@@ -1,0 +1,11 @@
+include *.rst
+include boxhed_kernel/VERSION
+include boxhed_kernel/CMakeLists.txt
+
+recursive-include boxhed_kernel *
+recursive-include boxhed_kernel/include *
+recursive-include boxhed_kernel/src *
+recursive-include boxhed_kernel/rabit *
+recursive-include boxhed_kernel/dmlc-core *
+
+global-exclude *.py[oc]
