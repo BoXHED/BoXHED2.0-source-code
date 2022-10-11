@@ -1,0 +1,6 @@
+packages/boxhed/boxhed.egg-info/
+packages/boxhed/build/
+packages/boxhed_kernel/boxhed_kernel.egg-info/
+packages/boxhed_kernel/build/
+packages/boxhed_prep/boxhed_prep.egg-info/
+packages/boxhed_prep/build/
