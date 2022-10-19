@@ -118,7 +118,9 @@ def create_dir_if_not_exist(path):
 
 import functools
 import multiprocessing
-multiprocessing.set_start_method('fork')
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    multiprocessing.set_start_method('fork')
 from multiprocessing import Process, Queue
 
 
