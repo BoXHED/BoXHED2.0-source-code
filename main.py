@@ -1,8 +1,8 @@
 import os
 import pandas as pd
-from boxhed import boxhed
-from model_selection import cv
-from utils import timer, run_as_process, TrueHaz, calc_L2, create_dir_if_not_exist
+from boxhed.boxhed import boxhed
+from boxhed.model_selection import cv
+from boxhed.utils import timer, run_as_process, TrueHaz, calc_L2, create_dir_if_not_exist
 
 # BoXHED 2.0 (https://arxiv.org/pdf/2103.12591.pdf) is a software package
 # for estimating hazard functions nonparametrically via gradient boosting. 
