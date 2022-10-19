@@ -232,18 +232,51 @@ class preprocessor:
         return data, nIDs
 
 
-    def _compute_quant(self, data, nrows, ncols, is_cat):
+    def _compute_quant(self, data, nrows, ncols, is_cat, split_vals):
+        for k, _ in split_vals.items():
+            if k in ["ID", "delta"]:
+                raise ValueError(f'The column {k} was passed in split_vals but is not used as feature to split on.')
+
+            if k in ["t_start", "t_end"]:
+                raise ValueError(f'The column {k} was passed in split_vals. If specifying time splits, use the key "time" in split_vals instead of {k}.')
+
+        split_vals = {(k if k!="t" else "t_start"):v for (k,v) in split_vals.items()}
+        split_vals = {k:np.sort(np.unique(v)) for (k,v) in split_vals.items()}
+        
+        max_nsplits = max([len(v) for (k,v) in split_vals.items()], default=0)
+        if max_nsplits > self.num_quantiles:
+            raise ValueError(f'The number of unique split values specified in split_vals for any covariate/time ({max_nsplits}) cannot exceed number of quantiles num_quantiles ({self.num_quantiles}).')
+
         self.quant      = self._contig_float(np.zeros((1, self.num_quantiles*(ncols))))
         self.quant_size = self._contig_size_t(np.zeros((1, ncols)))
 
         self.__compute_quant(data, nrows, ncols, is_cat)
 
-    def preprocess(self, data, is_cat=[], num_quantiles=256, weighted=False, nthread=1):
+        for k, v in split_vals.items():
+            try:
+                idx = self.colnames.index(k)
+            except ValueError:
+                raise ValueError(f'The column {k} was passed in split_vals but does not exist in the dataset.')
+
+            col_min  = data[:,idx].min()
+            
+            if  v[0] < col_min:
+                v[0] = col_min
+
+            if  v[0] > col_min:
+                v    = np.sort(np.unique(np.append(v, col_min)))
+                assert len(v) <= self.num_quantiles, "The specified split_vals values is not compatible with num_quantiles. Consider increasing num_quantiles by at least 1."
+
+            self.quant[0, idx*self.num_quantiles:idx*self.num_quantiles+len(v)] = v
+            self.quant_size[0, idx] = len(v)
+
+
+    def preprocess(self, data, is_cat=[], split_vals={}, num_quantiles=256, weighted=False, nthread=1):
         #TODO: maye change how the data is given? pat, X, y?
 
         #XXX: using np.float64---c_double
         self.nthread            = nthread
-        self.num_quantiles      = min(num_quantiles, 256)
+        self.num_quantiles      = num_quantiles#min(num_quantiles, 256)
         self.weighted           = weighted
         _is_cat                 = self._contig_bool(np.zeros((1, data.shape[1])))
         for cat_col in is_cat:
@@ -257,7 +290,7 @@ class preprocessor:
 
         data, nIDs              = self._setup_data(data)
 
-        self._compute_quant(data, nrows, ncols, _is_cat)
+        self._compute_quant(data, nrows, ncols, _is_cat, split_vals)
 
         bndry_info              = self._get_boundaries(data, nrows, ncols, nIDs)
         preprocessed            = self._preprocess(data, nrows, ncols, _is_cat, bndry_info)
