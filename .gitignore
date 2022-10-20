@@ -6,6 +6,4 @@ packages/boxhed_prep/boxhed_prep.egg-info/
 packages/boxhed_prep/build/
 packages/boxhed_kernel/boxhed_kernel/build/
 packages/boxhed_kernel/boxhed_kernel/lib/
-packages/boxhed_kernel/boxhed_kernel/python-package/
-packages/boxhed_kernel/boxhed_kernel/xgboost
 setup_log.txt
