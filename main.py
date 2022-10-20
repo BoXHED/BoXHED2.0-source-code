@@ -91,9 +91,16 @@ def cv_train_BoXHED2(train_data):
     # boxhed.preprocess():
     # Input:
     #      @ num_quantiles: the number of candidate split points to try for time and for each covariate. 
-    #                       The locations of the split points are based on the quantiles of the training data.
+    #                       The locations of the split points are based on the quantiles of the training data. The default value is 256. 
+    #                       Some applications may need finer splits and therefore a larger num_quantiles value.
     #      @ is_cat:        a list of the column indexes that contain categorical data. The categorical data must be one-hot encoded.
     #                       For example, is_cat = [4,5,6] if a categorical variable with 3 factors is transformed into binary-valued columns 4,5,6
+    #      @ split_vals:    a dictionary to specify values to split on for any covariate or time. The key should the variable name and
+    #                       the value a list (or a 1d NumPy array) containing candidate split points. For specifying candidate points for time the 
+    #                       key value should simply be 'time' and for other covariates it should exactly match the column name in the dataset. 
+    #                       Key values 'ID', 't_start', 't_end', and 'delta' are not allowed. If the candidate split points of a covariate/time is
+    #                       not specified in split_vals, extracted quantiles (the default behavior) would be used. Be sure to not specify split points
+    #                       whose number exceeds the num_quantiles variable.
     #      @ weighted:      if set to True, the locations of the candidate split points will be based on weighted quantiles 
     #                       (see Section 3.3 of the BoXHED 2.0 paper)      
     #      @ nthreads:      number of CPU threads to use for preprocessing the data
@@ -106,6 +113,7 @@ def cv_train_BoXHED2(train_data):
     ID, X, w, delta = boxhed_.preprocess(
             data          = train_data, 
             #is_cat       = [],
+            split_vals    = {"t": [0.2, 0.4, 0.6, 0.8]},
             num_quantiles = 256, 
             weighted      = False, 
             nthread       = nthread_prep)
@@ -114,7 +122,7 @@ def cv_train_BoXHED2(train_data):
     # Perform K-fold cross-validation to select hyperparameters {tree depth, number of trees, learning rate} if do_CV = True.
     # Otherwise, users should manually specify hyperparameter values. Note that a tree of depth k has 2^k leaf nodes.
     do_CV = False                                 
-    param_manual = {'max_depth':2, 'n_estimators':100, 'eta':0.1}
+    param_manual = {'max_depth':1, 'n_estimators':200, 'eta':0.1}
     
     # Specify the candidate values for the hyperparameters to cross-validate on (more trees and/or deeper trees may be needed for other datasets).
     param_grid = {
@@ -169,11 +177,6 @@ def cv_train_BoXHED2(train_data):
     boxhed_.fit(X, delta, w)
     train_info_dict["fit_time"] = fit_timer.get_dur()
 
-    boxhed_.iboxhed_build()
-    from iboxhed_utils import get_heatmap
-    fig, ax = get_heatmap(boxhed_, X, 't_start', 'X_0')
-    fig.savefig('./results/iboxhed_first.jpg')
-
     return boxhed_, train_info_dict
 
 
@@ -196,12 +199,6 @@ def testRMSE_BoXHED2(boxhed_, test_X, test_true_haz):
     test_info_dict["pred_time"] = pred_timer.get_dur()
 
     # Compute the RMSE of the estimates, and its 95% confidence interval:
-    L2 = calc_L2(preds, test_true_haz)
-    test_info_dict["rmse_CI"] = f"{L2['point_estimate']:.3f} ({L2['lower_CI']:.3f}, {L2['higher_CI']:.3f})"
-    print (test_info_dict)
-
-    boxhed_.iboxhed_build()
-    preds = boxhed_.iboxhed_predict(test_X)
     L2 = calc_L2(preds, test_true_haz)
     test_info_dict["rmse_CI"] = f"{L2['point_estimate']:.3f} ({L2['lower_CI']:.3f}, {L2['higher_CI']:.3f})"
 
