@@ -73,7 +73,7 @@ then
         exit 1
     fi
     cmake_args+=(-DUSE_CUDA=ON)
-    cmake_args+=(-D CMAKE_CUDA_COMPILER=/home/grads/a/a.pakbin/cuda-11.1/bin/nvcc)
+    #cmake_args+=(-D CMAKE_CUDA_COMPILER=/home/grads/a/a.pakbin/cuda-11.1/bin/nvcc)
 else
     cmake_args+=(-DUSE_CUDA=OFF)
 fi
