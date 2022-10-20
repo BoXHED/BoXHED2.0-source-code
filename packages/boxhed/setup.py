@@ -4,7 +4,7 @@ from setuptools import find_packages, setup  # This line replaces 'from setuptoo
 
 setup(
     name="boxhed",
-    version="2.0",
+    version="2.1",
     description="BoXHED2.0",
     author='Arash Pakbin',
     #cmake_install_target = cmake_install_target(),

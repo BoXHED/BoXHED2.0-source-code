@@ -80,7 +80,7 @@ class RunSetupsSdist(sdist):
 
 setup(
     name="boxhed_prep",
-    version="2.0.2",
+    version="2.2",
     description="preprocessor for BoXHED2.0",
     author='Arash Pakbin',
     #cmake_install_target = "ll",#cmake_install_target(),

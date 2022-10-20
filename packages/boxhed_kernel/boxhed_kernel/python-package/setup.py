@@ -128,7 +128,7 @@ class BuildExt(build_ext.build_ext):  # pylint: disable=too-many-ancestors
             self.logger.info('Using system libxgboost.')
             return
 
-        src_dir = 'xgboost'
+        src_dir = 'boxhed_kernel'
         try:
             copy_tree(os.path.join(CURRENT_DIR, os.path.pardir),
                       os.path.join(self.build_temp, src_dir))
@@ -154,7 +154,7 @@ class BuildExt(build_ext.build_ext):  # pylint: disable=too-many-ancestors
 
         if system() == 'Windows':
             # Pick up from LGB, just test every possible tool chain.
-            for vs in ('-GVisual Studio 16 2019', '-GVisual Studio 15 2017',
+            for vs in ('-GVisual Studio 17 2022', '-GVisual Studio 16 2019', '-GVisual Studio 15 2017',
                        '-GVisual Studio 14 2015', '-GMinGW Makefiles'):
                 try:
                     self.build(src_dir, build_dir, vs)
@@ -197,7 +197,7 @@ class Sdist(sdist.sdist):       # pylint: disable=too-many-ancestors
 
     def run(self):
         copy_tree(os.path.join(CURRENT_DIR, os.path.pardir),
-                  os.path.join(CURRENT_DIR, 'xgboost'))
+                  os.path.join(CURRENT_DIR, 'boxhed_kernel'))
         libxgboost = os.path.join(
             CURRENT_DIR, os.path.pardir, 'lib', lib_name())
         if os.path.exists(libxgboost):
@@ -223,16 +223,16 @@ class InstallLib(install_lib.install_lib):
             assert os.path.exists(os.path.join(lib_path, lib_name())), msg
             return []
 
-        lib_dir = os.path.join(self.install_dir, 'xgboost', 'lib')
+        lib_dir = os.path.join(self.install_dir, 'boxhed_kernel', 'lib')
         if not os.path.exists(lib_dir):
             os.mkdir(lib_dir)
-        dst = os.path.join(self.install_dir, 'xgboost', 'lib', lib_name())
+        dst = os.path.join(self.install_dir, 'boxhed_kernel', 'lib', lib_name())
 
         global BUILD_TEMP_DIR   # pylint: disable=global-statement
         libxgboost_path = lib_name()
 
         dft_lib_dir = os.path.join(CURRENT_DIR, os.path.pardir, 'lib')
-        build_dir = os.path.join(BUILD_TEMP_DIR, 'xgboost', 'lib')
+        build_dir = os.path.join(BUILD_TEMP_DIR, 'boxhed_kernel', 'lib')
 
         if os.path.exists(os.path.join(dft_lib_dir, libxgboost_path)):
             # The library is built by CMake directly
@@ -299,9 +299,9 @@ if __name__ == '__main__':
     # - pip install . -e
     # - python setup.py develop   # same as above
     logging.basicConfig(level=logging.INFO)
-    setup(name='xgboost',
-          version=open(os.path.join(
-              CURRENT_DIR, 'xgboost/VERSION')).read().strip(),
+    setup(name='boxhed_kernel',
+          version="2.2",#open(os.path.join(
+          #    CURRENT_DIR, 'xgboost/VERSION')).read().strip(),
           description="XGBoost Python Package",
           long_description=open(os.path.join(CURRENT_DIR, 'README.rst'),
                                 encoding='utf-8').read(),
@@ -323,8 +323,8 @@ if __name__ == '__main__':
               'datatable': ['datatable'],
               'plotting': ['graphviz', 'matplotlib']
           },
-          maintainer='Hyunsu Cho',
-          maintainer_email='chohyu01@cs.washington.edu',
+          #maintainer='Hyunsu Cho',
+          #maintainer_email='chohyu01@cs.washington.edu',
           zip_safe=False,
           packages=find_packages(),
           include_package_data=True,
