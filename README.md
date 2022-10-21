@@ -30,11 +30,11 @@ conda activate boxhed2.0
 
 Please make sure to clone this repository:
 ```
-git clone https://github.com/BoXHED/BoXHED2.0.git
+git clone https://github.com/BoXHED/BoXHED2.0_.git
 ```
 Then, go to the directory:
 ```
-cd BoXHED2.0
+cd BoXHED2.0_
 ```
 now install numpy, pandas, scikit-learn, pytz, py3nvml and matplotlib by:
 ```
