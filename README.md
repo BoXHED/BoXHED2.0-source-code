@@ -10,7 +10,8 @@ Please refer to [BoXHED2.0 Paper](https://arxiv.org/abs/2103.12591) for details,
 ## Prerequisites
 The software developed and tested in Linux and Mac OS environments. The requirements are the following:
 - cmake  (>=3.18.2)
-- Python (>=3.8)
+- Python (=3.8)
+- CUDA   (=11.1)
 - conda
 
 For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. Windows users need to have Visual Studio 19 2022 installed.
