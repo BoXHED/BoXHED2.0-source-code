@@ -282,22 +282,48 @@ class collapsed_gs_:
         }
 
 
-def cv(param_grid, x, w, delta, subjects, n_splits, gpu_list, batch_size):
+def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, batch_size):
+    """cross validate different hyperpatameter combinations based on likelihood risk.
+
+    :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
+    param_grid = {
+        'max_depth':    [1, 2, 3, 4, 5],
+        'n_estimators': [50, 100, 150, 200, 250, 300],
+        'eta':          [0.1]
+    }
+    :type param_grid: dict
+    :param X: he preprocessed covariate matrix. An output of the preprocessor.
+    :type X: pd.DataFrame
+    :param w: length of each epoch.  An output of the preprocessor.
+    :type w: pd.Series
+    :param delta: an indicator which equals one if event occurred at the end of epoch; zero otherwise. An output of the preprocessor.
+    :type delta: pd.Series
+    :param ID: subject ID of each row in \textbf{X}, \textbf{w}, and \textbf{delta}.  An output of the preprocessor.
+    :type ID: pd.Series
+    :param num_folds: the number $K$ in $K$-fold cross-validation.
+    :type num_folds: int
+    :param gpu_list: the list of GPU IDs to use for training. Set $\text{gpu\_list} = [-1]$ to use CPUs.
+    :type gpu_list: list
+    :param batch_size: the maximum number of BoXHED2.0 instances trained at any point in time. Example: Performing 10-fold cross-validation using the param\_grid above requires training 5*6*10 = 300 instances in total. When gpu\_list = [-1], batch\_size specifies the number of CPU threads to be used, with each one training one instance at a time. When using GPUs, each GPU trains at most $\text{batch\_size}/len(\text{gpu\_list)}$ instances at a time. Hence if 2 GPUs are used and $\text{batch\_size} = 20$, each GPU will train at most 10 instances at a time.
+    :type batch_size: int
+    :return: \textbf{cv\_rslts}: mean and st.dev of the log-likelihood value for each hyperparameter combination.
+    :rtype: dict
+    """
 
     assert batch_size%len(gpu_list) == 0, "batch_size should be divisible by len(gpu_list)"
-    x, w, delta, groups = indexable(x, w, delta, subjects)
+    X, w, delta, groups = indexable(X, w, delta, ID)
 
-    gkf = list(GroupKFold(n_splits=n_splits).split(x,delta,subjects))
+    gkf = list(GroupKFold(n_splits=num_folds).split(X,delta,ID))
 
     collapsed_ntree_gs_  = collapsed_gs_(param_grid, gkf, gpu_list, batch_size)
  
-    results     = collapsed_ntree_gs_.fit(x,w,delta)
+    results     = collapsed_ntree_gs_.fit(X,w,delta)
     means       = results['mean_test_score']
     stds        = results['std_test_score']
     params      = results['params']
     best_params = results['best_params']
 
-    return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(n_splits)}, best_params
+    return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}, best_params
 
 
 def best_param_1se_rule(cv_results):
