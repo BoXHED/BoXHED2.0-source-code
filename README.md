@@ -46,7 +46,7 @@ Subsequently you can install BoXHED2.0 by running:
 source setup.sh
 ```
 Here are the flags that can be passed to the installer:
-- '-g': If you want the code to be compiled with GPU support, you may pass the '-g' flag. Please note that this is only supported for Linux users at the moment. 
+- '-g': If you want the code to be compiled with GPU support, you may pass the '-g' flag. Note that you need CUDA 11.1 installed. Please note that this is only supported for Linux users at the moment. 
 
 then run the *main.py* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
