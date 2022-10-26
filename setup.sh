@@ -35,7 +35,7 @@ is_linux=$((1-$is_linux))
 build_dirs=(
     "${DIR}/packages/boxhed/boxhed.egg-info/"
     "${DIR}/packages/boxhed/build/"
-    "${DIR}/packages/boxhed_kernel/boxhed_kernel/build/"
+    #"${DIR}/packages/boxhed_kernel/boxhed_kernel/build/"
     "${DIR}/packages/boxhed_kernel/boxhed_kernel/lib/"
     "${DIR}/packages/boxhed_kernel/boxhed_kernel/python-package/build/"
     "${DIR}/packages/boxhed_kernel/boxhed_kernel/python-package/xgboost.egg-info/"
