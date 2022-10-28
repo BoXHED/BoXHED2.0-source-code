@@ -9,7 +9,7 @@ Please refer to [BoXHED2.0 Paper](https://arxiv.org/abs/2103.12591) for details,
 
 ## Prerequisites
 The software developed and tested in Linux and Mac OS environments. The requirements are the following:
-- cmake  (>=3.18.2)
+- cmake  (>=3.18.2) (CMake is part of Visual Studio installation for Windows)
 - Python (=3.8)
 - CUDA   (=11.1) (only if GPU support is needed)
 - conda
