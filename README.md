@@ -56,5 +56,3 @@ then run the *main.py* file for a quick demonstration of how to train/test a BoX
 ```
 python main.py
 ``` 
-
-Please note that everytime you relocate the code, you need to run bash setup.sh again.
