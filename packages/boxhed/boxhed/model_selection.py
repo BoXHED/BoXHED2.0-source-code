@@ -331,4 +331,4 @@ def best_param_1se_rule(cv_results):
     highest_mean_idx               = np.argmax(means)
     highest_mean, highest_mean_ste = means[highest_mean_idx], stes[highest_mean_idx]
     params_within_1se              = [param for (param, mean) in zip(params, means) if abs(mean-highest_mean)<highest_mean_ste]
-    return min(params_within_1se, key=lambda param:param['n_estimators']*np.power(2, param['max_depth']))
+    return min(params_within_1se, key=lambda param:param['n_estimators']*np.power(2, param['max_depth'])), params_within_1se
