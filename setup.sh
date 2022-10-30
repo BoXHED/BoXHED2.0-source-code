@@ -27,11 +27,6 @@ is_windows=$((1-$is_windows))
 [[ "$OSTYPE" == "darwin"* ]] ; is_mac=$?
 is_mac=$((1-$is_mac))
 
-# is linux
-[[ "$OSTYPE" == "linux-gnu"* ]] ; is_linux=$?
-is_linux=$((1-$is_linux))
-
-
 build_dirs=(
     "${DIR}/packages/boxhed/boxhed.egg-info/"
     "${DIR}/packages/boxhed/build/"
@@ -47,36 +42,6 @@ do
     rm -rf $dir
 done
 
-
-use_gpu=false
-while getopts ":gv:" opt; do
-    case $opt in
-        g)
-            use_gpu=true
-            ;;
-        \?)
-            echo "ERROR: Invalid option: -$OPTARG" >&2
-            exit 1
-            ;;
-        :)
-            echo "ERROR: Option -$OPTARG requires an argument." >&2
-            exit 1
-            ;;
-    esac
-done
-shift $((OPTIND -1))
-
-if [ "$use_gpu" == true ]
-then
-    if [[ $is_linux == 0 ]] ; then
-        echo "Error: CUDA usage is available for Linux users only at the moment." >&2
-        exit 1
-    fi
-    cmake_args+=(-DUSE_CUDA=ON)
-    #cmake_args+=(-D CMAKE_CUDA_COMPILER=/home/grads/a/a.pakbin/cuda-11.1/bin/nvcc)
-else
-    cmake_args+=(-DUSE_CUDA=OFF)
-fi
             
 rm -f setup_log
 
@@ -95,6 +60,15 @@ fi
 
 print "running cmake for boxhed in ${DIR}/packages/boxhed_kernel/boxhed_kernel/build/"
 cd "${DIR}/packages/boxhed_kernel/boxhed_kernel/build/"
+
+cmake_args+=(-DUSE_CUDA=ON)
+# CMake arguments may be passed like the following. It has the general
+# form of "-D _ARGUMENT_=VALUE". A common problem that may arise is
+# CMake not being able to find CUDA compiler. In case this happens you
+# may uncomment following line and replace the address place holder 
+# with your true CUDA compiler address. (The compiler address should look
+# like this example: /home/grads/j/j.doe/cuda-11.1/bin/nvcc)
+#cmake_args+=(-D CMAKE_CUDA_COMPILER=__ADDRESS_TO_CUDA_COMPILER__)
 cmake ${cmake_args[@]} >> ${setup_log} 2>&1
 check_success
 
