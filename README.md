@@ -50,16 +50,21 @@ Then, go to the directory:
 ```
 cd BoXHED2.0_
 ```
-now install numpy, pandas, scikit-learn, pytz, py3nvml and matplotlib by:
+now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
 ```
 source conda_install_packages.sh
 ```
 
-Note that you need CUDA 11.1 installed. 
+Note that you need CUDA 11.1 installed. In case you do not have it already, you can download CUDA 11.1 from [here](https://developer.nvidia.com/cuda-11.1.1-download-archive).
+
 Subsequently you can install BoXHED2.0 by running:
 ```
-source setup.sh -g
+./setup.sh
 ```
+
+The installer logs its activity in the terminal. If it states that the installation has been unsuccessful, you may check the *setup_log.txt* file created within the current directory for a more detailed description of what has gone wrong.  
+
+According to our experience, one of the most prevalent problems is that CMake cannot find CUDA the compiler or needs some arguments set depending on your machine. If that is the case, please see the instructions at line 65 of the file *setup.sh* to properly set the missing arguments.
 
 then run the *main.py* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
