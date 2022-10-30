@@ -32,6 +32,16 @@ then activate it
 conda activate boxhed2.0
 ```
 
+## Installing BoXHED2.0 (CPU training only)
+For CPU training only, you can install BoXHED2.0 from pip:
+```
+pip install boxhed
+```
+
+## Installing BoXHED 2.0 (with GPU support)
+
+For adding GPU support, BoXHED2.0 needs to be build from source. 
+
 Please make sure to clone this repository:
 ```
 git clone https://github.com/BoXHED/BoXHED2.0_.git
@@ -45,12 +55,11 @@ now install numpy, pandas, scikit-learn, pytz, py3nvml and matplotlib by:
 source conda_install_packages.sh
 ```
 
+Note that you need CUDA 11.1 installed. 
 Subsequently you can install BoXHED2.0 by running:
 ```
-source setup.sh
+source setup.sh -g
 ```
-Here are the flags that can be passed to the installer:
-- '-g': If you want the code to be compiled with GPU support, you may pass the '-g' flag. Note that you need CUDA 11.1 installed. Please note that this is only supported for Linux users at the moment. 
 
 then run the *main.py* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
