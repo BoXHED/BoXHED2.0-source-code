@@ -69,7 +69,7 @@ According to our experience, one of the most prevalent problems is that CMake ca
 
 
 ## Running the Tutorial
-then run the *main.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+Run the *main.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
 jupyter notebook
 ``` 
