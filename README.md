@@ -32,6 +32,15 @@ then activate it
 conda activate boxhed2.0
 ```
 
+Clone this repository:
+```
+git clone https://github.com/BoXHED/BoXHED2.0_.git
+```
+Then, go to the directory:
+```
+cd BoXHED2.0_
+```
+
 ## Installing BoXHED2.0 (CPU training only)
 For CPU training only, you can install BoXHED2.0 from pip:
 ```
@@ -42,14 +51,6 @@ pip install boxhed
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
 
-Please make sure to clone this repository:
-```
-git clone https://github.com/BoXHED/BoXHED2.0_.git
-```
-Then, go to the directory:
-```
-cd BoXHED2.0_
-```
 now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
 ```
 source conda_install_packages.sh
@@ -66,7 +67,9 @@ The installer logs its activity in the terminal. If it states that the installat
 
 According to our experience, one of the most prevalent problems is that CMake cannot find CUDA the compiler or needs some arguments set depending on your machine. If that is the case, please see the instructions at line 65 of the file *setup.sh* to properly set the missing arguments.
 
-then run the *main.py* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+
+## Running the Tutorial
+then run the *main.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
-python main.py
+jupyter notebook
 ``` 
