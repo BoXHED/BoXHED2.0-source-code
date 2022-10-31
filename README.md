@@ -51,7 +51,7 @@ pip install boxhed
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
 
-now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
+Now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
 ```
 source conda_install_packages.sh
 ```
