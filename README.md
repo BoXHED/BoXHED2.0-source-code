@@ -22,16 +22,6 @@ When installing Visual Studio 17 2022 toolset, among "Workloads" select "Desktop
 We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 For installing the conda environment please open a terminal and do the following:
 
-First create the conda environment:
-```
-conda env create -f environment.yml
-```
-
-then activate it
-```
-conda activate boxhed
-```
-
 Clone this repository:
 ```
 git clone https://github.com/BoXHED/BoXHED2.0_.git
@@ -39,6 +29,16 @@ git clone https://github.com/BoXHED/BoXHED2.0_.git
 Then, go to the directory:
 ```
 cd BoXHED2.0_
+```
+
+Create the conda environment:
+```
+conda env create -f environment.yml
+```
+
+then activate it
+```
+conda activate boxhed
 ```
 
 ## Installing BoXHED2.0 (CPU training only)
