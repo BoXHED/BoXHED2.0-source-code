@@ -24,12 +24,12 @@ For installing the conda environment please open a terminal and do the following
 
 First create the conda environment:
 ```
-conda create -n boxhed2.0 python=3.8
+conda env create -f environment.yml
 ```
 
 then activate it
 ```
-conda activate boxhed2.0
+conda activate boxhed
 ```
 
 Clone this repository:
@@ -50,11 +50,6 @@ pip install boxhed
 ## Installing BoXHED 2.0 (with GPU support)
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
-
-Now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
-```
-source conda_install_packages.sh
-```
 
 Note that you need CUDA 11.1 installed. In case you do not have it already, you can download CUDA 11.1 from [here](https://developer.nvidia.com/cuda-11.1.1-download-archive).
 
