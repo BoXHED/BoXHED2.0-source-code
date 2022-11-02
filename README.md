@@ -51,6 +51,14 @@ pip install boxhed
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
 
+<<<<<<< HEAD
+=======
+now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
+```
+source conda_install_packages.sh
+```
+
+>>>>>>> parent of aa6206c... capitalize
 Note that you need CUDA 11.1 installed. In case you do not have it already, you can download CUDA 11.1 from [here](https://developer.nvidia.com/cuda-11.1.1-download-archive).
 
 Subsequently you can install BoXHED2.0 by running:
