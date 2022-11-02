@@ -22,6 +22,16 @@ When installing Visual Studio 17 2022 toolset, among "Workloads" select "Desktop
 We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 For installing the conda environment please open a terminal and do the following:
 
+First create the conda environment:
+```
+conda create -n boxhed2.0 python=3.8
+```
+
+then activate it
+```
+conda activate boxhed2.0
+```
+
 Clone this repository:
 ```
 git clone https://github.com/BoXHED/BoXHED2.0_.git
@@ -29,16 +39,6 @@ git clone https://github.com/BoXHED/BoXHED2.0_.git
 Then, go to the directory:
 ```
 cd BoXHED2.0_
-```
-
-Create the conda environment:
-```
-conda env create -f environment.yml
-```
-
-then activate it
-```
-conda activate boxhed
 ```
 
 ## Installing BoXHED2.0 (CPU training only)
@@ -51,14 +51,11 @@ pip install boxhed
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
 
-<<<<<<< HEAD
-=======
-now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
+Now install numpy, pandas, scikit-learn, pytz, py3nvml, matplotlib, and CudaToolkit by:
 ```
 source conda_install_packages.sh
 ```
 
->>>>>>> parent of aa6206c... capitalize
 Note that you need CUDA 11.1 installed. In case you do not have it already, you can download CUDA 11.1 from [here](https://developer.nvidia.com/cuda-11.1.1-download-archive).
 
 Subsequently you can install BoXHED2.0 by running:
