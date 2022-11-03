@@ -47,6 +47,17 @@ For CPU training only, you can install BoXHED2.0 from pip:
 pip install boxhed
 ```
 
+Now install Jupyter Notebook:
+```
+pip install jupyter
+```
+
+## Running the Tutorial
+Run the *main.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+```
+jupyter notebook
+``` 
+
 ## Installing BoXHED 2.0 (with GPU support)
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
