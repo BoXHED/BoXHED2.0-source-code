@@ -52,7 +52,7 @@ Now install Jupyter Notebook:
 pip install jupyter
 ```
 
-Run the *tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
 jupyter notebook
 ``` 
@@ -77,7 +77,7 @@ The installer logs its activity in the terminal. If it states that the installat
 
 According to our experience, one of the most prevalent problems is that CMake cannot find CUDA the compiler or needs some arguments set depending on your machine. If that is the case, please see the instructions at line 65 of the file *setup.sh* to properly set the missing arguments.
 
-Run the *tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
 jupyter notebook
 ``` 
