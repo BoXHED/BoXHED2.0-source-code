@@ -34,11 +34,11 @@ conda activate boxhed2.0
 
 Clone this repository:
 ```
-git clone https://github.com/BoXHED/BoXHED2.0_.git
+git clone https://github.com/BoXHED/BoXHED2.0.git
 ```
 Then, go to the directory:
 ```
-cd BoXHED2.0_
+cd BoXHED2.0
 ```
 
 ## Installing BoXHED2.0 (CPU training only)
