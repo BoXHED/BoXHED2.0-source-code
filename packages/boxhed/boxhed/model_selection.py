@@ -2,13 +2,8 @@ from boxhed.boxhed import boxhed
 
 
 from sklearn.utils import indexable
-import functools
 import numpy as np
-from multiprocessing import Array#, RawArray
-from multiprocessing.sharedctypes import RawArray
 import multiprocessing as mp
-from contextlib import closing
-import ctypes
 from joblib import Parallel, delayed
 import numpy as np
 import copy
@@ -22,8 +17,7 @@ from itertools import product
 from multiprocessing import Manager
 from multiprocessing.shared_memory import SharedMemory
 from multiprocessing.managers import SharedMemoryManager
-from py3nvml import get_free_gpus
-from sklearn.model_selection import GroupKFold, GridSearchCV 
+from sklearn.model_selection import GroupKFold 
 
 
 
@@ -218,7 +212,7 @@ class collapsed_gs_:
 
             rslt_mngd =          manager.list([0]*len(self.param_dicts_test))
 
-            for batch_idx in tqdm(range(int(len(self.param_dicts_train)/self.batch_size)+1),
+            for batch_idx in tqdm(range(int(np.ceil(len(self.param_dicts_train)/self.batch_size))),
                     desc="batched cross validation"):
 
                 param_dict_mngd['batch_idx'] = batch_idx
@@ -282,7 +276,7 @@ class collapsed_gs_:
         }
 
 
-def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, batch_size):
+def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
     """cross validate different hyperpatameter combinations based on likelihood risk.
 
     :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
@@ -304,14 +298,20 @@ def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, batch_size):
     :type num_folds: int
     :param gpu_list: the list of GPU IDs to use for training. Set $\text{gpu\_list} = [-1]$ to use CPUs.
     :type gpu_list: list
-    :param batch_size: the maximum number of BoXHED2.0 instances trained at any point in time. Example: Performing 10-fold cross-validation using the param\_grid above requires training 5*6*10 = 300 instances in total. When gpu\_list = [-1], batch\_size specifies the number of CPU threads to be used, with each one training one instance at a time. When using GPUs, each GPU trains at most $\text{batch\_size}/len(\text{gpu\_list)}$ instances at a time. Hence if 2 GPUs are used and $\text{batch\_size} = 20$, each GPU will train at most 10 instances at a time.
+    :param nthread: 
+    :type batch_size: int
+    :param models_per_gpu: 
     :type batch_size: int
     :return: \textbf{cv\_rslts}: mean and st.dev of the log-likelihood value for each hyperparameter combination.
     :rtype: dict
     """
 
-    assert batch_size%len(gpu_list) == 0, "batch_size should be divisible by len(gpu_list)"
-    X, w, delta, groups = indexable(X, w, delta, ID)
+    if gpu_list == [-1]:
+        batch_size = nthread if nthread != -1 else mp.cpu_count()-1
+    else:
+        batch_size = models_per_gpu * len(gpu_list)
+
+    X, w, delta, ID = indexable(X, w, delta, ID)
 
     gkf = list(GroupKFold(n_splits=num_folds).split(X,delta,ID))
 
@@ -321,14 +321,20 @@ def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, batch_size):
     means       = results['mean_test_score']
     stds        = results['std_test_score']
     params      = results['params']
-    best_params = results['best_params']
 
-    return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}, best_params
+    return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}
 
 
-def best_param_1se_rule(cv_results):
-    params, means, stes            = [cv_results[key] for key in ["params", "score_mean", "score_ste"]]
-    highest_mean_idx               = np.argmax(means)
-    highest_mean, highest_mean_ste = means[highest_mean_idx], stes[highest_mean_idx]
-    params_within_1se              = [param for (param, mean) in zip(params, means) if abs(mean-highest_mean)<highest_mean_ste]
-    return min(params_within_1se, key=lambda param:param['n_estimators']*np.power(2, param['max_depth'])), params_within_1se
+def best_param_1se_rule(cv_results, model_complexity=None, bounded_search=True):
+    params, means, stes               = [cv_results[key] for key in ["params", "score_mean", "score_ste"]]
+    highest_mean_idx                  = np.argmax(means)
+    highest_mean, highest_mean_ste    = means[highest_mean_idx], stes[highest_mean_idx]
+    params_within_1se                 = [param for (param, mean) in zip(params, means) if abs(mean-highest_mean)<highest_mean_ste]
+    params_within_1se                 = [{key: params_[key] for key in ['max_depth', 'n_estimators']} for params_ in params_within_1se]
+    if bounded_search:
+        best_params                   = params[highest_mean_idx]
+        params_within_1se             = [params for params in params_within_1se
+                                      if all([params[key]<=best_params[key] for key in ['max_depth', 'n_estimators']])]
+    if model_complexity is None:
+        model_complexity              = lambda max_depth, n_estimators: n_estimators*(2**max_depth)
+    return min(params_within_1se, key = lambda params:model_complexity(params['max_depth'], params['n_estimators'])), params_within_1se

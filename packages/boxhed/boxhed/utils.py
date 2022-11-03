@@ -154,3 +154,13 @@ def _get_free_gpu_list(nom):
     return GPU_LIST[:nom]
 
 
+import pickle
+def dump_pickle(obj, addr):
+    with open(addr, 'wb') as handle:
+        pickle.dump(obj, handle)
+
+
+def load_pickle(addr):
+    with open(addr, 'rb') as handle:
+        obj = pickle.load(handle)
+    return obj

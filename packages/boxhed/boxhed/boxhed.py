@@ -5,6 +5,7 @@ from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from collections.abc import Iterable
 from boxhed_prep.boxhed_prep import preprocessor
+from . import utils
 
 
 import boxhed_kernel as xgb
@@ -39,7 +40,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         self.nthread       = nthread
 
 
-    def _X_y_to_dmat(self, X, y=None, w=None):
+    def X_y_to_dmat(self, X, y=None, w=None):
         if not hasattr(self, 'X_colnames'):
             self.X_colnames = None #model probably created for CV, no need for data name matching
         dmat = xgb.DMatrix(pd.DataFrame(X, columns=self.X_colnames))
@@ -124,7 +125,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             w = np.ones_like(y)
 
         f0_   = np.log(np.sum(y)/np.sum(w))
-        dmat_ = self._X_y_to_dmat(X, y, w)
+        dmat_ = self.X_y_to_dmat(X, y, w)
 
         if self.gpu_id>=0:
             self.objective_   = 'survival:boxhed_gpu'
@@ -199,7 +200,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             pass
         X = check_array(X, force_all_finite='allow-nan')
 
-        return self.boxhed_.predict(self._X_y_to_dmat(X), ntree_limit = ntree_limit)
+        return self.boxhed_.predict(self.X_y_to_dmat(X), ntree_limit = ntree_limit)
 
     def get_survival(self, X, t, ntree_limit = 0):
         """estimating survival probability at a specific time using a trained BoXHED instance.
@@ -227,7 +228,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         cte_hazard_epoch_df            = self.prep.epoch_break_cte_hazard(X)
         cte_hazard_epoch               = check_array(cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"]), 
                                             force_all_finite='allow-nan')
-        cte_hazard_epoch               = self._X_y_to_dmat(cte_hazard_epoch)
+        cte_hazard_epoch               = self.X_y_to_dmat(cte_hazard_epoch)
         preds                          = self.boxhed_.predict(cte_hazard_epoch, ntree_limit = ntree_limit)
         cte_hazard_epoch_df ['preds']  = preds
         cte_hazard_epoch_df ['surv']   = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['preds']
@@ -258,3 +259,16 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
 
         preds = self.predict(X, ntree_limit = ntree_limit)
         return -(np.inner(preds, w)-np.inner(np.log(preds), y))
+
+    def dump_model(self, fname):
+        self.prep.prep_lib = None
+        utils.dump_pickle(self, fname)
+        self.prep.__init__()
+
+    def load_model(self, fname):
+        boxhed_ = utils.load_pickle(fname)
+        for attr in dir(boxhed_):
+            if attr.startswith('__') or attr.startswith('_'):
+                continue
+            setattr(self, attr, getattr(boxhed_, attr))
+        self.prep.__init__()
