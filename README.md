@@ -54,7 +54,7 @@ pip install jupyter
 
 Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
-jupyter notebook
+jupyter notebook BoXHED2_tutorial.ipynb
 ``` 
 
 ## Installing BoXHED 2.0 (with GPU support)
@@ -79,5 +79,5 @@ According to our experience, one of the most prevalent problems is that CMake ca
 
 Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
 ```
-jupyter notebook
+jupyter notebook BoXHED2_tutorial.ipynb
 ``` 
