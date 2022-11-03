@@ -346,10 +346,10 @@ class preprocessor:
 
         bndry_info              = self._get_boundaries(data, nrows, ncols, nIDs)
         preprocessed            = self._preprocess(data, nrows, ncols, _is_cat, bndry_info)
-        IDs, X, delta, w        = self._prep_output_df(preprocessed)
+        ID, X, delta, w         = self._prep_output_df(preprocessed)
         self._free_boundary_info(bndry_info)
 
-        return IDs, X, w, delta
+        return {"ID": ID, "X": X, "w": w, "delta": delta}
 
     def _post_training_get_X_shape(self, X):
         assert X.ndim==2,"ERROR: data needs to be 2 dimensional"

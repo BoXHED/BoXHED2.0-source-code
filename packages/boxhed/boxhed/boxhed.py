@@ -86,7 +86,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         :rtype: pd.Series, pd.DataFrame, pd.Series, pd.Series
         """
         self.prep = preprocessor()
-        IDs, X, w, delta =  self.prep.preprocess(
+        X_post               = self.prep.preprocess(
             data             = data, 
             is_cat           = is_cat,
             split_vals       = split_vals,
@@ -94,10 +94,10 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             weighted         = weighted, 
             nthread          = nthread)
 
-        self.X_colnames = X.columns.values.tolist()
+        self.X_colnames = X_post['X'].columns.values.tolist()
         self.X_colnames = [item if item!='t_start' else 'time' for item in self.X_colnames]
 
-        return IDs, X, w, delta
+        return X_post
 
     def fit (self, X, y, w=None):
         """_summary_

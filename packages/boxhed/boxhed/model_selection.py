@@ -276,7 +276,7 @@ class collapsed_gs_:
         }
 
 
-def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
+def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
     """cross validate different hyperpatameter combinations based on likelihood risk.
 
     :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
@@ -311,7 +311,7 @@ def cv(param_grid, X, w, delta, ID, num_folds, gpu_list, nthread=-1, models_per_
     else:
         batch_size = models_per_gpu * len(gpu_list)
 
-    X, w, delta, ID = indexable(X, w, delta, ID)
+    X, w, delta, ID = indexable(X_post['X'], X_post['w'], X_post['delta'], X_post['ID'])
 
     gkf = list(GroupKFold(n_splits=num_folds).split(X,delta,ID))
 
