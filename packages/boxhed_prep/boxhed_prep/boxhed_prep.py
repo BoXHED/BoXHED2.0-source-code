@@ -335,17 +335,17 @@ class preprocessor:
             _is_cat[0, cat_col] = True
         self.is_cat             = _is_cat
         nrows                   = data.shape[0]
-        ncols                   = data.shape[1]
+        self.ncols              = data.shape[1]
 
         self.colnames  = list(data.columns)
         self._set_col_indcs()
 
         data, nIDs              = self._setup_data(data)
 
-        self._compute_quant(data, nrows, ncols, _is_cat, split_vals)
+        self._compute_quant(data, nrows, self.ncols, _is_cat, split_vals)
 
-        bndry_info              = self._get_boundaries(data, nrows, ncols, nIDs)
-        preprocessed            = self._preprocess(data, nrows, ncols, _is_cat, bndry_info)
+        bndry_info              = self._get_boundaries(data, nrows, self.ncols, nIDs)
+        preprocessed            = self._preprocess(data, nrows, self.ncols, _is_cat, bndry_info)
         ID, X, delta, w         = self._prep_output_df(preprocessed)
         self._free_boundary_info(bndry_info)
 
@@ -364,6 +364,8 @@ class preprocessor:
         quant_idxs = np.ascontiguousarray(np.zeros(ncols), dtype = np.int32)
 
         for idx, colname in enumerate(X.columns):
+            if colname in ['t', 'time', 't_start']:
+                colname = 't_start'
             col_idx = self.colnames.index(colname)
             assert col_idx > -1, "ERROR: X and trained data colnames do not match"
             quant_idxs [idx] = col_idx

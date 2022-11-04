@@ -191,13 +191,9 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         :rtype: np.array
         """
         check_is_fitted(self)
-        '''
-        self.prep.shift_left(X)
-        '''
-        try:
+        if hasattr(self, 'prep'):
             X = self.prep.shift_left(X)
-        except:
-            pass
+
         X = check_array(X, force_all_finite='allow-nan')
 
         return self.boxhed_.predict(self.X_y_to_dmat(X), ntree_limit = ntree_limit)
