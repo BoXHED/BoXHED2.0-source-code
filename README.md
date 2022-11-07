@@ -17,7 +17,7 @@ The software developed and tested in Linux and Mac OS environments. The requirem
 For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. Windows users need to have Visual Studio 17 2022 toolset installed.
 
 When installing Visual Studio 17 2022 toolset, among "Workloads" select "Desktop Development with C++" in the "Desktop and Mobile" section. A selection menu shows up on the right where you need to make the following selections:
-![vs_windows_selection](https://user-images.githubusercontent.com/34462617/198723876-38a85c80-4e50-4fe7-8a8a-1ac3c020d346.jpg)
+![sc](https://user-images.githubusercontent.com/34462617/200373995-0cb0b531-e2d1-4b55-a298-4f26cae6a43b.png)
 
 We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 For installing the conda environment please open a terminal and do the following:
