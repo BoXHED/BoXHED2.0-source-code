@@ -14,10 +14,54 @@ The software developed and tested in Linux and Mac OS environments. The requirem
 - CUDA   (=11.1) (only if GPU support is needed)
 - conda
 
-For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. Windows users need to have Visual Studio 17 2022 toolset installed.
-
-When installing Visual Studio 17 2022 toolset, among "Workloads" select "Desktop Development with C++" in the "Desktop and Mobile" section. A selection menu shows up on the right where you need to make the following selections:
+Windows users need to have Visual Studio 17 2022 toolset installed. When installing Visual Studio 17 2022 toolset, among "Workloads" select "Desktop Development with C++" in the "Desktop and Mobile" section. A selection menu shows up on the right where you need to make the following selections:
 ![sc__](https://user-images.githubusercontent.com/34462617/201495851-c7d02796-31e0-4181-9eba-78065d2a5f59.png)
+
+## Installing BoXHED2.0 (CPU training only)
+
+We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
+
+For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. 
+
+For installing the conda environment please open a terminal and do the following:
+
+First create the conda environment:
+```
+conda create -n boxhed2.0 python=3.8
+```
+
+then activate it
+```
+conda activate boxhed2.0
+```
+
+Clone this repository:
+```
+git clone https://github.com/BoXHED/BoXHED2.0.git
+```
+Then, go to the directory:
+```
+cd BoXHED2.0
+```
+
+
+For CPU training only, you can install BoXHED2.0 from pip:
+```
+pip install boxhed
+```
+
+Now install Jupyter Notebook:
+```
+pip install jupyter
+```
+
+Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
+```
+jupyter notebook BoXHED2_tutorial.ipynb
+``` 
+
+## Installing BoXHED 2.0 (with GPU support)
+For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. 
 
 We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 For installing the conda environment please open a terminal and do the following:
@@ -41,23 +85,6 @@ Then, go to the directory:
 cd BoXHED2.0
 ```
 
-## Installing BoXHED2.0 (CPU training only)
-For CPU training only, you can install BoXHED2.0 from pip:
-```
-pip install boxhed
-```
-
-Now install Jupyter Notebook:
-```
-pip install jupyter
-```
-
-Run the *BoXHED2_tutorial.ipynb* file for a quick demonstration of how to train/test a BoXHED model on a synthetic dataset. Please refer to this file for proper usage of BoXHED2.0.
-```
-jupyter notebook BoXHED2_tutorial.ipynb
-``` 
-
-## Installing BoXHED 2.0 (with GPU support)
 
 For adding GPU support, BoXHED2.0 needs to be build from source. 
 
