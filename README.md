@@ -61,7 +61,7 @@ jupyter notebook BoXHED2_tutorial.ipynb
 ``` 
 
 ## Installing BoXHED 2.0 (with GPU support)
-For Windows users, using [Git for Windows](https://gitforwindows.org/) would significantly ease the installation process. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Git for Windows for Windows users. 
+For Windows users, using [Anaconda Prompt](https://docs.anaconda.com/anaconda/install/) would be preferred because it eases Conda usage. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Anaconda Prompt for Windows users.
 
 We highly recommend devoting a conda environment to BoXHED 2.0. This step makes sure BoXHED 2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 For installing the conda environment please open a terminal and do the following:
