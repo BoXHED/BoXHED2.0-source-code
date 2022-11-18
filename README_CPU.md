@@ -1,4 +1,4 @@
-## Installing BoXHED2.0 with multicore CPU support
+## Installing BoXHED2.0 (multicore CPU support)
 
 We recommend setting up a dedicated virtual environment for BoXHED2.0 (instructions below). This ensures that BoXHED2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
 
