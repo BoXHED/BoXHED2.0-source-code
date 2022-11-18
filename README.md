@@ -6,7 +6,7 @@ What’s new (over BoXHED1.0):
  - Multicore CPU and GPU support
 
 
-Please refer to [BoXHED2.0 paper](https://arxiv.org/abs/2103.12591) for details, which builds on [BoXHED1.0 paper](http://proceedings.mlr.press/v119/wang20o/wang20o.pdf) (ICML 2020). The theoretical underpinnings for BoXHED is provided [here](https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-4/Boosted-nonparametric-hazards-with-time-dependent-covariates/10.1214/20-AOS2028.full) (Annals of Statistics 2021).
+Please refer to the [BoXHED2.0 paper](https://arxiv.org/abs/2103.12591) for details, which builds on the [BoXHED1.0 paper](http://proceedings.mlr.press/v119/wang20o/wang20o.pdf) (ICML 2020). The theoretical underpinnings for BoXHED is provided [here](https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-4/Boosted-nonparametric-hazards-with-time-dependent-covariates/10.1214/20-AOS2028.full) (Annals of Statistics 2021).
 
 ## Prerequisites
 The software was developed and tested in Linux and Mac OS environments. The requirements are the following:
