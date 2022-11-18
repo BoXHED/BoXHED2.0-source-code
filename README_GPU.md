@@ -1,6 +1,6 @@
 ## Installing BoXHED2.0 with GPU support
 
-To add GPU support, you must first install [CUDA 11.1](https://developer.nvidia.com/cuda-11.1.1-download-archive).
+To add GPU support, you must first install [CUDA 11.1](https://developer.nvidia.com/cuda-11.1.1-download-archive). Note that CUDA is only available on Linux or Windows, as Macs do not use Nvidia GPUs.
 
 For Windows users, using [Anaconda Prompt](https://docs.anaconda.com/anaconda/install/) would be preferred because it eases Conda usage. For unifying the approach, we refer to the command line interface as 'terminal' but it could be Anaconda Prompt for Windows users.
 
