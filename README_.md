@@ -1,11 +1,9 @@
-# BoXHED2.0
+# TESTTTTT
 
 What’s new (over BoXHED 1.0):
  - Allows for survival data far beyond right censoring (specifically, Aalen’s multiplicative intensity setting). Examples include left truncation and recurrent events.
  - Significant speed improvement
  - Multicore CPU and GPU support
-
-[File A](README_.md)
 
 Please refer to [BoXHED2.0 paper](https://arxiv.org/abs/2103.12591) for details, which builds on [BoXHED1.0 paper](http://proceedings.mlr.press/v119/wang20o/wang20o.pdf) (ICML 2020). The theoretical underpinnings for BoXHED is provided [here](https://projecteuclid.org/journals/annals-of-statistics/volume-49/issue-4/Boosted-nonparametric-hazards-with-time-dependent-covariates/10.1214/20-AOS2028.full) (Annals of Statistics 2021).
 
