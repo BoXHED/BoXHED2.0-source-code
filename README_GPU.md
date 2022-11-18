@@ -1,4 +1,4 @@
-## Installing BoXHED2.0 with GPU support
+## Installing BoXHED2.0 (multicore CPU + GPU support)
 
 To add GPU support, you must first install [CUDA 11.1](https://developer.nvidia.com/cuda-11.1.1-download-archive). Note that CUDA is only available on Linux or Windows, as Macs do not use Nvidia GPUs.
 
@@ -16,7 +16,7 @@ then activate it:
 conda activate boxhed2.0
 ```
 
-Clone this repository:
+Clone this repository (or manually download the files here and extract them to a directory called BoXHED2.0):
 ```
 git clone https://github.com/BoXHED/BoXHED2.0.git
 ```
