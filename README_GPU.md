@@ -16,7 +16,7 @@ then activate it:
 conda activate boxhed2.0
 ```
 
-Clone this repository (or manually download the files here and extract them to a directory called BoXHED2.0):
+Clone this repository (or manually download the files and extract them to a directory called BoXHED2.0):
 ```
 git clone https://github.com/BoXHED/BoXHED2.0.git
 ```
