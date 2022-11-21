@@ -173,7 +173,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             print_tree(th_id)
 
 
-    def predict(self, X, ntree_limit = 0, _shift_left=True):
+    def hazard(self, X, ntree_limit = 0, _shift_left=True):
         """_summary_
 
         :param X: a Pandas dataframe. The test data, unlike the training data, should not contain the following columns: \textit{ID}, \textit{t\_end}, and \textit{delta}. An example of this data is depicted in a table below. The order of the columns should exactly match that of the training set dataframe, except for the mentioned columns that do not exist.
@@ -226,9 +226,9 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         cte_hazard_epoch               = check_array(cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"]), 
                                             force_all_finite='allow-nan')
         cte_hazard_epoch               = self.X_y_to_dmat(cte_hazard_epoch)
-        preds                          = self.boxhed_.predict(cte_hazard_epoch, ntree_limit = ntree_limit, _shift_left=False)
-        cte_hazard_epoch_df ['preds']  = preds
-        cte_hazard_epoch_df ['surv']   = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['preds']
+        hzrds                          = self.boxhed_.hazard(cte_hazard_epoch, ntree_limit = ntree_limit, _shift_left=False)
+        cte_hazard_epoch_df ['hzrds']  = hzrds
+        cte_hazard_epoch_df ['surv']   = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['hzrds']
         surv_t                         = np.exp(cte_hazard_epoch_df.groupby('ID')['surv'].sum()).reset_index()
         surv_t.rename(columns={'surv':f'surv_at_t={t}'}, inplace=True)
         return surv_t.set_index('ID')
@@ -254,8 +254,8 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         if w is None:
             w = np.zeros_like(y)
 
-        preds = self.predict(X, ntree_limit = ntree_limit)
-        return -(np.inner(preds, w)-np.inner(np.log(preds), y))
+        hzrds = self.hazard(X, ntree_limit = ntree_limit)
+        return -(np.inner(hzrds, w)-np.inner(np.log(hzrds), y))
 
     def dump_model(self, fname):
         self.prep.prep_lib = None
@@ -269,7 +269,6 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
                 continue
             setattr(self, attr, getattr(boxhed_, attr))
         self.prep.__init__()
-
 
     def time_splits(self):
         check_is_fitted(self)
