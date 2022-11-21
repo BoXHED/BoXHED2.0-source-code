@@ -270,8 +270,8 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             setattr(self, attr, getattr(boxhed_, attr))
         self.prep.__init__()
 
-def time_splits(self):
-    check_is_fitted(self)
-    trees_df = self.boxhed_.trees_to_dataframe()
-    return np.sort(trees_df[trees_df['Feature']=='time']['Split'].values)
 
+    def time_splits(self):
+        check_is_fitted(self)
+        trees_df = self.boxhed_.trees_to_dataframe()
+        return np.sort(trees_df[trees_df['Feature']=='time']['Split'].values)
