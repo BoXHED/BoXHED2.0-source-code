@@ -173,7 +173,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             print_tree(th_id)
 
 
-    def predict(self, X, ntree_limit = 0):
+    def predict(self, X, ntree_limit = 0, _shift_left=True):
         """_summary_
 
         :param X: a Pandas dataframe. The test data, unlike the training data, should not contain the following columns: \textit{ID}, \textit{t\_end}, and \textit{delta}. An example of this data is depicted in a table below. The order of the columns should exactly match that of the training set dataframe, except for the mentioned columns that do not exist.
@@ -191,8 +191,9 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         :rtype: np.array
         """
         check_is_fitted(self)
-        if hasattr(self, 'prep'):
-            X = self.prep.shift_left(X)
+        if _shift_left:
+            if hasattr(self, 'prep'):
+                X = self.prep.shift_left(X)
 
         X = check_array(X, force_all_finite='allow-nan')
 
@@ -225,7 +226,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         cte_hazard_epoch               = check_array(cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"]), 
                                             force_all_finite='allow-nan')
         cte_hazard_epoch               = self.X_y_to_dmat(cte_hazard_epoch)
-        preds                          = self.boxhed_.predict(cte_hazard_epoch, ntree_limit = ntree_limit)
+        preds                          = self.boxhed_.predict(cte_hazard_epoch, ntree_limit = ntree_limit, _shift_left=False)
         cte_hazard_epoch_df ['preds']  = preds
         cte_hazard_epoch_df ['surv']   = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['preds']
         surv_t                         = np.exp(cte_hazard_epoch_df.groupby('ID')['surv'].sum()).reset_index()
