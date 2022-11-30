@@ -297,9 +297,6 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         cte_hazard_epoch_df ['hzrds']   = hzrds
         cte_hazard_epoch_df ['surv']    = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['hzrds']
 
-        aa = cte_hazard_epoch_df[['ID', 't_start', 'hzrds']].rename(columns={"t_start": "t_end"})
-        aa['ID'] = aa['ID'].astype(int)
-        print(aa.to_string(index=False))
         survs                           = np.exp(cte_hazard_epoch_df.groupby('ID')['surv'].sum()).values
         survs[t_zero_idxs]              = 1
         return survs
