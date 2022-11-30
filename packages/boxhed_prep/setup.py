@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="boxhed_prep",
-    version="2.4",
+    version="2.41",
     description="preprocessor for BoXHED2.0",
     author='Arash Pakbin',
 
