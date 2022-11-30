@@ -325,7 +325,7 @@ def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
     return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}
 
 
-def best_param_1se_rule(cv_results, model_complexity=None, bounded_search=True):
+def best_param_1se_rule(cv_results, model_complexity, bounded_search=True):
     params, means, stes               = [cv_results[key] for key in ["params", "score_mean", "score_ste"]]
     highest_mean_idx                  = np.argmax(means)
     highest_mean, highest_mean_ste    = means[highest_mean_idx], stes[highest_mean_idx]
@@ -335,6 +335,6 @@ def best_param_1se_rule(cv_results, model_complexity=None, bounded_search=True):
         best_params                   = params[highest_mean_idx]
         params_within_1se             = [params for params in params_within_1se
                                       if all([params[key]<=best_params[key] for key in ['max_depth', 'n_estimators']])]
-    if model_complexity is None:
-        model_complexity              = lambda max_depth, n_estimators: n_estimators*(2**max_depth)
+    #if model_complexity is None:
+    #    model_complexity              = lambda max_depth, n_estimators: n_estimators*(2**max_depth)
     return min(params_within_1se, key = lambda params:model_complexity(params['max_depth'], params['n_estimators'])), params_within_1se
