@@ -17,7 +17,7 @@
 #include <exception>
 #include <sstream>
 
-#define EPSILON 1e-4
+#define EPSILON 1e-7
 
 #define PARALLEL
 
@@ -178,7 +178,14 @@ class preprocessor{
                 if (t_end<=t_start)
                 {
                     std::stringstream err_str;
-                    err_str << "ERROR: t_end should be > t_start in input row"<<" "<<row;
+                    err_str << "ERROR: t_end should be > t_start in input row"<<" "<<row<<".";
+                    throw std::invalid_argument(err_str.str());
+                }
+
+                if (t_start < 0)
+                {
+                    std::stringstream err_str;
+                    err_str << "ERROR: t_start should be at least 0 in input row"<<" "<<row<<".";
                     throw std::invalid_argument(err_str.str());
                 }
 
@@ -818,13 +825,15 @@ void shift_left(
         size_t ncols, 
         const void* quant_idx_v, 
         const void* quant_v, 
+        const void* quant_size_v, 
         size_t num_quantiles, 
         int nthreads
         ){
 
-    double* data         = (double *) data_v;
-    const double* quant  = (double *) quant_v;
-    const int* quant_idx = (int *)    quant_idx_v;
+    double* data             = (double *) data_v;
+    const double* quant      = (double *) quant_v;
+    const size_t* quant_size = (size_t *) quant_size_v;
+    const int* quant_idx     = (int *)    quant_idx_v;
 
     typedef double T;
 
@@ -834,23 +843,28 @@ void shift_left(
 
     #pragma omp parallel for schedule(static)
     for (size_t col_idx = 0; col_idx < ncols; ++col_idx){
-        size_t quant_idx_ = quant_idx [col_idx];
+        size_t quant_idx_  = quant_idx  [col_idx];
+        size_t quant_size_ = quant_size [quant_idx_];
+        
+        if (quant_size_ == 0)
+            continue;
 
         auto column_quant = std::vector<T>(
-            quant + quant_idx_*     num_quantiles, 
-            quant + (quant_idx_+1)* num_quantiles);
-
+            quant + (quant_idx_ * num_quantiles), 
+            quant + (quant_idx_ * num_quantiles + quant_size_));
+        
         for (size_t row_idx = 0; row_idx < nrows; ++row_idx){
             T val = data [row_idx*ncols + col_idx];
 
-            auto quant_val_iter = min (std::lower_bound (
+            auto quant_val_iter = std::min (std::lower_bound (
                     column_quant.begin(), 
                     column_quant.end(), 
-                    val), 
+                    val),//,
+                    //[](const T a, const T b){return (a < b);}),// && (!_approx_equal(a, b));}), 
                     column_quant.end()-1);
 
             if (_approx_equal(val, *quant_val_iter)){
-                quant_val_iter = max(
+                quant_val_iter = std::max(
                     --quant_val_iter, 
                     column_quant.begin());
                 data [row_idx*ncols + col_idx] = *quant_val_iter;

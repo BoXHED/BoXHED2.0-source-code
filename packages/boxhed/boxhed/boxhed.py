@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin, TransformerMixin 
@@ -94,6 +95,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             weighted         = weighted, 
             nthread          = nthread)
 
+        self.train_data_cols = data.columns
         self.X_colnames = X_post['X'].columns.values.tolist()
         self.X_colnames = [item if item!='t_start' else 'time' for item in self.X_colnames]
 
@@ -152,6 +154,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
                                   num_boost_round = self.n_estimators) 
         
         self.VarImps = self.boxhed_.get_score(importance_type='total_gain')
+        self.time_splits = self._time_splits()
         return self
 
         
@@ -173,7 +176,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             print_tree(th_id)
 
 
-    def hazard(self, X, ntree_limit = 0, _shift_left=True):
+    def hazard(self, X, ntree_limit = 0):
         """_summary_
 
         :param X: a Pandas dataframe. The test data, unlike the training data, should not contain the following columns: \textit{ID}, \textit{t\_end}, and \textit{delta}. An example of this data is depicted in a table below. The order of the columns should exactly match that of the training set dataframe, except for the mentioned columns that do not exist.
@@ -191,9 +194,9 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         :rtype: np.array
         """
         check_is_fitted(self)
-        if _shift_left:
-            if hasattr(self, 'prep'):
-                X = self.prep.shift_left(X)
+
+        if hasattr(self, 'prep'):
+            X = self.prep.shift_left(X)
 
         X = check_array(X, force_all_finite='allow-nan')
 
@@ -270,7 +273,33 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             setattr(self, attr, getattr(boxhed_, attr))
         self.prep.__init__()
 
-    def time_splits(self):
-        check_is_fitted(self)
+    def _time_splits(self):
         trees_df = self.boxhed_.trees_to_dataframe()
-        return np.sort(trees_df[trees_df['Feature']=='time']['Split'].values)
+        return np.sort(np.unique(trees_df[trees_df['Feature']=='time']['Split'].values))
+
+    def survivor(self, X, ntree_limit = 0):
+        check_is_fitted(self)
+        X                               = X.rename(columns={'t':'t_end', 'time':'t_end'})
+        t_zero_idxs                     = np.where(X['t_end'].values==0)[0]
+        X['t_end'].replace(0, sys.float_info.epsilon, inplace=True)
+        X['t_start']                    = 0
+        X['delta']                      = 0
+        X['ID']                         = range(1, X.shape[0]+1)
+        X                               = X[self.train_data_cols]
+
+        self.prep.update_time_splits (self.time_splits)
+
+        cte_hazard_epoch_df             = self.prep.epoch_break_cte_hazard(X)
+        cte_hazard_epoch_df['t_start']  = cte_hazard_epoch_df['t_start'] + cte_hazard_epoch_df['dt']
+
+        cte_hazard_epoch                = cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"])
+        hzrds                           = self.hazard(cte_hazard_epoch, ntree_limit = ntree_limit)
+        cte_hazard_epoch_df ['hzrds']   = hzrds
+        cte_hazard_epoch_df ['surv']    = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['hzrds']
+
+        aa = cte_hazard_epoch_df[['ID', 't_start', 'hzrds']].rename(columns={"t_start": "t_end"})
+        aa['ID'] = aa['ID'].astype(int)
+        print(aa.to_string(index=False))
+        survs                           = np.exp(cte_hazard_epoch_df.groupby('ID')['surv'].sum()).values
+        survs[t_zero_idxs]              = 1
+        return survs

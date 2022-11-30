@@ -108,6 +108,7 @@ void shift_left(
         size_t ncols, 
         const void* quant_idx_v, 
         const void* quant_v, 
+        const void* quant_size_v, 
         size_t num_quantiles, 
         int nthreads
         );

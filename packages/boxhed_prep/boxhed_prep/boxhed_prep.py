@@ -130,6 +130,7 @@ class preprocessor:
                 c_size_t, #ncols
                 c_void_p, #quant_idx_v
                 c_void_p, #quant_v
+                c_void_p, #quant_size_v
                 c_size_t, #num_quantiles
                 c_int     #nthread
                 ]
@@ -379,10 +380,28 @@ class preprocessor:
             c_size_t(ncols),
             c_void_p(quant_idxs.ctypes.data),
             c_void_p(self.quant.ctypes.data),
+            c_void_p(self.quant_size.ctypes.data),
             c_size_t(self.num_quantiles),
             c_int(self.nthread))
         
         return processed
+
+
+    def update_time_splits(self, time_splits):
+        idx              = self.t_start_idx
+        time_splits      = np.sort(np.unique(np.append(
+                           time_splits, self.quant[0,idx* self.num_quantiles]
+                           )))
+        time_splits_size = time_splits.shape[0]
+
+        self.quant[0,   (idx  ) * self.num_quantiles :
+                        (idx+1) * self.num_quantiles ]                   = 0
+
+        self.quant[0,   (idx  ) * self.num_quantiles :
+                        (idx  ) * self.num_quantiles + time_splits_size] = time_splits
+
+        self.quant_size[0, idx] = time_splits_size
+
 
     def epoch_break_cte_hazard (self, data): # used for breaking epochs into cte hazard valued intervals
         nrows, ncols  = data.shape
