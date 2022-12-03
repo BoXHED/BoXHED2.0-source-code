@@ -103,7 +103,7 @@ class preprocessor{
                 T quantized_val;
 
                 if (is_cat[col_idx]                    ||
-                    quant_size[col_idx]< num_quantiles ||
+                    //quant_size[col_idx]<num_quantiles||
                     std::isnan(val)                    ||
                     col_idx == t_start_idx             ||
                     col_idx == t_end_idx               || 
@@ -456,6 +456,16 @@ inline void _rmv_nans(T *arr, size_t size, size_t *out_size){
     *out_size = idx;
 }
 
+template <class T>
+inline T _nan_min(T *arr, size_t size){
+    T min = std::numeric_limits<T>::infinity();
+    for (size_t i = 0; i < size; ++i){
+        if ((!std::isnan(arr[i])) && (arr[i]<min))
+            min = arr[i];
+    }
+    return min;
+}
+
 
 template <class T>
 inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool* is_cat, size_t t_start_idx, size_t t_end_idx, size_t id_idx, size_t delta_idx, T* quant, size_t* quant_size, size_t num_quantiles){
@@ -466,6 +476,7 @@ inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool
             continue;
         }
         size_t vals_size = (col_idx==t_start_idx) ? 2*nrows : nrows;
+        vals_size       += 1;
 
         /*
         T vals [vals_size];
@@ -476,6 +487,8 @@ inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool
         if (col_idx == t_start_idx){
             _copy_col2arr(data, nrows, ncols, t_end_idx, vals + nrows);
         }
+
+        vals[vals_size-1] = (col_idx==t_start_idx) ? 0 : _nan_min(vals, vals_size-1)-1;
 
         size_t num_non_nan;
         _rmv_nans(vals, vals_size, &num_non_nan);
@@ -646,6 +659,7 @@ void _compute_quant_weighted(const T* data, size_t nrows, size_t ncols, const bo
             continue;
         }
         size_t vals_size = (col_idx==t_start_idx) ? 2*nrows : nrows;
+        vals_size       += 1;
         T *vals = new T[vals_size];
 
         std::vector<std::pair<T, size_t>> srtd_val_idx (vals_size);
@@ -654,6 +668,8 @@ void _compute_quant_weighted(const T* data, size_t nrows, size_t ncols, const bo
         if (col_idx == t_start_idx){
             _copy_col2arr(data, nrows, ncols, t_end_idx, vals + nrows);
         }
+
+        vals[vals_size-1] = (col_idx==t_start_idx) ? 0 : _nan_min(vals, vals_size-1)-1;
 
         for (size_t i=0; i<vals_size; ++i){
             srtd_val_idx [i] = std::make_pair(vals[i], i);

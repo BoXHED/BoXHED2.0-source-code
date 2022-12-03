@@ -271,7 +271,7 @@ class preprocessor:
                 raise ValueError(f'The column {k} was passed in split_vals. If specifying time splits, use the key "time" in split_vals instead of {k}.')
 
         split_vals = {(k if k!="t" else "t_start"):v for (k,v) in split_vals.items()}
-        split_vals = {k:np.sort(np.unique(v)) for (k,v) in split_vals.items()}
+        #split_vals = {k:np.sort(np.unique(v)) for (k,v) in split_vals.items()}
         
         max_nsplits = max([len(v) for (k,v) in split_vals.items()], default=0)
         if max_nsplits > self.num_quantiles:
@@ -288,14 +288,9 @@ class preprocessor:
             except ValueError:
                 raise ValueError(f'The column {k} was passed in split_vals but does not exist in the dataset.')
 
-            col_min  = data[:,idx].min()
-            
-            if  v[0] < col_min:
-                v[0] = col_min
-
-            if  v[0] > col_min:
-                v    = np.sort(np.unique(np.append(v, col_min)))
-                assert len(v) <= self.num_quantiles, "The specified split_vals values is not compatible with num_quantiles. Consider increasing num_quantiles by at least 1."
+            v = np.append(v, 0 if idx == self.t_start_idx else data[:,idx].min()-1)
+            v = np.sort(np.unique(v))
+            assert len(v) <= self.num_quantiles, "The specified split_vals values is not compatible with num_quantiles. Consider increasing num_quantiles by at least 1."
 
             self.quant[0, idx*self.num_quantiles:idx*self.num_quantiles+len(v)] = v
             self.quant_size[0, idx] = len(v)
