@@ -476,7 +476,7 @@ inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool
             continue;
         }
         size_t vals_size = (col_idx==t_start_idx) ? 2*nrows : nrows;
-        vals_size       += 1;
+        //vals_size       += 1;
 
         /*
         T vals [vals_size];
@@ -488,7 +488,7 @@ inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool
             _copy_col2arr(data, nrows, ncols, t_end_idx, vals + nrows);
         }
 
-        vals[vals_size-1] = (col_idx==t_start_idx) ? 0 : _nan_min(vals, vals_size-1)-1;
+        //vals[vals_size-1] = (col_idx==t_start_idx) ? 0 : _nan_min(vals, vals_size-1)-1;
 
         size_t num_non_nan;
         _rmv_nans(vals, vals_size, &num_non_nan);
@@ -497,11 +497,21 @@ inline void _compute_quant(const T* data, size_t nrows, size_t ncols, const bool
         size_t num_unique;
         _rmv_dupl_srtd<T>(vals, num_non_nan, &num_unique);
 
-        size_t num_quants = std::min(num_unique, num_quantiles);
+        size_t num_quants = std::min(num_unique, num_quantiles-1);
         quant_size [col_idx] = num_quants;
 
+        size_t offset;
+        if (((col_idx==t_start_idx)) && (vals[0]==0)){
+            offset                       = 0;
+        } else {
+            quant[col_idx*num_quantiles] = (col_idx==t_start_idx) ? 0 : _nan_min(vals, vals_size-1)-1;
+            offset                       = 1;
+            quant_size [col_idx]        += 1;
+        }
+        
+
         for (size_t i=0; i<num_quants; ++i){
-            quant[col_idx*num_quantiles+i] = vals[static_cast<int>(num_unique*i/num_quants)];
+            quant[col_idx*num_quantiles+i+offset] = vals[static_cast<int>(num_unique*i/num_quants)];
         }
         delete [] vals;
                 
