@@ -34,11 +34,7 @@ inline bool _approx_equal (T val1, T val2){
 
 template <class T>
 inline size_t _tquant_distance(const std::vector<T>& tquant, int tquant_i, int tquant_j, T t_min,  T t_max){
-
-    return std::max(tquant_j-tquant_i
-            -static_cast<int>(_approx_equal(tquant[std::min(tquant_i, static_cast<int>(tquant.size()-1))],t_min))
-            -static_cast<int>(_approx_equal(tquant[std::min(tquant_j, static_cast<int>(tquant.size()-1))],t_max)),
-            0);
+    return std::max(tquant_j-tquant_i, 0);
 }
 
 
@@ -49,8 +45,8 @@ inline std::pair<int,int> _get_range_sorted(const std::vector<T> &vec, const T m
     auto start_iter = vec.begin();
     auto end_iter   = vec.end();
     
-    vec_iter<T> min_idx = std::lower_bound (start_iter, end_iter, min);
-    vec_iter<T> max_idx = std::lower_bound (min_idx, end_iter, max);
+    vec_iter<T> min_idx = std::lower_bound (start_iter, end_iter, min, [](const T a, const T b){return (a <= b);});
+    vec_iter<T> max_idx = std::lower_bound (min_idx,    end_iter, max);
 
     return std::make_pair(min_idx-vec.begin(), max_idx-vec.begin());
 }
