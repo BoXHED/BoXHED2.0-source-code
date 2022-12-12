@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="boxhed",
-    version="2.41",
+    version="2.42",
     description="BoXHED2.0",
     author='Arash Pakbin',
     packages=find_packages(),
