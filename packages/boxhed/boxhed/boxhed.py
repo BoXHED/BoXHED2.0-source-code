@@ -290,7 +290,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         self.prep.update_time_splits (self.time_splits)
 
         cte_hazard_epoch_df             = self.prep.epoch_break_cte_hazard(X)
-        cte_hazard_epoch_df['t_start']  = cte_hazard_epoch_df['t_start'] + cte_hazard_epoch_df['dt']
+        cte_hazard_epoch_df['t_start']  = cte_hazard_epoch_df['t_start'] + 0.5 * cte_hazard_epoch_df['dt']
 
         cte_hazard_epoch                = cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"])
         hzrds                           = self.hazard(cte_hazard_epoch, ntree_limit = ntree_limit)
