@@ -17,7 +17,7 @@ Clone this repository, or manually download the files and extract them to a dire
 cd BoXHED2.0
 ```
 
-Install BoXHED2.0 from pip:
+Install BoXHED2.0 from pip (if an error occurs, try running ```conda install cmake``` first):
 ```
 pip install boxhed
 ```
