@@ -120,7 +120,7 @@ import functools
 import multiprocessing
 from sys import platform
 if platform == "linux" or platform == "linux2":
-    multiprocessing.set_start_method('fork')
+    multiprocessing.set_start_method('fork', force=True)
 from multiprocessing import Process, Queue
 
 
