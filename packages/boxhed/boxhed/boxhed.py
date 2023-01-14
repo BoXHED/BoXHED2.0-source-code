@@ -8,9 +8,7 @@ from collections.abc import Iterable
 from boxhed_prep.boxhed_prep import preprocessor
 from . import utils
 
-
 import boxhed_kernel as xgb
-
 
 from boxhed_kernel import plot_tree
 import matplotlib.pyplot as plt
@@ -18,21 +16,28 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 
 
-class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin, 
+class boxhed(BaseEstimator, RegressorMixin):
+    """ 
+    BoXHED is a nonparametric tree-boosted hazard estimator that is fully non-parametric.
+    It allows for survival settings far more general than right-censoring, including recurring events.
+    For more information, see http://github.com/BoXHED/BoXHED2.0. 
+    """
 
     def __init__(self, max_depth=1, n_estimators=100, eta=0.1, gpu_id = -1, nthread = 1):
-        """initializer of the BoXHED class.
+        """BoXHED instance initializer. 
 
-        :param max_depth: maximum depth of each tree. Depth $l$ hosts $2^l$ terminal nodes., defaults to 1
-        :type max_depth: int, optional
-        :param n_estimators: number of trees., defaults to 100
-        :type n_estimators: int, optional
-        :param eta: the learning rate., defaults to 0.1
-        :type eta: float, optional
-        :param gpu_id: the ID of the GPU to be used. Set to -1 (default value) to use CPU., defaults to -1
-        :type gpu_id: int, optional
-        :param nthread: the number of CPU threads to be used., defaults to 1
-        :type nthread: int, optional
+        Parameters
+        ----------
+        max_depth : int, optional
+            The maximum depth of each tree. A tree of depth k has 2^k leaf nodes, by default 1
+        n_estimators : int, optional
+            Number of trees in the boosted ensemble, by default 100
+        eta : float, optional
+            Stepsize shrinkage, usually held fixed at a small number, by default 0.1
+        gpu_id : int, optional
+            GPU ID to use. Set gpu_id = -1 to use CPUs., by default -1
+        nthread : int, optional
+            If training with CPUs, this is the number of threads to use. Default is -1 (use all available threads)., by default 1
         """
         self.max_depth     = max_depth
         self.n_estimators  = n_estimators
@@ -41,7 +46,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         self.nthread       = nthread
 
 
-    def X_y_to_dmat(self, X, y=None, w=None):
+    def _X_y_to_dmat(self, X, y=None, w=None):
         if not hasattr(self, 'X_colnames'):
             self.X_colnames = None #model probably created for CV, no need for data name matching
         dmat = xgb.DMatrix(pd.DataFrame(X, columns=self.X_colnames))
@@ -53,38 +58,49 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         return dmat
         
     def preprocess(self, data, is_cat=[], split_vals={}, num_quantiles=256, weighted=False, nthread=-1):
-        """preprocess the training data before fitting a BoXHED instance.
+        """
+        BoXHED2.0 applies a preprocessing trick to the training data to speed up training. 
+        THE DATA ONLY NEEDS TO BE PREPROCESSED ONCE PER TRAINING SET. BoXHED2.0 does not use the original training data, 
+        just the outputs from the boxhed.preprocess() function.
 
-        :param data: input training data. 
-        ID	t_start     t_end       X_0         delta
-        1   0.010000    0.064333    0.152407	0.0
-        1   0.064333    0.135136    0.308475	0.0
-        1   0.194810    0.223106    0.614977	1.0
-        1   0.223106    0.248753    0.614977	0.0
-        2   0.795027    0.841729    0.196407	1.0
-        2   0.841729    0.886587    0.196407	0.0
-        2   0.886587    0.949803    0.671227	0.0
-        Each row corresponds to an epoch in patient history. Column \textit{ID} denotes the patient identifier. The start and end times of the epoch are stored in \textit{t\_start} and \textit{t\_end} respectively. Each change in their status marks a new epoch. For obvious reasons, t\_start < t\_end for all epochs. Also, no epoch can start earlier than the end of the previous one for the same patient, i.e. ${t\_end}_i <= {t\_start}_{i+1}$. Column $X_0$ records the values of covariate $X_0$. Finally, the value in column \textit{delta} equals $1$ if the epoch ends with the event (possibly recurring) and equals $0$ otherwise. \softc expects the input Pandas dataframe to have columns with these exact names: \textit{ID}, \textit{t\_start}, \textit{t\_end}, and \textit{delta}. All other columns (if any) will be interpreted as covariates.
-        :type data: pd.DataFrame
-        :param is_cat: a list of the column indexes that contain categorical data. The categorical data must be one-hot encoded. For example, is\_cat = [4,5,6] if a categorical variable with 3 factors is transformed into binary-valued columns 4,5,6., defaults to []
-        :type is_cat: list, optional
-        :param split_vals: a dictionary to specify values to split on for any covariate or time. The key should the variable name and the value a list (or a 1d NumPy array) containing candidate split points. For specifying candidate points for time the key value should simply be 'time' and for other covariates it should exactly match the column name in the dataset. Key values 'ID', 't_start', 't_end', and 'delta' are not allowed. If the candidate split points of a covariate/time is not specified in split_vals, extracted quantiles (the default behavior) would be used. Be sure to not specify split points whose number exceeds the num_quantiles variable., defaults to {}
-        :type split_vals: dict, optional
-        :param num_quantiles: the number of candidate split points to try for time and for each covariate. The locations of the split points are based on the quantiles of the training data., defaults to 256
-        :type num_quantiles: int, optional
-        :param weighted: if set to True, the locations of the candidate split points will be based on weighted quantiles., defaults to False
-        :type weighted: bool, optional
-        :param nthread: number of CPU threads to use for preprocessing the data., defaults to -1
-        :type nthread: int, optional
-        :return: 
-                \textbf{ID}: subject ID for each row in the processed data frames X, w, and delta.
-                
-                \textbf{X}: each row represents an epoch of the transformed data, and contains the values of the covariates as well as its start time.
-                
-                \textbf{w}: length of each epoch.
-                
-                \textbf{delta}: equals one if an event occurred at the end of the epoch; zero otherwise.
-        :rtype: pd.Series, pd.DataFrame, pd.Series, pd.Series
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            The data on the event histories of study subjects. The data needs to have several columns:
+                * ID: subject ID
+                * t_start: the start time of an epoch for the subject
+                * t_end: the end time of the epoch
+                * X_i: value of the i-th covariate between tstart and tend
+                * delta: event label, which is 1 if an event occurred at t_end; 0 otherwise
+            An illustrative example:
+                +----+---------+--------+--------+-----+--------+-------+
+                | ID | t_start |  t_end |    X_0 | ... |   X_10 | delta |
+                +====+=========+========+========+=====+========+=======+
+                |  1 |  0.0100 | 0.0747 | 0.2655 |     | 0.2059 |     1 |
+                +----+---------+--------+--------+-----+--------+-------+
+                |  1 |  0.0747 | 0.1072 | 0.7829 |     | 0.4380 |     0 |
+                +----+---------+--------+--------+-----+--------+-------+
+                |  1 |  0.1072 | 0.1526 | 0.7570 |     | 0.7789 |     1 |
+                +----+---------+--------+--------+-----+--------+-------+
+                |  2 |  0.2066 | 0.2105 | 0.9618 |     | 0.0859 |     1 |
+                +----+---------+--------+--------+-----+--------+-------+
+                |  2 |  0.2345 | 0.2716 | 0.3586 |     | 0.0242 |     0 |
+                +----+---------+--------+--------+-----+--------+-------+
+        is_cat : list, optional
+            A list of the column indexes that contain categorical data. The categorical data must be one-hot encoded. For example, is_cat=[4,5,6] if a categorical variable with 3 factors is transformed into binary-valued columns 4,5,6., by default []
+        split_vals : dict, optional
+            To specify custom candidate split points for time and/or a subset of non-categorical covariates, use a dictionary to specify the values to split on (details below). Candidate split points for time/non-categorical covariates not specified in split_vals will be chosen in accordance to the num_quantiles option above., by default {}
+        num_quantiles : int, optional
+            the number of candidate split points to try for time and for each non-categorical covariate., by default 256
+        weighted : bool, optional
+            if set to True, the locations of the candidate split points will be based on weighted quantiles, by default False
+        nthread : int, optional
+            number of CPU threads to use for preprocessing the data., by default -1
+
+        Returns
+        -------
+        dict()
+            A dictionary containing the preprocessed data.
         """
         self.prep = preprocessor()
         X_post               = self.prep.preprocess(
@@ -102,16 +118,21 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         return X_post
 
     def fit (self, X, y, w=None):
-        """_summary_
+        """Fit a BoXHED instance to the preprocessed training data.
 
-        :param X: the preprocessed covariate matrix. An output of the preprocessor.
-        :type X: pd.DataFrame
-        :param y: length of each epoch.  An output of the preprocessor.
-        :type y: pd.Series
-        :param w: length of each epoch.  An output of the preprocessor.
-        :type w: pd.Series
-        :return: trained BoXHED instance
-        :rtype: BoXHED estimator
+        Parameters
+        ----------
+        X : numpy.array
+            The preprocessed covariate matrix. An output of the preprocessor.
+        y : numpy.array
+            An indicator which equals one if event occurred at the end of epoch; zero otherwise. An output of the preprocessor.
+        w : numpy.array
+            Length of each epoch.  An output of the preprocessor.
+
+        Returns
+        -------
+        BoXHED instance
+            Returns a fitted BoXHED instance
         """
 
         check_array(y, ensure_2d = False)
@@ -127,7 +148,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
             w = np.ones_like(y)
 
         f0_   = np.log(np.sum(y)/np.sum(w))
-        dmat_ = self.X_y_to_dmat(X, y, w)
+        dmat_ = self._X_y_to_dmat(X, y, w)
 
         if self.gpu_id>=0:
             self.objective_   = 'survival:boxhed_gpu'
@@ -159,10 +180,12 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
 
         
     def plot_tree(self, num_trees):
-        """saving figures of the trees in a trained \softc instance as figures.
+        """Save figures of the trees in a trained \softc instance as figures.
 
-        :param num_trees: number of trees to plot and save to file. They will be saved in the same directory. The first \textit{num_trees} trees will be plotted.
-        :type num_trees: int
+        Parameters
+        ----------
+        num_trees : int
+            number of trees to plot and save to file. They will be saved in the same directory. The first *num_trees* trees will be plotted.
         """
                         
         def print_tree(i):
@@ -177,21 +200,34 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
 
 
     def hazard(self, X, ntree_limit = 0):
-        """_summary_
+        """Use the fitted BoXHED instance to estimate the hazard value for each row of the test data, which consists of a point (t, X_0, ...).
 
-        :param X: a Pandas dataframe. The test data, unlike the training data, should not contain the following columns: \textit{ID}, \textit{t\_end}, and \textit{delta}. An example of this data is depicted in a table below. The order of the columns should exactly match that of the training set dataframe, except for the mentioned columns that do not exist.
-        t       X0
-        0.01    0.15
-        0.06    0.30
-        0.89    0.67
-        0.19    0.61
-        0.22    0.61
-        0.80    0.19
-        :type X: pd.DataFrame
-        :param ntree_limit: _description_, defaults to 0
-        :type ntree_limit: int, optional
-        :return: a NumPy array which is a column vector. The $i$'th element corresponds to the $i$'th row in \textbf{X}.
-        :rtype: np.array
+        Parameters
+        ----------
+        X : pandas.DataFrame
+            The test data, unlike the training data, should not contain the following columns: ID, t_end, and delta. 
+            An example of this data is depicted in the table below. The order of the columns should exactly match that of the training set dataframe, except for the mentioned columns that do not exist.
+            +--------+--------+-----+--------+
+            |      t |   X_0  | ... |  X_10  |
+            +========+========+=====+========+
+            | 0.0000 |   0.0  |     | 0.5081 |
+            +--------+--------+-----+--------+
+            | 0.0101 |   0.0  |     | 0.4149 |
+            +--------+--------+-----+--------+
+            | 0.0202 |   0.0  |     | 0.4077 |
+            +--------+--------+-----+--------+
+            | 0.0303 |   0.0  |     | 0.5897 |
+            +--------+--------+-----+--------+
+            | 0.0404 |   0.0  |     | 0.8405 |
+            +--------+--------+-----+--------+
+        ntree_limit : int, optional
+            The number of trees used to make the estimation. If ntree_limit>0, the first ntree_limit trees are used for computing the output. 
+            If ntree_limit is zero (set by default), all the trees are used., by default 0
+
+        Returns
+        -------
+        numpy.array
+            Estimated hazards. Each row of the input dataframe corresponds to one estimated hazard value.
         """
         check_is_fitted(self)
 
@@ -200,18 +236,9 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
 
         X = check_array(X, force_all_finite='allow-nan')
 
-        return self.boxhed_.predict(self.X_y_to_dmat(X), ntree_limit = ntree_limit)
+        return self.boxhed_.predict(self._X_y_to_dmat(X), ntree_limit = ntree_limit)
 
-    def get_survival(self, X, t, ntree_limit = 0):
-        """estimating survival probability at a specific time using a trained BoXHED instance.
-
-        :param X: a Pandas dataframe. The structure exactly follows the one boxhed.fit() uses.
-        :type X: pd.DataFrame
-        :param t: the time at which survival needs to be calculated. The survival probability of all subjects is calculated for the same time \textit{t}.
-        :type t: float
-        :param ntree_limit: the number of trees used to make the estimation. If \textit{ntree\_limit}>0, the first \textit{ntree\_limit} trees are used for computing the output. If \textit{ntree\_limit} is zero (set by default), all of the trees are used., defaults to 0
-        :type ntree_limit: int, optional
-        """
+    def _get_survival(self, X, t, ntree_limit = 0):
         def truncate_to_t(data, t):
             def _truncate_to_t(data_id):
                 #data_id                   = data_id[data_id['t_start']<t]
@@ -228,7 +255,7 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         cte_hazard_epoch_df            = self.prep.epoch_break_cte_hazard(X)
         cte_hazard_epoch               = check_array(cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"]), 
                                             force_all_finite='allow-nan')
-        cte_hazard_epoch               = self.X_y_to_dmat(cte_hazard_epoch)
+        cte_hazard_epoch               = self._X_y_to_dmat(cte_hazard_epoch)
         hzrds                          = self.boxhed_.hazard(cte_hazard_epoch, ntree_limit = ntree_limit, _shift_left=False)
         cte_hazard_epoch_df ['hzrds']  = hzrds
         cte_hazard_epoch_df ['surv']   = -cte_hazard_epoch_df ['dt'] * cte_hazard_epoch_df ['hzrds']
@@ -238,7 +265,14 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         
 
 
-    def get_params(self, deep=True):
+    def get_params(self):
+        """A BoXHED class getter function for obtaining parameters.
+
+        Returns
+        -------
+        dict
+            A dictionary containing class parameters.
+        """
         return {"max_depth":     self.max_depth, 
                 "n_estimators":  self.n_estimators,
                 "eta":           self.eta, 
@@ -247,12 +281,38 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
 
 
     def set_params(self, **params):
+        """A BoXHED class setter function for setting parameters.
+
+        Returns
+        -------
+        BoXHED instance
+            Returns self after setting the parameters.
+        """
         for param, val in params.items():
             setattr(self, param, val)
         return self
 
 
     def score(self, X, y, w=None, ntree_limit=0):
+        """Returns a goodness-of-fit of BoXHED based on log-likelihood.
+
+        Parameters
+        ----------
+        X : numpy.array
+            The preprocessed covariate matrix. An output of the preprocessor.
+        y : numpy.array
+            An indicator which equals one if event occurred at the end of epoch; zero otherwise. An output of the preprocessor.
+        w : numpy.array
+            Length of each epoch.  An output of the preprocessor.
+        ntree_limit : int, optional
+            The number of trees used to make the estimation. If ntree_limit>0, the first ntree_limit trees are used for computing the output. 
+            If ntree_limit is zero (set by default), all the trees are used., by default 0
+
+        Returns
+        -------
+        float
+            The log-likelihood of the input data.
+        """
         X, y    = check_X_y(X, y, force_all_finite='allow-nan')
         if w is None:
             w = np.zeros_like(y)
@@ -261,11 +321,25 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         return -(np.inner(hzrds, w)-np.inner(np.log(hzrds), y))
 
     def dump_model(self, fname):
+        """Save the fitted BoXHED instance to disk.
+
+        Parameters
+        ----------
+        fname : str
+            The address to the file to be saved.
+        """
         self.prep.prep_lib = None
         utils.dump_pickle(self, fname)
         self.prep.__init__()
 
     def load_model(self, fname):
+        """Retrieve the fitted BoXHED instance from disk.
+
+        Parameters
+        ----------
+        fname : str
+            The address to the file to be retrieved.
+        """
         boxhed_ = utils.load_pickle(fname)
         for attr in dir(boxhed_):
             if attr.startswith('__') or attr.startswith('_'):
@@ -278,6 +352,34 @@ class boxhed(BaseEstimator, RegressorMixin):#ClassifierMixin,
         return np.sort(np.unique(trees_df[trees_df['Feature']=='time']['Split'].values))
 
     def survivor(self, X, ntree_limit = 0):
+        """The survivor curve is not meaningful when the covariates change over time. However, if they are static, S(t|x) can be estimated using BoXHED.
+
+        Parameters
+        ----------
+        X : pandas.DataFrame
+            A dataframe where only the valye 't' changes. Make sure t is monotonically increasing.
+            +------+--------+-----+--------+
+            |   t  |   X_0  | ... |  X_10  |
+            +======+========+=====+========+
+            | 0.00 | 0.2655 |     | 0.2059 |
+            +------+--------+-----+--------+
+            | 0.01 | 0.2655 |     | 0.2059 |
+            +------+--------+-----+--------+
+            | 0.02 | 0.2655 |     | 0.2059 |
+            +------+--------+-----+--------+
+            | 0.03 | 0.2655 |     | 0.2059 |
+            +------+--------+-----+--------+
+            | 0.04 | 0.2655 |     | 0.2059 |
+            +------+--------+-----+--------+
+        ntree_limit : int, optional
+            The number of trees used to make the estimation. If ntree_limit>0, the first ntree_limit trees are used for computing the output. 
+            If ntree_limit is zero (set by default), all the trees are used., by default 0
+
+        Returns
+        -------
+        numpy.array
+            A Numpy array of survivor values at each point in time in the input.
+        """
         check_is_fitted(self)
         X                               = X.rename(columns={'t':'t_end', 'time':'t_end'})
         t_zero_idxs                     = np.where(X['t_end'].values==0)[0]
