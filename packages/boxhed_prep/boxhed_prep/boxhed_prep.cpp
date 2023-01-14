@@ -17,6 +17,9 @@
 #include <exception>
 #include <sstream>
 
+#include <stdexcept>
+#include <limits>
+
 #define EPSILON 1e-7
 
 #define PARALLEL
