@@ -265,7 +265,7 @@ class boxhed(BaseEstimator, RegressorMixin):
         
 
 
-    def get_params(self):
+    def get_params(self, deep=None):
         """A BoXHED class getter function for obtaining parameters.
 
         Returns
