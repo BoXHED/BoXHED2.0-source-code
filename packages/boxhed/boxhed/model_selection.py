@@ -61,7 +61,7 @@ def _run_batch_process(param_dict_, rslts):
     def _fit_single_model(param_dict):
         estimator = boxhed()
         estimator.set_params(**param_dict)
-        
+
         fold = param_dict["fold"]
         estimator.fit(X    [data_idx[fold]['train'], :], 
                       delta[data_idx[fold]['train']],
@@ -70,37 +70,46 @@ def _run_batch_process(param_dict_, rslts):
         return estimator
 
 
-    def _fill_rslt(rslt_idx):
-        est_idx   = rslt_idx // test_block_size
-        test_idx  = rslt_idx %  test_block_size
+    def _get_score_batch_est_test(idx_dict):
+        est_idx   = idx_dict['est_idx']
+        test_idx  = idx_dict['test_idx']
         abs_idx   = batch_idx*batch_size+est_idx
-
-        est       = trained_models[est_idx]
         test_dict = param_dicts_test[test_block_size*abs_idx + test_idx]
 
         n_trees = test_dict['n_estimators']
         fold    = test_dict['fold']
 
-        score = est.score(
+        est       = trained_models[est_idx]
+        
+        return est.score(
             X    [data_idx[fold]['test'], :], 
             delta[data_idx[fold]['test']],
             w    [data_idx[fold]['test']],
             ntree_limit = n_trees)
 
-        rslts[test_block_size*abs_idx+test_idx] = score
+    def _get_score_batch_est(idx_dicts):
+        scores = [None] * len(idx_dicts)
+        for i, idx_dict in enumerate(idx_dicts):
+            scores[i] = _get_score_batch_est_test(idx_dict)
+        return scores
 
 
-    def _fill_rslts():
+    def _fill_rslt():
+        batch_block_size = test_block_size*len(trained_models)
+        idx_dicts = [{"est_idx": rslt_idx // test_block_size, "test_idx":rslt_idx % test_block_size} 
+            for rslt_idx in range(batch_block_size)]
+        idx_dicts = [idx_dicts[i : i + test_block_size] for i in range(0, len(idx_dicts), test_block_size)]
+        scores = Parallel(n_jobs = batch_size, prefer = "threads")(delayed (_get_score_batch_est)(idx_dicts_) 
+            for idx_dicts_ in idx_dicts)
+        scores = [item for sublist in scores for item in sublist]
+        rslts [batch_block_size*batch_idx:batch_block_size*(batch_idx+1)] = scores
 
-        Parallel(n_jobs = -1, prefer = "threads")(delayed (_fill_rslt)(rslt_idx) for rslt_idx in range(test_block_size*len(trained_models)))
-
-
+    
     trained_models = Parallel(n_jobs=-1, prefer="threads")(delayed(_fit_single_model)(param_dict) 
             for param_dict in param_dicts_train[batch_idx*batch_size:
                 (batch_idx+1)*batch_size])
 
-
-    _fill_rslts()
+    _fill_rslt()
 
 
 class collapsed_gs_:
@@ -136,7 +145,6 @@ class collapsed_gs_:
         self.not_collapsed = 'max_depth'
 
         self.param_grid_train = copy.copy(self.param_grid)
-        #self.param_grid_fit["fold"] = [x for x in range(len(cv))]
 
         self.param_grid_train[self.collapsed] = [
                 max(self.param_grid_train[self.collapsed])
@@ -154,7 +162,6 @@ class collapsed_gs_:
 
         self.test_block_size = len(self.param_grid[self.collapsed])
 
-        #raise
         self.cv         = cv
 
         self.data_idx   = {}
@@ -179,10 +186,7 @@ class collapsed_gs_:
         return dicts
 
 
-    #TODO: what if it was on CPU?
     def _batched_train_test(self):
-
-        #batch_size = len(self.GPU_LIST)*self.model_per_gpu
 
         smm = SharedMemoryManager()
         smm.start()
@@ -222,12 +226,16 @@ class collapsed_gs_:
                 print (rslt_mngd)
                 raise
                 '''
+
                 p = mp.Process(target = _run_batch_process, args = (param_dict_mngd, rslt_mngd))
 
                 p.start() 
                 p.join()
+                
                 p.terminate()
-
+                if p.exitcode != 0:
+                    raise MemoryError("ERROR: Cross validation did not finish successfully due to memory error. Consider reducing nthread and/or models_per_gpu to cut down on the memory used by cross validation.")
+            
             smm.shutdown()
             
             self.rslts = list(rslt_mngd)
@@ -260,7 +268,6 @@ class collapsed_gs_:
         self.X     = np.array(X)
         self.w     = np.array(w)
         self.delta = np.array(delta)
-
 
         self._batched_train_test()
 
@@ -314,13 +321,45 @@ def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
     X, w, delta, ID = indexable(X_post['X'], X_post['w'], X_post['delta'], X_post['ID'])
 
     gkf = list(GroupKFold(n_splits=num_folds).split(X,delta,ID))
+    
+    ID             = ID.astype(int)
+    ID_unique_srtd = np.sort(np.unique(ID))
+
+    nfolds = num_folds
+
+    ID_counts = [len(ID_unique_srtd)//nfolds] * nfolds
+    for i in range(len(ID_unique_srtd)%nfolds):
+        ID_counts[i]+=1
+
+    assert sum(ID_counts)==len(ID_unique_srtd)
+
+    fold_idxs = np.hstack([[i]*id_count for i, id_count in enumerate(ID_counts)])
+
+    #np.random.seed(666)
+    np.random.shuffle(fold_idxs)
+
+    gkf_ = []
+    for fold_idx in range(nfolds):
+        train_ids = ID_unique_srtd[np.where(fold_idxs!=fold_idx)[0]]
+        test_ids  = ID_unique_srtd[np.where(fold_idxs==fold_idx)[0]]
+        gkf_.append((np.where(np.isin(ID, train_ids))[0], np.where(np.isin(ID, test_ids))[0]))
+
+    gkf = gkf_
 
     collapsed_ntree_gs_  = collapsed_gs_(param_grid, gkf, gpu_list, batch_size)
  
-    results     = collapsed_ntree_gs_.fit(X,w,delta)
-    means       = results['mean_test_score']
-    stds        = results['std_test_score']
-    params      = results['params']
+    try:
+        results     = collapsed_ntree_gs_.fit(X,w,delta)
+        means       = results['mean_test_score']
+        stds        = results['std_test_score']
+        params      = results['params']
+
+    except MemoryError as me:
+        print (me)
+        means       = np.array([])
+        stds        = np.array([])
+        params      = np.array([])
+
 
     return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}
 
