@@ -1,13 +1,14 @@
 from datetime import datetime
 from pytz import timezone
 import os
+import contextlib
 import numpy as np
-from sklearn.model_selection import StratifiedKFold
+#from sklearn.model_selection import StratifiedKFold
 from py3nvml import get_free_gpus
 import pickle
-from joblib import Parallel, delayed
-import itertools
-from collections import namedtuple
+#from joblib import Parallel, delayed
+#import itertools
+#from collections import namedtuple
 from scipy.stats import beta # beta distribution.
 import math
 
@@ -15,7 +16,7 @@ import math
 import warnings
 warnings.simplefilter(action='ignore', category=Warning)
 
-import pandas as pd
+#import pandas as pd
 from pathlib import Path
 import sys
 sys.path.append(os.path.join(os.path.expanduser("~"), "survival_analysis/BoXHED2.0/xgboost/python-package/"))
@@ -117,10 +118,10 @@ def create_dir_if_not_exist(path):
         os.makedirs(path)
 
 import functools
-import multiprocessing
-from sys import platform
-if platform == "linux" or platform == "linux2":
-    multiprocessing.set_start_method('fork', force=True)
+#import multiprocessing
+#from sys import platform
+#if platform == "linux" or platform == "linux2":
+#    multiprocessing.set_start_method('fork', force=True)
 from multiprocessing import Process, Queue
 
 
@@ -164,3 +165,27 @@ def load_pickle(addr):
     with open(addr, 'rb') as handle:
         obj = pickle.load(handle)
     return obj
+
+
+from threading import Thread
+def run_as_threads(f, args_dict_list):
+
+    T = []
+    for args_dict in args_dict_list:
+        t=Thread(target = f, kwargs = args_dict)
+        t.start()
+        T.append(t)
+
+    for t in T:
+        t.join()
+
+
+#https://stackoverflow.com/questions/49555991/can-i-create-a-local-numpy-random-seed
+@contextlib.contextmanager
+def temp_seed(seed):
+    state = np.random.get_state()
+    np.random.seed(seed)
+    try:
+        yield
+    finally:
+        np.random.set_state(state)

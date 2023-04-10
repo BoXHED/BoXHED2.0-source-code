@@ -1,25 +1,21 @@
-from boxhed.boxhed import boxhed
-
-
-from sklearn.utils import indexable
-import numpy as np
-import multiprocessing as mp
-from joblib import Parallel, delayed
-import numpy as np
-import copy
-from tqdm import tqdm
-#'''
 import os
+import copy
+import numpy as np
+from tqdm import tqdm
+import multiprocessing as mp
+from itertools import product
+from boxhed.boxhed import boxhed
+from boxhed.utils import temp_seed
+from multiprocessing import Manager
+from sklearn.utils import indexable
+from joblib import Parallel, delayed
+from multiprocessing.shared_memory import SharedMemory
+from multiprocessing.managers import SharedMemoryManager
+#'''
 #TODO: CAN I DO ANYTHING ABOUT OMP_NUM_THREADS
 os.environ['OMP_NUM_THREADS'] = "1"
 #'''
-from itertools import product
-from multiprocessing import Manager
-from multiprocessing.shared_memory import SharedMemory
-from multiprocessing.managers import SharedMemoryManager
-from sklearn.model_selection import GroupKFold 
-
-
+#from sklearn.model_selection import GroupKFold
 
 def _to_shared_mem(smm, arr_np):
     shared_mem       = smm.SharedMemory(size=arr_np.nbytes)
@@ -283,7 +279,34 @@ class collapsed_gs_:
         }
 
 
-def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
+def group_k_fold(ID, num_folds, seed=None):
+    ID             = ID.astype(int)
+    ID_unique_srtd = np.sort(np.unique(ID))
+
+    ID_counts = [len(ID_unique_srtd)//num_folds] * num_folds
+    for i in range(len(ID_unique_srtd)%num_folds):
+        ID_counts[i]+=1
+
+    assert sum(ID_counts)==len(ID_unique_srtd)
+
+    fold_idxs = np.hstack([[i]*id_count for i, id_count in enumerate(ID_counts)])
+
+    if seed is not None:
+        with temp_seed(seed):
+            np.random.shuffle(fold_idxs)
+    else:
+        np.random.shuffle(fold_idxs)
+
+    gkf = []
+    for fold_idx in range(num_folds):
+        train_ids = ID_unique_srtd[np.where(fold_idxs!=fold_idx)[0]]
+        test_ids  = ID_unique_srtd[np.where(fold_idxs==fold_idx)[0]]
+        gkf.append((np.where(np.isin(ID, train_ids))[0], np.where(np.isin(ID, test_ids))[0]))
+    
+    return gkf
+
+
+def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1, seed=None, ID=None):
     """cross validate different hyperpatameter combinations based on likelihood risk.
 
     :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
@@ -318,33 +341,11 @@ def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1):
     else:
         batch_size = models_per_gpu * len(gpu_list)
 
-    X, w, delta, ID = indexable(X_post['X'], X_post['w'], X_post['delta'], X_post['ID'])
+    X, w, delta, ID_ = indexable(X_post['X'], X_post['w'], X_post['delta'], X_post['ID'])
 
-    gkf = list(GroupKFold(n_splits=num_folds).split(X,delta,ID))
+    ID = ID_ if ID is None else ID
     
-    ID             = ID.astype(int)
-    ID_unique_srtd = np.sort(np.unique(ID))
-
-    nfolds = num_folds
-
-    ID_counts = [len(ID_unique_srtd)//nfolds] * nfolds
-    for i in range(len(ID_unique_srtd)%nfolds):
-        ID_counts[i]+=1
-
-    assert sum(ID_counts)==len(ID_unique_srtd)
-
-    fold_idxs = np.hstack([[i]*id_count for i, id_count in enumerate(ID_counts)])
-
-    #np.random.seed(666)
-    np.random.shuffle(fold_idxs)
-
-    gkf_ = []
-    for fold_idx in range(nfolds):
-        train_ids = ID_unique_srtd[np.where(fold_idxs!=fold_idx)[0]]
-        test_ids  = ID_unique_srtd[np.where(fold_idxs==fold_idx)[0]]
-        gkf_.append((np.where(np.isin(ID, train_ids))[0], np.where(np.isin(ID, test_ids))[0]))
-
-    gkf = gkf_
+    gkf = group_k_fold(ID, num_folds, seed)
 
     collapsed_ntree_gs_  = collapsed_gs_(param_grid, gkf, gpu_list, batch_size)
  
