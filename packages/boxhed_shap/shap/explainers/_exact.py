@@ -102,7 +102,7 @@ class Exact(Explainer):
             delta_indexes = self._cached_gray_codes(len(inds))
 
             # map to a larger mask that includes the invarient entries
-            extended_delta_indexes = np.zeros(2**len(inds), dtype=np.int)
+            extended_delta_indexes = np.zeros(2**len(inds), dtype=int)
             for i in range(2**len(inds)):
                 if delta_indexes[i] == MaskedModel.delta_mask_noop_value:
                     extended_delta_indexes[i] = delta_indexes[i]
@@ -340,7 +340,7 @@ def gray_code_indexes(nbits):
     We assume the masks start at all zero and -1 means don't do a flip.
     This is a more efficient represenation of the gray_code_masks version.
     """
-    out = np.ones(2**nbits, dtype=np.int) * MaskedModel.delta_mask_noop_value
+    out = np.ones(2**nbits, dtype=int) * MaskedModel.delta_mask_noop_value
     li = np.zeros(nbits, dtype=np.bool)
     for term in range((1<<nbits)-1):
         if term % 2 == 1: # odd

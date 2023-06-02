@@ -214,7 +214,7 @@ class Partition(Explainer):
 
         #f = self._reshaped_model
         #r = self.masker
-        #masks = np.zeros(2*len(inds)+1, dtype=np.int)
+        #masks = np.zeros(2*len(inds)+1, dtype=int)
         M = len(fm)
         m00 = np.zeros(M, dtype=np.bool)
         #f00 = fm(m00.reshape(1,-1))[0]
@@ -353,7 +353,7 @@ class Partition(Explainer):
 
         #f = self._reshaped_model
         #r = self.masker
-        #masks = np.zeros(2*len(inds)+1, dtype=np.int)
+        #masks = np.zeros(2*len(inds)+1, dtype=int)
         M = len(fm)
         m00 = np.zeros(M, dtype=np.bool)
         #f00 = fm(m00.reshape(1,-1))[0]
@@ -507,7 +507,7 @@ class Partition(Explainer):
 
     #     #f = self._reshaped_model
     #     #r = self.masker
-    #     #masks = np.zeros(2*len(inds)+1, dtype=np.int)
+    #     #masks = np.zeros(2*len(inds)+1, dtype=int)
     #     M = len(fm)
     #     m00 = np.zeros(M, dtype=np.bool)
     #     #f00 = fm(m00.reshape(1,-1))[0]
