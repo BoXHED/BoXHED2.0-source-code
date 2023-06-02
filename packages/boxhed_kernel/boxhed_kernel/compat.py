@@ -28,14 +28,14 @@ def lazy_isinstance(instance, module, name):
 # pandas
 try:
     from pandas import DataFrame, Series
-    from pandas import MultiIndex, Int64Index
+    from pandas import MultiIndex, Index
     from pandas import concat as pandas_concat
 
     PANDAS_INSTALLED = True
 except ImportError:
 
     MultiIndex = object
-    Int64Index = object
+    Index = object
     DataFrame = object
     Series = object
     pandas_concat = None
