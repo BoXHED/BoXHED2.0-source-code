@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="boxhed",
-    version="2.0.3",
+    version="2.0.4",
     long_description=long_description,
     long_description_content_type='text/markdown',
     description="BoXHED2.0",
