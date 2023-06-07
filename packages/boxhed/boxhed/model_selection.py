@@ -291,12 +291,20 @@ def group_k_fold(ID, num_folds, seed=None):
     assert sum(ID_counts)==len(ID_unique_srtd)
 
     fold_idxs = np.hstack([[i]*id_count for i, id_count in enumerate(ID_counts)])
-
+    '''
     if seed is not None:
         with temp_seed(seed):
             np.random.shuffle(fold_idxs)
     else:
         np.random.shuffle(fold_idxs)
+    '''
+    if seed is not None:
+        rng = np.random.default_rng(seed)
+        rng.shuffle(fold_idxs)
+        
+    else:
+        np.random.shuffle(fold_idxs) 
+
 
     gkf = []
     for fold_idx in range(num_folds):
