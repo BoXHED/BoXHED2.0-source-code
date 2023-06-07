@@ -229,8 +229,6 @@ class collapsed_gs_:
                 p.join()
                 
                 p.terminate()
-                if p.exitcode != 0:
-                    raise MemoryError("ERROR: Cross validation did not finish successfully due to memory error. Consider reducing nthread and/or models_per_gpu to cut down on the memory used by cross validation.")
             
             smm.shutdown()
             
@@ -251,6 +249,9 @@ class collapsed_gs_:
         srtd_rslts, srtd_param_dict_test = zip(*rslt__param_dict_test)
         srtd_rslts = np.array(srtd_rslts)
         srtd_rslts = srtd_rslts.reshape(-1, len(self.cv))
+
+        if 0 in srtd_rslts:
+            raise MemoryError("ERROR: Cross validation did not finish successfully due to memory error. Consider reducing nthread and/or models_per_gpu to cut down on the memory used by cross validation.")
 
         self.srtd_param_dict_test_scores = srtd_rslts.mean(axis=1)
         self.srtd_param_dict_test_std    = srtd_rslts.std(axis=1)
