@@ -46,6 +46,21 @@ class boxhed(BaseEstimator, RegressorMixin):
         self.nthread       = nthread
 
 
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        out = ""
+        for line in [
+                "a BoXHED estimator instance",
+                f"    max_depth:    {self.max_depth}",
+                f"    n_estimators: {self.n_estimators}",
+                f"    eta:          {self.eta}"
+            ]:
+            out += line+"\n"
+        return out
+
+
     def _X_y_to_dmat(self, X, y=None, w=None):
         if not hasattr(self, 'X_colnames'):
             self.X_colnames = None #model probably created for CV, no need for data name matching
