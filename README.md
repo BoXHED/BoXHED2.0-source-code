@@ -22,3 +22,5 @@ Windows users need to have the Visual Studio 17 2022 toolset installed. During i
 ## [Installing BoXHED2.0 (multicore CPU support)](README_CPU.md)
 
 ## [Installing BoXHED2.0 (multicore CPU + GPU support)](README_GPU.md)
+
+## [Installing SHAP for BoXHED](README_SHAP.md)
