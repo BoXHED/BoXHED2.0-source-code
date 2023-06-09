@@ -300,7 +300,7 @@ if __name__ == '__main__':
     # - python setup.py develop   # same as above
     logging.basicConfig(level=logging.INFO)
     setup(name='boxhed_kernel',
-          version="2.4",#open(os.path.join(
+          version="2.0.1",#open(os.path.join(
           #    CURRENT_DIR, 'xgboost/VERSION')).read().strip(),
           description="XGBoost Python Package",
           long_description=open(os.path.join(CURRENT_DIR, 'README.rst'),
