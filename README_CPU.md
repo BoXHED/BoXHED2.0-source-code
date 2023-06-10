@@ -17,6 +17,11 @@ Clone this repository, or manually download the files and extract them to a dire
 cd BoXHED2.0
 ```
 
+Install the dependencies by running the bash script *conda_install_packages.sh*. You can also paste the installation lines inside *conda_install_packages.sh* into your shell instead, should there be any problem in running the bash file.
+```
+./conda_install_packages.sh
+```
+
 Install BoXHED2.0 from pip (if an error occurs, try running ```conda install cmake``` first):
 ```
 pip install boxhed
