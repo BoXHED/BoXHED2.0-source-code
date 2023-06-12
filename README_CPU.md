@@ -24,16 +24,12 @@ conda install -c conda-forge matplotlib=3.7.1 -y
 pip install pandas==1.5.2
 pip install cmake==3.26.3
 pip install py3nvml==0.2.7
+pip install jupyter
 ```
 
 Install BoXHED2.0 from pip:
 ```
 pip install boxhed
-```
-
-Now install Jupyter Notebook:
-```
-pip install jupyter
 ```
 
 Run *BoXHED2_tutorial.ipynb* for a demonstration of how to fit a BoXHED hazard estimator.
