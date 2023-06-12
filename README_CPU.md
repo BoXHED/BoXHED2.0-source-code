@@ -20,6 +20,7 @@ cd BoXHED2.0
 Install the dependencies by pasting the following lines in your terminal:
 ```
 pip install matplotlib==3.7.1
+pip install pillow==9.4.0
 pip install numpy==1.24.3
 pip install scikit-learn==1.2.2
 pip install pytz==2023.3
