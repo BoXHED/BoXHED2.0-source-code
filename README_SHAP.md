@@ -13,7 +13,7 @@ Install the `shap` package using `pip`:
 pip install ./packages/boxhed_shap
 ```
 
-The tutorial *BoXHED2_tutorial.ipynb* provides example code for how to use `shap`:
+The tutorial *BoXHED2_tutorial.ipynb* provides example code on how to use `shap`:
 ```
 jupyter notebook BoXHED2_tutorial.ipynb
 ```
