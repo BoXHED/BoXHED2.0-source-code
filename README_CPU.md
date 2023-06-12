@@ -19,11 +19,17 @@ cd BoXHED2.0
 
 Install the dependencies by pasting the following lines in your terminal:
 ```
-conda install -c anaconda pandas=1.5.2 numpy=1.24.3 scikit-learn=1.2.2 pytz=2022.7 jupyter -y
-conda install -c conda-forge matplotlib=3.7.1 -y
-pip install pandas==1.5.2
+pip install matplotlib==3.7.1
+pip install numpy==1.24.3
+pip install scikit-learn==1.2.2
+pip install pytz==2023.3
+pip install pandas==1.5.3
 pip install cmake==3.26.3
 pip install py3nvml==0.2.7
+pip install tqdm==4.65.0
+pip install threadpoolctl==3.1.0
+pip install scipy==1.10.1
+pip install joblib==1.2.0
 pip install jupyter
 ```
 
