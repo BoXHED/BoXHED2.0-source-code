@@ -4,8 +4,8 @@ Another variable importance measure called SHAP values (SHapley Additive exPlana
 
 To use SHAP with `BoXHED2.0`, first activate the dedicated virtual environment for `BoXHED2.0`, and then go to the directory containing the cloned repository: 
 ```
-conda activate boxhed2.0
-cd BoXHED2.0
+conda activate boxhed2
+cd BoXHED2
 ```
 
 Install the `shap` package using `pip`:
