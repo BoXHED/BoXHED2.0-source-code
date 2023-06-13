@@ -4,17 +4,17 @@ We recommend setting up a dedicated virtual environment for BoXHED2.0 (instructi
 
 In this example we use [Anaconda Prompt](https://docs.anaconda.com/anaconda/install/) to open a terminal. First, create a virtual environment called BoXHED2.0:
 ```
-conda create -n boxhed2.0 python=3.8
+conda create -n boxhed2 python=3.8
 ```
 
 then activate it
 ```
-conda activate boxhed2.0
+conda activate boxhed2
 ```
 
 Clone this repository, or manually download the files and extract them to a directory called BoXHED2.0. Then go to the directory:
 ```
-cd BoXHED2.0
+cd BoXHED2
 ```
 
 Install the dependencies by pasting the following lines in your terminal:
@@ -44,3 +44,5 @@ Run *BoXHED2_tutorial.ipynb* for a demonstration of how to fit a BoXHED hazard e
 ```
 jupyter notebook BoXHED2_tutorial.ipynb
 ``` 
+
+BoXHED2.0 also supports the use of SHAP values. Please see the installation instructions for the [BoXHED SHAP](https://github.com/BoXHED/BoXHED2.0/blob/master/README_SHAP.md) package.
