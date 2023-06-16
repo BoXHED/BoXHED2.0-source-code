@@ -60,6 +60,11 @@ class boxhed(BaseEstimator, RegressorMixin):
             out += line+"\n"
         return out
 
+    def _update_time_splits(self):
+        check_is_fitted(self)
+        if not self.time_splits_updated:
+            self.prep.update_time_splits (self.time_splits)
+            self.time_splits_updated = True
 
     def _X_y_to_dmat(self, X, y=None, w=None):
         if not hasattr(self, 'X_colnames'):
@@ -191,6 +196,7 @@ class boxhed(BaseEstimator, RegressorMixin):
         
         self.VarImps = self.boxhed_.get_score(importance_type='total_gain')
         self.time_splits = self._time_splits()
+        self.time_splits_updated = False
         return self
 
         
@@ -404,7 +410,7 @@ class boxhed(BaseEstimator, RegressorMixin):
         X['ID']                         = range(1, X.shape[0]+1)
         X                               = X[self.train_data_cols]
 
-        self.prep.update_time_splits (self.time_splits)
+        self._update_time_splits()
 
         cte_hazard_epoch_df             = self.prep.epoch_break_cte_hazard(X)
         cte_hazard_epoch_df['t_start']  = cte_hazard_epoch_df['t_start'] + 0.5 * cte_hazard_epoch_df['dt']
@@ -417,3 +423,19 @@ class boxhed(BaseEstimator, RegressorMixin):
         survs                           = np.exp(cte_hazard_epoch_df.groupby('ID')['surv'].sum()).values
         survs[t_zero_idxs]              = 1
         return survs
+
+
+    def loglik(self, X, ntree_limit = 0):
+        check_is_fitted(self)
+        X                               = X[self.train_data_cols]
+
+        self._update_time_splits()
+
+        cte_hazard_epoch_df             = self.prep.epoch_break_cte_hazard(X)
+        cte_hazard_epoch_df['t_start']  = cte_hazard_epoch_df['t_start'] + 0.5 * cte_hazard_epoch_df['dt']
+
+        cte_hazard_epoch                = cte_hazard_epoch_df.drop(columns=["ID", "dt", "delta"])
+        hzrds                           = self.hazard(cte_hazard_epoch, ntree_limit = ntree_limit)
+        w, y                            = [cte_hazard_epoch_df[col].values for col in ["dt", "delta"]]
+
+        return -(np.inner(hzrds, w)-np.inner(np.log(hzrds), y))
