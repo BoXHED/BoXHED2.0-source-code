@@ -4,7 +4,9 @@ To add GPU support, you must first install [CUDA 11.1](https://developer.nvidia.
 
 For Windows users, use the [Git Bash](https://gitforwindows.org/) terminal for the installation. You will need to [set up conda in Git Bash](https://discuss.codecademy.com/t/setting-up-conda-in-git-bash/534473). Linux users should use the default terminal.
 
-We recommend setting up a dedicated virtual environment for BoXHED2.0. This ensures that BoXHED2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
+Install Visual Studio before attempting the below. See the [Prerequisites](https://github.com/BoXHED/BoXHED2.0/) section of the main page.
+
+Next, set up a dedicated virtual environment for BoXHED2.0. This ensures that BoXHED2.0 will not interfere with any existing XGBoost packages. This implementation uses python 3.8.
 
 Open a terminal and create a virtual environment called BoXHED2.0:
 ```
