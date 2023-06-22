@@ -1,6 +1,8 @@
 ## Installing BoXHED2.0 (multicore CPU support)
 
-We recommend setting up a dedicated virtual environment for BoXHED2.0 (instructions below). This ensures that BoXHED2.0 will not interfere with XGBoost (the library we have borrowed from extensively) when installed. This implementation uses python 3.8.
+Install Visual Studio before attempting the below. See the [Prerequisites](https://docs.anaconda.com/anaconda/install/) section of the main page.
+
+Next, set up a dedicated virtual environment for BoXHED2.0. This ensures that BoXHED2.0 will not interfere with any existing XGBoost packages. This implementation uses python 3.8.
 
 In this example we use [Anaconda Prompt](https://docs.anaconda.com/anaconda/install/) to open a terminal. First, create a virtual environment called BoXHED2.0:
 ```
