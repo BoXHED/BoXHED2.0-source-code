@@ -6,12 +6,12 @@
 #include <cstring>
 
 #include "dmlc/io.h"
-#include "xgboost/data.h"
-#include "xgboost/c_api.h"
-#include "xgboost/host_device_vector.h"
-#include "xgboost/logging.h"
-#include "xgboost/version_config.h"
-#include "xgboost/learner.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/c_api.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/version_config.h"
+#include "boxhed_kernel/learner.h"
 #include "sparse_page_writer.h"
 #include "simple_dmatrix.h"
 
@@ -29,17 +29,17 @@
 #endif  // DMLC_ENABLE_STD_THREAD
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::data::SparsePageFormatReg<::xgboost::SparsePage>);
-DMLC_REGISTRY_ENABLE(::xgboost::data::SparsePageFormatReg<::xgboost::CSCPage>);
-DMLC_REGISTRY_ENABLE(::xgboost::data::SparsePageFormatReg<::xgboost::SortedCSCPage>);
-DMLC_REGISTRY_ENABLE(::xgboost::data::SparsePageFormatReg<::xgboost::EllpackPage>);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::data::SparsePageFormatReg<::boxhed_kernel::SparsePage>);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::data::SparsePageFormatReg<::boxhed_kernel::CSCPage>);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::data::SparsePageFormatReg<::boxhed_kernel::SortedCSCPage>);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::data::SparsePageFormatReg<::boxhed_kernel::EllpackPage>);
 }  // namespace dmlc
 
 namespace {
 
 template <typename T>
 void SaveScalarField(dmlc::Stream *strm, const std::string &name,
-                     xgboost::DataType type, const T &field) {
+                     boxhed_kernel::DataType type, const T &field) {
   strm->Write(name);
   strm->Write(static_cast<uint8_t>(type));
   strm->Write(true);  // is_scalar=True
@@ -48,7 +48,7 @@ void SaveScalarField(dmlc::Stream *strm, const std::string &name,
 
 template <typename T>
 void SaveVectorField(dmlc::Stream *strm, const std::string &name,
-                     xgboost::DataType type, std::pair<uint64_t, uint64_t> shape,
+                     boxhed_kernel::DataType type, std::pair<uint64_t, uint64_t> shape,
                      const std::vector<T>& field) {
   strm->Write(name);
   strm->Write(static_cast<uint8_t>(type));
@@ -60,24 +60,24 @@ void SaveVectorField(dmlc::Stream *strm, const std::string &name,
 
 template <typename T>
 void SaveVectorField(dmlc::Stream* strm, const std::string& name,
-                     xgboost::DataType type, std::pair<uint64_t, uint64_t> shape,
-                     const xgboost::HostDeviceVector<T>& field) {
+                     boxhed_kernel::DataType type, std::pair<uint64_t, uint64_t> shape,
+                     const boxhed_kernel::HostDeviceVector<T>& field) {
   SaveVectorField(strm, name, type, shape, field.ConstHostVector());
 }
 
 template <typename T>
 void LoadScalarField(dmlc::Stream* strm, const std::string& expected_name,
-                     xgboost::DataType expected_type, T* field) {
+                     boxhed_kernel::DataType expected_type, T* field) {
   const std::string invalid {"MetaInfo: Invalid format. "};
   std::string name;
-  xgboost::DataType type;
+  boxhed_kernel::DataType type;
   bool is_scalar;
   CHECK(strm->Read(&name)) << invalid;
   CHECK_EQ(name, expected_name)
       << invalid << " Expected field: " << expected_name << ", got: " << name;
   uint8_t type_val;
   CHECK(strm->Read(&type_val)) << invalid;
-  type = static_cast<xgboost::DataType>(type_val);
+  type = static_cast<boxhed_kernel::DataType>(type_val);
   CHECK(type == expected_type)
       << invalid << "Expected field of type: " << static_cast<int>(expected_type) << ", "
       << "got field type: " << static_cast<int>(type);
@@ -89,17 +89,17 @@ void LoadScalarField(dmlc::Stream* strm, const std::string& expected_name,
 
 template <typename T>
 void LoadVectorField(dmlc::Stream* strm, const std::string& expected_name,
-                     xgboost::DataType expected_type, std::vector<T>* field) {
+                     boxhed_kernel::DataType expected_type, std::vector<T>* field) {
   const std::string invalid {"MetaInfo: Invalid format. "};
   std::string name;
-  xgboost::DataType type;
+  boxhed_kernel::DataType type;
   bool is_scalar;
   CHECK(strm->Read(&name)) << invalid;
   CHECK_EQ(name, expected_name)
     << invalid << " Expected field: " << expected_name << ", got: " << name;
   uint8_t type_val;
   CHECK(strm->Read(&type_val)) << invalid;
-  type = static_cast<xgboost::DataType>(type_val);
+  type = static_cast<boxhed_kernel::DataType>(type_val);
   CHECK(type == expected_type)
     << invalid << "Expected field of type: " << static_cast<int>(expected_type) << ", "
     << "got field type: " << static_cast<int>(type);
@@ -118,14 +118,14 @@ void LoadVectorField(dmlc::Stream* strm, const std::string& expected_name,
 
 template <typename T>
 void LoadVectorField(dmlc::Stream* strm, const std::string& expected_name,
-                     xgboost::DataType expected_type,
-                     xgboost::HostDeviceVector<T>* field) {
+                     boxhed_kernel::DataType expected_type,
+                     boxhed_kernel::HostDeviceVector<T>* field) {
   LoadVectorField(strm, expected_name, expected_type, &field->HostVector());
 }
 
 }  // anonymous namespace
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 uint64_t constexpr MetaInfo::kNumField;
 
@@ -334,16 +334,16 @@ inline bool MetaTryLoadFloatInfo(const std::string& fname,
 // macro to dispatch according to specified pointer types
 #define DISPATCH_CONST_PTR(dtype, old_ptr, cast_ptr, proc)              \
   switch (dtype) {                                                      \
-    case xgboost::DataType::kFloat32: {                                 \
+    case boxhed_kernel::DataType::kFloat32: {                                 \
       auto cast_ptr = reinterpret_cast<const float*>(old_ptr); proc; break; \
     }                                                                   \
-    case xgboost::DataType::kDouble: {                                  \
+    case boxhed_kernel::DataType::kDouble: {                                  \
       auto cast_ptr = reinterpret_cast<const double*>(old_ptr); proc; break; \
     }                                                                   \
-    case xgboost::DataType::kUInt32: {                                  \
+    case boxhed_kernel::DataType::kUInt32: {                                  \
       auto cast_ptr = reinterpret_cast<const uint32_t*>(old_ptr); proc; break; \
     }                                                                   \
-    case xgboost::DataType::kUInt64: {                                  \
+    case boxhed_kernel::DataType::kUInt64: {                                  \
       auto cast_ptr = reinterpret_cast<const uint64_t*>(old_ptr); proc; break; \
     }                                                                   \
     default: LOG(FATAL) << "Unknown data type" << static_cast<uint8_t>(dtype); \
@@ -420,7 +420,7 @@ void MetaInfo::GetInfo(char const *key, bst_ulong *out_len, DataType dtype,
     } else {
       LOG(FATAL) << "Unknown float field name: " << key;
     }
-    *out_len = static_cast<xgboost::bst_ulong>(vec->size()); // NOLINT
+    *out_len = static_cast<boxhed_kernel::bst_ulong>(vec->size()); // NOLINT
     *reinterpret_cast<float const**>(out_dptr) = dmlc::BeginPtr(*vec);
   } else if (dtype == DataType::kUInt32) {
     const std::vector<unsigned> *vec = nullptr;
@@ -429,7 +429,7 @@ void MetaInfo::GetInfo(char const *key, bst_ulong *out_len, DataType dtype,
     } else {
       LOG(FATAL) << "Unknown uint32 field name: " << key;
     }
-    *out_len = static_cast<xgboost::bst_ulong>(vec->size());
+    *out_len = static_cast<boxhed_kernel::bst_ulong>(vec->size());
     *reinterpret_cast<unsigned const**>(out_dptr) = dmlc::BeginPtr(*vec);
   } else {
     LOG(FATAL) << "Unknown data type for getting meta info.";
@@ -934,7 +934,7 @@ uint64_t SparsePage::Push(const AdapterBatchT& batch, float missing, int nthread
 }
 
 void SparsePage::PushCSC(const SparsePage &batch) {
-  std::vector<xgboost::Entry>& self_data = data.HostVector();
+  std::vector<boxhed_kernel::Entry>& self_data = data.HostVector();
   std::vector<bst_row_t>& self_offset = offset.HostVector();
 
   auto const& other_data = batch.data.ConstHostVector();
@@ -956,7 +956,7 @@ void SparsePage::PushCSC(const SparsePage &batch) {
   std::vector<bst_row_t> offset(other_offset.size());
   offset[0] = 0;
 
-  std::vector<xgboost::Entry> data(self_data.size() + other_data.size());
+  std::vector<boxhed_kernel::Entry> data(self_data.size() + other_data.size());
 
   // n_cols in original csr data matrix, here in csc is n_rows
   size_t const n_features = other_offset.size() - 1;
@@ -1008,4 +1008,4 @@ namespace data {
 // List of files that will be force linked in static links.
 DMLC_REGISTRY_LINK_TAG(sparse_page_raw_format);
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

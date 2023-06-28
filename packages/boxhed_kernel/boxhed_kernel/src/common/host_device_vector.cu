@@ -9,12 +9,12 @@
 #include <cstdint>
 #include <mutex>
 
-#include "xgboost/data.h"
-#include "xgboost/host_device_vector.h"
-#include "xgboost/tree_model.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/tree_model.h"
 #include "device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 // the handler to call instead of cudaSetDevice; only used for testing
 static void (*cudaSetDeviceHandler)(int) = nullptr;  // NOLINT
@@ -418,4 +418,4 @@ template class HostDeviceVector<RTreeNodeStat>;
 template class HostDeviceVector<std::size_t>;
 #endif  // defined(__APPLE__)
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel

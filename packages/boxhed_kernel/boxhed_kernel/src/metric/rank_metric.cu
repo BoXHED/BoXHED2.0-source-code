@@ -7,8 +7,8 @@
 #include <rabit/rabit.h>
 #include <dmlc/registry.h>
 
-#include <xgboost/metric.h>
-#include <xgboost/host_device_vector.h>
+#include <boxhed_kernel/metric.h>
+#include <boxhed_kernel/host_device_vector.h>
 #include <thrust/iterator/discard_iterator.h>
 
 #include <cmath>
@@ -20,7 +20,7 @@
 #include "../common/math.h"
 #include "../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(rank_metric_gpu);
@@ -131,7 +131,7 @@ struct EvalNDCGGpu {
                          const EvalRankConfig &ecfg,
                          // The order in which labels have to be accessed. The order is determined
                          // by sorting the predictions or the labels for the entire dataset
-                         const xgboost::common::Span<const uint32_t> &dlabels_sort_order,
+                         const boxhed_kernel::common::Span<const uint32_t> &dlabels_sort_order,
                          dh::caching_device_vector<double> *dcgptr) {
     dh::caching_device_vector<double> &dcgs(*dcgptr);
     // Group info on device
@@ -520,7 +520,7 @@ struct EvalAucPRGpu : public Metric {
     XGBOOST_DEVICE ComputeItemPrecision(PrecisionType ptype,
                                         uint32_t ngroups,
                                         const float *dweights,
-                                        const xgboost::common::Span<const uint32_t> &dgidxs,
+                                        const boxhed_kernel::common::Span<const uint32_t> &dgidxs,
                                         const float *dlabels)
       : ptype_(ptype), ngroups_(ngroups), dweights_(dweights), dgidxs_(dgidxs), dlabels_(dlabels) {}
 
@@ -536,7 +536,7 @@ struct EvalAucPRGpu : public Metric {
     PrecisionType ptype_;  // Precision type to be computed
     uint32_t ngroups_;  // Number of groups in the dataset
     const float *dweights_;  // Instance/group weights
-    const xgboost::common::Span<const uint32_t> dgidxs_;  // The group a given instance belongs to
+    const boxhed_kernel::common::Span<const uint32_t> dgidxs_;  // The group a given instance belongs to
     const float *dlabels_;  // Unsorted labels in the dataset
   };
 
@@ -711,4 +711,4 @@ XGBOOST_REGISTER_GPU_METRIC(MAPGpu, "map")
 .describe("map@k for rank computed on GPU.")
 .set_body([](const char* param) { return new EvalRankGpu<EvalMAPGpu>("map", param); });
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -1,4 +1,4 @@
-"""Setup xgboost package."""
+"""Setup boxhed_kernel package."""
 import os
 import shutil
 import subprocess
@@ -17,7 +17,7 @@ sys.path.insert(0, CURRENT_DIR)
 # Options only effect `python setup.py install`, building `bdist_wheel`
 # requires using CMake directly.
 USER_OPTIONS = {
-    # libxgboost options.
+    # libboxhed_kernel options.
     'use-openmp': (None, 'Build with OpenMP support.', 1),
     'use-cuda':   (None, 'Build with GPU acceleration.', 0),
     'use-nccl':   (None, 'Build with NCCL to enable distributed GPU support.', 0),
@@ -27,9 +27,7 @@ USER_OPTIONS = {
     'use-azure':  (None, 'Build with AZURE support.', 0),
     'use-s3':     (None, 'Build with S3 support', 0),
     'plugin-lz4': (None, 'Build lz4 plugin.', 0),
-    'plugin-dense-parser': (None, 'Build dense parser plugin.', 0),
-    # Python specific
-    'use-system-libxgboost': (None, 'Use libxgboost.so in system path.', 0)
+    'plugin-dense-parser': (None, 'Build dense parser plugin.', 0)
 }
 
 NEED_CLEAN_TREE = set()
@@ -40,11 +38,11 @@ BUILD_TEMP_DIR = None
 def lib_name():
     '''Return platform dependent shared object name.'''
     if system() == 'Linux' or system().upper().endswith('BSD'):
-        name = 'libxgboost.so'
+        name = 'libboxhed_kernel.so'
     elif system() == 'Darwin':
-        name = 'libxgboost.dylib'
+        name = 'libboxhed_kernel.dylib'
     elif system() == 'Windows':
-        name = 'xgboost.dll'
+        name = 'boxhed_kernel.dll'
     return name
 
 
@@ -124,9 +122,6 @@ class BuildExt(build_ext.build_ext):  # pylint: disable=too-many-ancestors
 
     def build_cmake_extension(self):
         '''Configure and build using CMake'''
-        if USER_OPTIONS['use-system-libxgboost'][2]:
-            self.logger.info('Using system libxgboost.')
-            return
 
         src_dir = 'boxhed_kernel'
         try:
@@ -137,14 +132,14 @@ class BuildExt(build_ext.build_ext):  # pylint: disable=too-many-ancestors
         build_dir = self.build_temp
         global BUILD_TEMP_DIR  # pylint: disable=global-statement
         BUILD_TEMP_DIR = build_dir
-        libxgboost = os.path.abspath(
+        libboxhed_kernel = os.path.abspath(
             os.path.join(CURRENT_DIR, os.path.pardir, 'lib', lib_name()))
 
-        if os.path.exists(libxgboost):
+        if os.path.exists(libboxhed_kernel):
             self.logger.info('Found shared library, skipping build.')
             return
 
-        self.logger.info('Building from source. %s', libxgboost)
+        self.logger.info('Building from source. %s', libboxhed_kernel)
         if not os.path.exists(build_dir):
             os.mkdir(build_dir)
         if shutil.which('ninja'):
@@ -193,35 +188,28 @@ class BuildExt(build_ext.build_ext):  # pylint: disable=too-many-ancestors
 
 class Sdist(sdist.sdist):       # pylint: disable=too-many-ancestors
     '''Copy c++ source into Python directory.'''
-    logger = logging.getLogger('xgboost sdist')
+    logger = logging.getLogger('boxhed_kernel sdist')
 
     def run(self):
         copy_tree(os.path.join(CURRENT_DIR, os.path.pardir),
                   os.path.join(CURRENT_DIR, 'boxhed_kernel'))
-        libxgboost = os.path.join(
+        libboxhed_kernel = os.path.join(
             CURRENT_DIR, os.path.pardir, 'lib', lib_name())
-        if os.path.exists(libxgboost):
+        if os.path.exists(libboxhed_kernel):
             self.logger.warning(
                 'Found shared library, removing to avoid being included in source distribution.'
             )
-            os.remove(libxgboost)
+            os.remove(libboxhed_kernel)
         super().run()
 
 
 class InstallLib(install_lib.install_lib):
     '''Copy shared object into installation directory.'''
-    logger = logging.getLogger('xgboost install_lib')
+    logger = logging.getLogger('boxhed_kernel install_lib')
 
     def install(self):
         outfiles = super().install()
 
-        if USER_OPTIONS['use-system-libxgboost'][2] != 0:
-            self.logger.info('Using system libxgboost.')
-            lib_path = os.path.join(sys.prefix, 'lib')
-            msg = 'use-system-libxgboost is specified, but ' + lib_name() + \
-                ' is not found in: ' + lib_path
-            assert os.path.exists(os.path.join(lib_path, lib_name())), msg
-            return []
 
         lib_dir = os.path.join(self.install_dir, 'boxhed_kernel', 'lib')
         if not os.path.exists(lib_dir):
@@ -229,17 +217,17 @@ class InstallLib(install_lib.install_lib):
         dst = os.path.join(self.install_dir, 'boxhed_kernel', 'lib', lib_name())
 
         global BUILD_TEMP_DIR   # pylint: disable=global-statement
-        libxgboost_path = lib_name()
+        libboxhed_kernel_path = lib_name()
 
         dft_lib_dir = os.path.join(CURRENT_DIR, os.path.pardir, 'lib')
         build_dir = os.path.join(BUILD_TEMP_DIR, 'boxhed_kernel', 'lib')
 
-        if os.path.exists(os.path.join(dft_lib_dir, libxgboost_path)):
+        if os.path.exists(os.path.join(dft_lib_dir, libboxhed_kernel_path)):
             # The library is built by CMake directly
-            src = os.path.join(dft_lib_dir, libxgboost_path)
+            src = os.path.join(dft_lib_dir, libboxhed_kernel_path)
         else:
             # The library is built by setup.py
-            src = os.path.join(build_dir, libxgboost_path)
+            src = os.path.join(build_dir, libboxhed_kernel_path)
         self.logger.info('Installing shared library: %s', src)
         dst, _ = self.copy_file(src, dst)
         outfiles.append(dst)
@@ -269,7 +257,7 @@ class Install(install.install):  # pylint: disable=too-many-instance-attributes
         self.plugin_lz4 = 0
         self.plugin_dense_parser = 0
 
-        self.use_system_libxgboost = 0
+        self.use_system_libboxhed_kernel = 0
 
     def run(self):
         # setuptools will configure the options according to user supplied command line
@@ -285,10 +273,10 @@ class Install(install.install):  # pylint: disable=too-many-instance-attributes
 if __name__ == '__main__':
     # Supported commands:
     # From internet:
-    # - pip install xgboost
-    # - pip install --no-binary :all: xgboost
+    # - pip install boxhed_kernel
+    # - pip install --no-binary :all: boxhed_kernel
 
-    # From source tree `xgboost/python-package`:
+    # From source tree `boxhed_kernel/python-package`:
     # - python setup.py build
     # - python setup.py build_ext
     # - python setup.py install
@@ -301,7 +289,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     setup(name='boxhed_kernel',
           version="2.0.1",#open(os.path.join(
-          #    CURRENT_DIR, 'xgboost/VERSION')).read().strip(),
+          #    CURRENT_DIR, 'boxhed_kernel/VERSION')).read().strip(),
           description="XGBoost Python Package",
           long_description=open(os.path.join(CURRENT_DIR, 'README.rst'),
                                 encoding='utf-8').read(),
@@ -309,7 +297,7 @@ if __name__ == '__main__':
               'numpy',
               'scipy',
           ],
-          ext_modules=[CMakeExtension('libxgboost')],
+          ext_modules=[CMakeExtension('libboxhed_kernel')],
           cmdclass={
               'build_ext': BuildExt,
               'sdist': Sdist,
@@ -338,6 +326,6 @@ if __name__ == '__main__':
                        'Programming Language :: Python :: 3.7',
                        'Programming Language :: Python :: 3.8'],
           python_requires='>=3.6',
-          url='https://github.com/dmlc/xgboost')
+          url='https://github.com/dmlc/boxhed_kernel')
 
     clean_up()

@@ -7,12 +7,12 @@
 #ifndef XGBOOST_COMMON_ROW_SET_H_
 #define XGBOOST_COMMON_ROW_SET_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <algorithm>
 #include <vector>
 #include <utility>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 /*! \brief collection of rowset */
@@ -241,6 +241,6 @@ class PartitionBuilder {
 
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_ROW_SET_H_

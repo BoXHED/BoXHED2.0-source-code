@@ -4,16 +4,16 @@
  * \brief Provides an implementation of the hinge loss function
  * \author Henry Gouk
  */
-#include "xgboost/objective.h"
-#include "xgboost/json.h"
-#include "xgboost/span.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/objective.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "../common/math.h"
 #include "../common/transform.h"
 #include "../common/common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 #if defined(XGBOOST_USE_CUDA)
@@ -95,4 +95,4 @@ XGBOOST_REGISTER_OBJECTIVE(HingeObj, "binary:hinge")
 .set_body([]() { return new HingeObj(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

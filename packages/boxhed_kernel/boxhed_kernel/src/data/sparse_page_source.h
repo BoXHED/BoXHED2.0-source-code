@@ -51,13 +51,13 @@
 #include <fstream>
 
 #include "rabit/rabit.h"
-#include "xgboost/base.h"
-#include "xgboost/data.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
 
 #include "adapter.h"
 #include "sparse_page_writer.h"
 #include "../common/common.h"
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 
 namespace detail {
 
@@ -70,17 +70,17 @@ GetCacheShards(const std::string& cache_info) {
       && std::isalpha(cache_info[0], std::locale::classic())
       && cache_info[1] == ':') {
     std::vector<std::string> cache_shards
-      = xgboost::common::Split(cache_info.substr(2), ':');
+      = boxhed_kernel::common::Split(cache_info.substr(2), ':');
     cache_shards[0] = cache_info.substr(0, 2) + cache_shards[0];
     return cache_shards;
   }
 #endif  // (defined _WIN32) || (defined __CYGWIN__)
-  return xgboost::common::Split(cache_info, ':');
+  return boxhed_kernel::common::Split(cache_info, ':');
 }
 
 }  // namespace detail
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 template<typename S, typename T>
@@ -560,5 +560,5 @@ class SortedCSCPageSource {
 };
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_SPARSE_PAGE_SOURCE_H_

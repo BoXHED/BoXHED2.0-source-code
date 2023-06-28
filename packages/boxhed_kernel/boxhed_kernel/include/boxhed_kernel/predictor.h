@@ -5,10 +5,10 @@
  *  performs predictions for a gradient booster.
  */
 #pragma once
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/host_device_vector.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/host_device_vector.h>
 
 #include <functional>
 #include <memory>
@@ -19,14 +19,14 @@
 #include <mutex>
 
 // Forward declarations
-namespace xgboost {
+namespace boxhed_kernel {
 class TreeUpdater;
 namespace gbm {
 struct GBTreeModel;
 }  // namespace gbm
 }
 
-namespace xgboost {
+namespace boxhed_kernel {
 /**
  * \struct  PredictionCacheEntry
  *
@@ -231,7 +231,7 @@ struct PredictorReg
   PredictorReg, std::function<Predictor*(GenericParameter const*)>> {};
 
 #define XGBOOST_REGISTER_PREDICTOR(UniqueId, Name)      \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::PredictorReg& \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::PredictorReg& \
       __make_##PredictorReg##_##UniqueId##__ =          \
-          ::dmlc::Registry<::xgboost::PredictorReg>::Get()->__REGISTER__(Name)
-}  // namespace xgboost
+          ::dmlc::Registry<::boxhed_kernel::PredictorReg>::Get()->__REGISTER__(Name)
+}  // namespace boxhed_kernel

@@ -1,4 +1,4 @@
-import xgboost as xgb
+import boxhed_kernel as xgb
 import numpy as np
 import time
 from sklearn import datasets

@@ -16,21 +16,21 @@
 #include <string>
 #include <unordered_map>
 
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/logging.h"
-#include "xgboost/gbm.h"
-#include "xgboost/predictor.h"
-#include "xgboost/tree_updater.h"
-#include "xgboost/parameter.h"
-#include "xgboost/json.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/gbm.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "gbtree_model.h"
 #include "../common/common.h"
 #include "../common/timer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 enum class TreeMethod : int {
   kAuto = 0, kApprox = 1, kExact = 2, kHist = 3,
   kGPUHist = 5
@@ -48,13 +48,13 @@ enum class PredictorType : int {
   kGPUPredictor,
   kOneAPIPredictor
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-DECLARE_FIELD_ENUM_CLASS(xgboost::TreeMethod);
-DECLARE_FIELD_ENUM_CLASS(xgboost::TreeProcessType);
-DECLARE_FIELD_ENUM_CLASS(xgboost::PredictorType);
+DECLARE_FIELD_ENUM_CLASS(boxhed_kernel::TreeMethod);
+DECLARE_FIELD_ENUM_CLASS(boxhed_kernel::TreeProcessType);
+DECLARE_FIELD_ENUM_CLASS(boxhed_kernel::PredictorType);
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 
 /*! \brief training parameters */
@@ -348,6 +348,6 @@ class GBTree : public GradientBooster {
 };
 
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_GBM_GBTREE_H_

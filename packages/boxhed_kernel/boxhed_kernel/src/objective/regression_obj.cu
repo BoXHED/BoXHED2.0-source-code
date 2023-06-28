@@ -6,23 +6,23 @@
  */
 
 #include <dmlc/omp.h>
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/objective.h>
 #include <cmath>
 #include <memory>
 #include <vector>
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/json.h"
-#include "xgboost/parameter.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/span.h"
 
 #include "../common/transform.h"
 #include "../common/common.h"
 #include "./regression_loss.h"
 
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 #if defined(XGBOOST_USE_CUDA)
@@ -708,4 +708,4 @@ XGBOOST_REGISTER_OBJECTIVE(TweedieRegression, "reg:tweedie")
 .set_body([]() { return new TweedieRegression(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

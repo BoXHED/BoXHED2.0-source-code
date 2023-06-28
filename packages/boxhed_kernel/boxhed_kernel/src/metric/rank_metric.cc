@@ -10,7 +10,7 @@
 // - An instance of the appropriate gpu metric type is created when a device ordinal is present
 // - If the creation is successful, the metric computation is done on the device
 // - else, it falls back on the CPU
-// - The GPU metric types are *only* registered when xgboost is built for GPUs
+// - The GPU metric types are *only* registered when boxhed_kernel is built for GPUs
 //
 // This is done for 2 reasons:
 // - Clear separation of CPU and GPU logic
@@ -21,19 +21,19 @@
 //   This precludes the CPU and GPU logic to coexist inside a .cu file
 
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <boxhed_kernel/metric.h>
 #include <dmlc/registry.h>
 #include <cmath>
 
 #include <vector>
 
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/host_device_vector.h"
 #include "../common/math.h"
 #include "metric_common.h"
 
 namespace {
 
-using PredIndPair = std::pair<xgboost::bst_float, uint32_t>;
+using PredIndPair = std::pair<boxhed_kernel::bst_float, uint32_t>;
 using PredIndPairContainer = std::vector<PredIndPair>;
 
 /*
@@ -53,13 +53,13 @@ using PredIndPairContainer = std::vector<PredIndPair>;
 
 class PerInstanceWeightPolicy {
  public:
-  inline static xgboost::bst_float
-  GetWeightOfInstance(const xgboost::MetaInfo& info,
+  inline static boxhed_kernel::bst_float
+  GetWeightOfInstance(const boxhed_kernel::MetaInfo& info,
                       unsigned instance_id, unsigned) {
     return info.GetWeight(instance_id);
   }
-  inline static xgboost::bst_float
-  GetWeightOfSortedRecord(const xgboost::MetaInfo& info,
+  inline static boxhed_kernel::bst_float
+  GetWeightOfSortedRecord(const boxhed_kernel::MetaInfo& info,
                           const PredIndPairContainer& rec,
                           unsigned record_id, unsigned) {
     return info.GetWeight(rec[record_id].second);
@@ -68,14 +68,14 @@ class PerInstanceWeightPolicy {
 
 class PerGroupWeightPolicy {
  public:
-  inline static xgboost::bst_float
-  GetWeightOfInstance(const xgboost::MetaInfo& info,
+  inline static boxhed_kernel::bst_float
+  GetWeightOfInstance(const boxhed_kernel::MetaInfo& info,
                       unsigned, unsigned group_id) {
     return info.GetWeight(group_id);
   }
 
-  inline static xgboost::bst_float
-  GetWeightOfSortedRecord(const xgboost::MetaInfo& info,
+  inline static boxhed_kernel::bst_float
+  GetWeightOfSortedRecord(const boxhed_kernel::MetaInfo& info,
                           const PredIndPairContainer&,
                           unsigned, unsigned group_id) {
     return info.GetWeight(group_id);
@@ -84,7 +84,7 @@ class PerGroupWeightPolicy {
 
 }  // anonymous namespace
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(rank_metric);
@@ -161,7 +161,7 @@ struct EvalAuc : public Metric {
  private:
   // This is used to compute the AUC metrics on the GPU - for ranking tasks and
   // for training jobs that run on the GPU.
-  std::unique_ptr<xgboost::Metric> auc_gpu_;
+  std::unique_ptr<boxhed_kernel::Metric> auc_gpu_;
 
   template <typename WeightPolicy>
   bst_float Eval(const HostDeviceVector<bst_float> &preds,
@@ -280,7 +280,7 @@ struct EvalAuc : public Metric {
 struct EvalRank : public Metric, public EvalRankConfig {
  private:
   // This is used to compute the ranking metrics on the GPU - for training jobs that run on the GPU.
-  std::unique_ptr<xgboost::Metric> rank_gpu_;
+  std::unique_ptr<boxhed_kernel::Metric> rank_gpu_;
 
  public:
   bst_float Eval(const HostDeviceVector<bst_float> &preds,
@@ -510,7 +510,7 @@ struct EvalAucPR : public Metric {
  private:
   // This is used to compute the AUCPR metrics on the GPU - for ranking tasks and
   // for training jobs that run on the GPU.
-  std::unique_ptr<xgboost::Metric> aucpr_gpu_;
+  std::unique_ptr<boxhed_kernel::Metric> aucpr_gpu_;
 
   template <typename WeightPolicy>
   bst_float Eval(const HostDeviceVector<bst_float> &preds,
@@ -673,4 +673,4 @@ XGBOOST_REGISTER_METRIC(Cox, "cox-nloglik")
 .describe("Negative log partial likelihood of Cox proportioanl hazards model.")
 .set_body([](const char*) { return new EvalCox(); });
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

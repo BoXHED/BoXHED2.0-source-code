@@ -19,9 +19,9 @@
 #include <algorithm>
 #include <utility>
 
-#include "xgboost/base.h"
+#include "boxhed_kernel/base.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief multi-thread version of group builder
@@ -129,5 +129,5 @@ class ParallelGroupBuilder {
   size_t base_row_offset_;
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_GROUP_DATA_H_

@@ -4,12 +4,12 @@
  * \brief Enable all kinds of global variables in common.
  */
 #include <dmlc/thread_local.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 
 #include "common.h"
 #include "./random.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*! \brief thread local entry for random. */
 struct RandomThreadLocalEntry {
@@ -30,4 +30,4 @@ int AllVisibleGPUs() {
 #endif  // !defined(XGBOOST_USE_CUDA)
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

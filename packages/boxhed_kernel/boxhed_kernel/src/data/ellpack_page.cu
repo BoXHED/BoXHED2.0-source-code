@@ -1,7 +1,7 @@
 /*!
  * Copyright 2019-2020 XGBoost contributors
  */
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <thrust/iterator/discard_iterator.h>
 #include <thrust/iterator/transform_output_iterator.h>
 #include "../common/categorical.h"
@@ -10,7 +10,7 @@
 #include "./ellpack_page.cuh"
 #include "device_adapter.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 EllpackPage::EllpackPage() : impl_{new EllpackPageImpl()} {}
 
@@ -466,4 +466,4 @@ EllpackDeviceAccessor EllpackPageImpl::GetDeviceAccessor(int device) const {
       common::CompressedIterator<uint32_t>(gidx_buffer.ConstDevicePointer(),
                                            NumSymbols()));
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel

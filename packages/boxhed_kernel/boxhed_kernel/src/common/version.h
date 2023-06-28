@@ -8,9 +8,9 @@
 #include <string>
 #include <tuple>
 
-#include "xgboost/base.h"
+#include "boxhed_kernel/base.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 class Json;
 // a static class for handling version info
 struct Version {
@@ -31,5 +31,5 @@ struct Version {
   static bool Same(TripletT const& triplet);
 };
 
-}      // namespace xgboost
+}      // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_VERSION_H_

@@ -7,13 +7,13 @@
 #include <dmlc/omp.h>
 #include <dmlc/common.h>
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <utility>
 #include <vector>
 #include <type_traits>  // enable_if
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/span.h"
 
 #include "common.h"
 
@@ -21,7 +21,7 @@
 #include "device_helpers.cuh"
 #endif  // defined (__CUDACC__)
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 constexpr size_t kBlockThreads = 256;
@@ -209,6 +209,6 @@ class Transform {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_TRANSFORM_H_

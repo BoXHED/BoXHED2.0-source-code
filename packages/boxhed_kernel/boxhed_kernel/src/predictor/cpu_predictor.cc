@@ -8,19 +8,19 @@
 #include <limits>
 #include <mutex>
 
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/predictor.h"
-#include "xgboost/tree_model.h"
-#include "xgboost/tree_updater.h"
-#include "xgboost/logging.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/tree_model.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "../data/adapter.h"
 #include "../common/math.h"
 #include "../gbm/gbtree_model.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace predictor {
 
 DMLC_REGISTRY_FILE_TAG(cpu_predictor);
@@ -510,4 +510,4 @@ XGBOOST_REGISTER_PREDICTOR(CPUPredictor, "cpu_predictor")
             return new CPUPredictor(generic_param);
           });
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace boxhed_kernel

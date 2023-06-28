@@ -1,25 +1,25 @@
 /*!
  * Copyright 2014-2019 by Contributors
  * \file objective.h
- * \brief interface of objective function used by xgboost.
+ * \brief interface of objective function used by boxhed_kernel.
  * \author Tianqi Chen, Kailong Chen
  */
 #ifndef XGBOOST_OBJECTIVE_H_
 #define XGBOOST_OBJECTIVE_H_
 
 #include <dmlc/registry.h>
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/model.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/host_device_vector.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/model.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/host_device_vector.h>
 
 #include <vector>
 #include <utility>
 #include <string>
 #include <functional>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 /*! \brief interface of objective function */
 class ObjFunction : public Configurable {
@@ -101,8 +101,8 @@ struct ObjFunctionReg
  * \endcode
  */
 #define XGBOOST_REGISTER_OBJECTIVE(UniqueId, Name)                      \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::ObjFunctionReg &              \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::ObjFunctionReg &              \
   __make_ ## ObjFunctionReg ## _ ## UniqueId ## __ =                    \
-      ::dmlc::Registry< ::xgboost::ObjFunctionReg>::Get()->__REGISTER__(Name)
-}  // namespace xgboost
+      ::dmlc::Registry< ::boxhed_kernel::ObjFunctionReg>::Get()->__REGISTER__(Name)
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_OBJECTIVE_H_

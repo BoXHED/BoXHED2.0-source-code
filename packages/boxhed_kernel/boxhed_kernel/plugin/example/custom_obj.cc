@@ -1,15 +1,15 @@
 /*!
  * Copyright 2015-2019 by Contributors
  * \file custom_metric.cc
- * \brief This is an example to define plugin of xgboost.
+ * \brief This is an example to define plugin of boxhed_kernel.
  *  This plugin defines the additional metric function.
  */
-#include <xgboost/base.h>
-#include <xgboost/parameter.h>
-#include <xgboost/objective.h>
-#include <xgboost/json.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/parameter.h>
+#include <boxhed_kernel/objective.h>
+#include <boxhed_kernel/json.h>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 // This is a helpful data structure to define parameters
@@ -85,10 +85,10 @@ class MyLogistic : public ObjFunction {
 };
 
 // Finally register the objective function.
-// After it succeeds you can try use xgboost with objective=mylogistic
+// After it succeeds you can try use boxhed_kernel with objective=mylogistic
 XGBOOST_REGISTER_OBJECTIVE(MyLogistic, "mylogistic")
 .describe("User defined logistic regression plugin")
 .set_body([]() { return new MyLogistic(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

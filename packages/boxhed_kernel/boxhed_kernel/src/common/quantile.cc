@@ -6,7 +6,7 @@
 #include "quantile.h"
 #include "hist_util.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 HostSketchContainer::HostSketchContainer(std::vector<bst_row_t> columns_size,
@@ -323,4 +323,4 @@ void HostSketchContainer::MakeCuts(HistogramCuts* cuts) {
   monitor_.Stop(__func__);
 }
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

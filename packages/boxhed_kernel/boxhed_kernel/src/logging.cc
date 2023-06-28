@@ -9,19 +9,19 @@
 #include <iostream>
 #include <map>
 
-#include "xgboost/parameter.h"
-#include "xgboost/logging.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/logging.h"
 
 #if !defined(XGBOOST_STRICT_R_MODE) || XGBOOST_STRICT_R_MODE == 0
 // Override logging mechanism for non-R interfaces
 void dmlc::CustomLogMessage::Log(const std::string& msg) {
-  const xgboost::LogCallbackRegistry* registry
-    = xgboost::LogCallbackRegistryStore::Get();
+  const boxhed_kernel::LogCallbackRegistry* registry
+    = boxhed_kernel::LogCallbackRegistryStore::Get();
   auto callback = registry->Get();
   callback(msg.c_str());
 }
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 ConsoleLogger::~ConsoleLogger() {
   if (ShouldLog(cur_verbosity_)) {
@@ -34,11 +34,11 @@ TrackerLogger::~TrackerLogger() {
   rabit::TrackerPrint(log_stream_.str());
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // !defined(XGBOOST_STRICT_R_MODE) || XGBOOST_STRICT_R_MODE == 0
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 DMLC_REGISTER_PARAMETER(ConsoleLoggerParam);
 
@@ -106,4 +106,4 @@ ConsoleLogger::ConsoleLogger(
   }
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel

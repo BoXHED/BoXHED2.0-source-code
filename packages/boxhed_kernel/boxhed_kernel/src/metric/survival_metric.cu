@@ -11,9 +11,9 @@
 #include <memory>
 #include <vector>
 
-#include "xgboost/json.h"
-#include "xgboost/metric.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/metric.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "metric_common.h"
 #include "../common/math.h"
@@ -24,12 +24,12 @@
 #include "../common/device_helpers.cuh"
 #endif  // XGBOOST_USE_CUDA
 
-using AFTParam = xgboost::common::AFTParam;
-using ProbabilityDistributionType = xgboost::common::ProbabilityDistributionType;
+using AFTParam = boxhed_kernel::common::AFTParam;
+using ProbabilityDistributionType = boxhed_kernel::common::ProbabilityDistributionType;
 template <typename Distribution>
-using AFTLoss = xgboost::common::AFTLoss<Distribution>;
+using AFTLoss = boxhed_kernel::common::AFTLoss<Distribution>;
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(survival_metric);
@@ -297,4 +297,4 @@ XGBOOST_REGISTER_METRIC(IntervalRegressionAccuracy, "interval-regression-accurac
 });
 
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

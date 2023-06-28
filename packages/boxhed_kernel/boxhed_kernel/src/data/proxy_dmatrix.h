@@ -10,12 +10,12 @@
 #include <string>
 #include <utility>
 
-#include "xgboost/data.h"
-#include "xgboost/generic_parameters.h"
-#include "xgboost/c_api.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/generic_parameters.h"
+#include "boxhed_kernel/c_api.h"
 #include "adapter.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 /*
  * \brief A proxy to external iterator.
@@ -45,7 +45,7 @@ class DataIterProxy {
 class DMatrixProxy : public DMatrix {
   MetaInfo info_;
   dmlc::any batch_;
-  int32_t device_ { xgboost::GenericParameter::kCpuId };
+  int32_t device_ { boxhed_kernel::GenericParameter::kCpuId };
 
 #if defined(XGBOOST_USE_CUDA)
   void FromCudaColumnar(std::string interface_str);
@@ -103,5 +103,5 @@ class DMatrixProxy : public DMatrix {
   }
 };
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_PROXY_DMATRIX_H_

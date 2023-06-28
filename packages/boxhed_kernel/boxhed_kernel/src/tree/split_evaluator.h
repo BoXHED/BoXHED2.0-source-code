@@ -9,19 +9,19 @@
 #define XGBOOST_TREE_SPLIT_EVALUATOR_H_
 
 #include <dmlc/registry.h>
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 #include <utility>
 #include <vector>
 #include <limits>
 
-#include "xgboost/tree_model.h"
-#include "xgboost/host_device_vector.h"
-#include "xgboost/generic_parameters.h"
+#include "boxhed_kernel/tree_model.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/generic_parameters.h"
 #include "../common/transform.h"
 #include "../common/math.h"
 #include "param.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 class TreeEvaluator {
   // hist and exact use parent id to calculate constraints.
@@ -92,7 +92,7 @@ class TreeEvaluator {
 
     XGBOOST_DEVICE float CalcWeight(bst_node_t nodeid, const ParamT &param,
                                     tree::GradStats stats) const {
-      float w = xgboost::tree::CalcWeight(param, stats);
+      float w = boxhed_kernel::tree::CalcWeight(param, stats);
       if (!has_constraint) {
         return w;
       }
@@ -175,6 +175,6 @@ class TreeEvaluator {
   }
 };
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_TREE_SPLIT_EVALUATOR_H_

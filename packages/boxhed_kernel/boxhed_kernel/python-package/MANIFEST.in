@@ -1,6 +1,6 @@
 include *.rst
-include xgboost/VERSION
-include xgboost/CMakeLists.txt
+include boxhed_kernel/VERSION
+include boxhed_kernel/CMakeLists.txt
 
 recursive-include boxhed_kernel *
 recursive-include boxhed_kernel/include *

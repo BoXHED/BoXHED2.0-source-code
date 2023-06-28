@@ -7,7 +7,7 @@
 #ifndef XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_
 #define XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -17,7 +17,7 @@
 #include "ellpack_page_source.h"
 #include "sparse_page_source.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 // Used for external memory.
 class SparsePageDMatrix : public DMatrix {
@@ -68,5 +68,5 @@ class SparsePageDMatrix : public DMatrix {
   }
 };
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_

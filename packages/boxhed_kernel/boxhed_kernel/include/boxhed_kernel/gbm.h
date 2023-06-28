@@ -10,10 +10,10 @@
 
 #include <dmlc/registry.h>
 #include <dmlc/any.h>
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/host_device_vector.h>
-#include <xgboost/model.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/model.h>
 
 #include <vector>
 #include <utility>
@@ -22,7 +22,7 @@
 #include <unordered_map>
 #include <memory>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 class FeatureMap;
@@ -217,9 +217,9 @@ struct GradientBoosterReg
  * \endcode
  */
 #define XGBOOST_REGISTER_GBM(UniqueId, Name)                            \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::GradientBoosterReg &          \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::GradientBoosterReg &          \
   __make_ ## GradientBoosterReg ## _ ## UniqueId ## __ =                \
-      ::dmlc::Registry< ::xgboost::GradientBoosterReg>::Get()->__REGISTER__(Name)
+      ::dmlc::Registry< ::boxhed_kernel::GradientBoosterReg>::Get()->__REGISTER__(Name)
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_GBM_H_

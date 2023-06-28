@@ -9,7 +9,7 @@
 #include <numeric>
 #include <vector>
 
-#include "xgboost/base.h"
+#include "boxhed_kernel/base.h"
 #include "../common/common.h"
 #include "hist_util.h"
 #include "random.h"
@@ -26,7 +26,7 @@
   #define PREFETCH_READ_T0(addr) do {} while (0)
 #endif  // defined(XGBOOST_MM_PREFETCH_PRESENT)
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 void GHistIndexMatrix::ResizeIndex(const size_t n_index,
@@ -184,7 +184,7 @@ static size_t GetConflictCount(const std::vector<bool>& mark,
                                const Column<BinIdxType>& column_input,
                                size_t max_cnt) {
   size_t ret = 0;
-  if (column_input.GetType() == xgboost::common::kDenseColumn) {
+  if (column_input.GetType() == boxhed_kernel::common::kDenseColumn) {
     const DenseColumn<BinIdxType>& column
       = static_cast<const DenseColumn<BinIdxType>& >(column_input);
     for (size_t i = 0; i < column.Size(); ++i) {
@@ -214,7 +214,7 @@ template <typename BinIdxType>
 inline void
 MarkUsed(std::vector<bool>* p_mark, const Column<BinIdxType>& column_input) {
   std::vector<bool>& mark = *p_mark;
-  if (column_input.GetType() == xgboost::common::kDenseColumn) {
+  if (column_input.GetType() == boxhed_kernel::common::kDenseColumn) {
     const DenseColumn<BinIdxType>& column
       = static_cast<const DenseColumn<BinIdxType>& >(column_input);
     for (size_t i = 0; i < column.Size(); ++i) {
@@ -447,10 +447,10 @@ template<typename GradientSumT>
 void InitilizeHistByZeroes(GHistRow<GradientSumT> hist, size_t begin, size_t end) {
 #if defined(XGBOOST_STRICT_R_MODE) && XGBOOST_STRICT_R_MODE == 1
   std::fill(hist.begin() + begin, hist.begin() + end,
-            xgboost::detail::GradientPairInternal<GradientSumT>());
+            boxhed_kernel::detail::GradientPairInternal<GradientSumT>());
 #else  // defined(XGBOOST_STRICT_R_MODE) && XGBOOST_STRICT_R_MODE == 1
   memset(hist.data() + begin, '\0', (end-begin)*
-         sizeof(xgboost::detail::GradientPairInternal<GradientSumT>));
+         sizeof(boxhed_kernel::detail::GradientPairInternal<GradientSumT>));
 #endif  // defined(XGBOOST_STRICT_R_MODE) && XGBOOST_STRICT_R_MODE == 1
 }
 template void InitilizeHistByZeroes(GHistRow<float> hist, size_t begin,
@@ -707,7 +707,7 @@ void GHistBuilder<GradientSumT>::BuildBlockHist(const std::vector<GradientPair>&
 #if defined(_OPENMP)
   const auto nthread = static_cast<bst_omp_uint>(this->nthread_);  // NOLINT
 #endif  // defined(_OPENMP)
-  xgboost::detail::GradientPairInternal<GradientSumT>* p_hist = hist.data();
+  boxhed_kernel::detail::GradientPairInternal<GradientSumT>* p_hist = hist.data();
 
 #pragma omp parallel for num_threads(nthread) schedule(guided)
   for (bst_omp_uint bid = 0; bid < nblock; ++bid) {
@@ -784,4 +784,4 @@ void GHistBuilder<double>::SubtractionTrick(GHistRow<double> self,
                                             GHistRow<double> parent);
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

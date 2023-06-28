@@ -10,7 +10,7 @@
 #include <memory>
 #include <utility>
 
-#include "xgboost/span.h"
+#include "boxhed_kernel/span.h"
 #include "quantile.h"
 #include "quantile.cuh"
 #include "hist_util.h"
@@ -18,7 +18,7 @@
 #include "categorical.h"
 #include "common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 using WQSketch = HostSketchContainer::WQSketch;
@@ -737,4 +737,4 @@ void SketchContainer::MakeCuts(HistogramCuts* p_cuts) {
   timer_.Stop(__func__);
 }
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

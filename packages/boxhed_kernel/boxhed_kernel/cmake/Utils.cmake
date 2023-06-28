@@ -129,7 +129,7 @@ macro(enable_nvtx target)
 endmacro()
 
 # Set CUDA related flags to target.  Must be used after code `format_gencode_flags`.
-function(xgboost_set_cuda_flags target)
+function(boxhed_kernel_set_cuda_flags target)
   find_package(OpenMP REQUIRED)
   target_link_libraries(${target} PUBLIC OpenMP::OpenMP_CXX)
 
@@ -156,7 +156,7 @@ function(xgboost_set_cuda_flags target)
   endif (USE_NVTX)
 
   target_compile_definitions(${target} PRIVATE -DXGBOOST_USE_CUDA=1 -DTHRUST_IGNORE_CUB_VERSION_CHECK=1)
-  target_include_directories(${target} PRIVATE ${xgboost_SOURCE_DIR}/cub/)
+  target_include_directories(${target} PRIVATE ${boxhed_kernel_SOURCE_DIR}/cub/)
 
   if (MSVC)
     target_compile_options(${target} PRIVATE
@@ -179,4 +179,4 @@ function(xgboost_set_cuda_flags target)
     target_compile_definitions(${target} PRIVATE -DXGBOOST_USE_NCCL=1)
     target_link_libraries(${target} PUBLIC ${NCCL_LIBRARY})
   endif (USE_NCCL)
-endfunction(xgboost_set_cuda_flags)
+endfunction(boxhed_kernel_set_cuda_flags)

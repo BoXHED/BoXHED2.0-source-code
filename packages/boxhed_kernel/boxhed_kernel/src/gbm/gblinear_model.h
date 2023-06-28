@@ -4,19 +4,19 @@
 #pragma once
 #include <dmlc/io.h>
 #include <dmlc/parameter.h>
-#include <xgboost/learner.h>
+#include <boxhed_kernel/learner.h>
 
 #include <vector>
 #include <string>
 #include <cstring>
 
-#include "xgboost/base.h"
-#include "xgboost/feature_map.h"
-#include "xgboost/model.h"
-#include "xgboost/json.h"
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/feature_map.h"
+#include "boxhed_kernel/model.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/parameter.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 class Json;
 namespace gbm {
 // Deprecated in 1.0.0. model parameter.  Only staying here for compatible binary model IO.
@@ -140,4 +140,4 @@ class GBLinearModel : public Model {
 };
 
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

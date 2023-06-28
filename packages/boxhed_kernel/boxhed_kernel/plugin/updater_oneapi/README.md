@@ -32,7 +32,7 @@ param['objective'] = 'reg:squarederror_oneapi'
 Building the plugin requires Data Parallel C++ Compiler (https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/dpc-compiler.html)
 
 ## Build
-From the command line on Linux starting from the xgboost directory:
+From the command line on Linux starting from the boxhed_kernel directory:
 
 ```bash
 $ mkdir build

@@ -5,9 +5,9 @@
 
 #include <thrust/execution_policy.h>
 #include <thrust/inner_product.h>
-#include <xgboost/data.h>
-#include <xgboost/linear_updater.h>
-#include "xgboost/span.h"
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/linear_updater.h>
+#include "boxhed_kernel/span.h"
 
 #include "coordinate_common.h"
 #include "../common/common.h"
@@ -15,7 +15,7 @@
 #include "../common/timer.h"
 #include "./param.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 
 DMLC_REGISTRY_FILE_TAG(updater_gpu_coordinate);
@@ -78,10 +78,10 @@ class GPUCoordinateUpdater : public LinearUpdater {  // NOLINT
       };
       auto column_begin =
           std::lower_bound(col.cbegin(), col.cend(),
-                           xgboost::Entry(0, 0.0f), cmp);
+                           boxhed_kernel::Entry(0, 0.0f), cmp);
       auto column_end =
           std::lower_bound(col.cbegin(), col.cend(),
-                           xgboost::Entry(num_row_, 0.0f), cmp);
+                           boxhed_kernel::Entry(num_row_, 0.0f), cmp);
       column_segments.emplace_back(
           std::make_pair(column_begin - col.cbegin(), column_end - col.cbegin()));
       row_ptr_.push_back(row_ptr_.back() + (column_end - column_begin));
@@ -201,7 +201,7 @@ class GPUCoordinateUpdater : public LinearUpdater {  // NOLINT
   // This needs to be public because of the __device__ lambda.
   GradientPair GetGradient(int group_idx, int num_group, int fidx) {
     dh::safe_cuda(cudaSetDevice(learner_param_->gpu_id));
-    common::Span<xgboost::Entry> d_col = dh::ToSpan(data_).subspan(row_ptr_[fidx]);
+    common::Span<boxhed_kernel::Entry> d_col = dh::ToSpan(data_).subspan(row_ptr_[fidx]);
     size_t col_size = row_ptr_[fidx + 1] - row_ptr_[fidx];
     common::Span<GradientPair> d_gpair = dh::ToSpan(gpair_);
     auto counting = thrust::make_counting_iterator(0ull);
@@ -247,7 +247,7 @@ class GPUCoordinateUpdater : public LinearUpdater {  // NOLINT
   common::Monitor monitor_;
 
   std::vector<size_t> row_ptr_;
-  dh::device_vector<xgboost::Entry> data_;
+  dh::device_vector<boxhed_kernel::Entry> data_;
   dh::caching_device_vector<GradientPair> gpair_;
   size_t num_row_;
 };
@@ -258,4 +258,4 @@ XGBOOST_REGISTER_LINEAR_UPDATER(GPUCoordinateUpdater, "gpu_coord_descent")
         "accelerated.")
     .set_body([]() { return new GPUCoordinateUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -34,7 +34,7 @@
  * DevicePointer and data on GPU  --> no problems, the device ptr
  *                        will be returned immediately.
  *
- * What if xgboost is compiled without CUDA?<br/>
+ * What if boxhed_kernel is compiled without CUDA?<br/>
  * In that case, there's a special implementation which always falls-back to
  * working with std::vector. This logic can be found in host_device_vector.cc
  *
@@ -55,7 +55,7 @@
 
 #include "span.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 #ifdef __CUDACC__
 // Sets a function to call instead of cudaSetDevice();
@@ -142,6 +142,6 @@ class HostDeviceVector {
   HostDeviceVectorImpl<T>* impl_;
 };
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_HOST_DEVICE_VECTOR_H_

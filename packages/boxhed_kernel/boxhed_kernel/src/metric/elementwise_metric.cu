@@ -7,7 +7,7 @@
  *  The expressions like wsum == 0 ? esum : esum / wsum is used to handle empty dataset.
  */
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <boxhed_kernel/metric.h>
 #include <dmlc/registry.h>
 #include <cmath>
 
@@ -24,7 +24,7 @@
 #include "../common/device_helpers.cuh"
 #endif  // XGBOOST_USE_CUDA
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(elementwise_metric);
@@ -416,4 +416,4 @@ XGBOOST_REGISTER_METRIC(TweedieNLogLik, "tweedie-nloglik")
 });
 
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

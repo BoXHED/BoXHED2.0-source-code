@@ -5,13 +5,13 @@
 #ifndef XGBOOST_COMMON_CATEGORICAL_H_
 #define XGBOOST_COMMON_CATEGORICAL_H_
 
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/span.h"
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/parameter.h"
 #include "bitfield.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 // Cast the categorical type.
 template <typename T>
@@ -45,6 +45,6 @@ inline XGBOOST_DEVICE bool Decision(common::Span<uint32_t const> cats, bst_cat_t
 using CatBitField = LBitField32;
 using KCatBitField = CLBitField32;
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_CATEGORICAL_H_

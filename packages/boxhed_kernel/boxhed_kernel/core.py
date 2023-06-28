@@ -22,12 +22,12 @@ from .compat import (STRING_TYPES, DataFrame, py_str, PANDAS_INSTALLED,
                      lazy_isinstance)
 from .libpath import find_lib_path
 
-# c_bst_ulong corresponds to bst_ulong defined in xgboost/c_api.h
+# c_bst_ulong corresponds to bst_ulong defined in boxhed_kernel/c_api.h
 c_bst_ulong = ctypes.c_uint64
 
 
 class XGBoostError(ValueError):
-    """Error thrown by xgboost trainer."""
+    """Error thrown by boxhed_kernel trainer."""
 
 
 class EarlyStopException(Exception):
@@ -128,7 +128,7 @@ def _get_log_callback_func():
 
 
 def _load_lib():
-    """Load xgboost Library."""
+    """Load boxhed_kernel Library."""
     lib_paths = find_lib_path()
     if not lib_paths:
         return None
@@ -361,7 +361,7 @@ class DataIter:
 
         data_handle: callable
             A function with same data fields like `data`, `label` with
-            `xgboost.DMatrix`.
+            `boxhed_kernel.DMatrix`.
 
         Returns
         -------
@@ -445,7 +445,7 @@ class DMatrix:                  # pylint: disable=too-many-instance-attributes
             Data source of DMatrix.
             When data is string or os.PathLike type, it represents the path
             libsvm format txt file, csv file (by specifying uri parameter
-            'path_to_csv?format=csv'), or binary file that xgboost can read
+            'path_to_csv?format=csv'), or binary file that boxhed_kernel can read
             from.
         label : list, numpy 1-D array or cudf.DataFrame, optional
             Label of the training data.
@@ -633,7 +633,7 @@ class DMatrix:                  # pylint: disable=too-many-instance-attributes
 
     def save_binary(self, fname, silent=True):
         """Save DMatrix to an XGBoost buffer.  Saved binary can be later loaded
-        by providing the path to :py:func:`xgboost.DMatrix` as input.
+        by providing the path to :py:func:`boxhed_kernel.DMatrix` as input.
 
         Parameters
         ----------
@@ -984,7 +984,7 @@ class Booster(object):
     # pylint: disable=too-many-public-methods
     """A Booster of XGBoost.
 
-    Booster is the model of xgboost, that contains low level routines for
+    Booster is the model of boxhed_kernel, that contains low level routines for
     training, prediction and evaluation.
     """
 
@@ -1274,7 +1274,7 @@ class Booster(object):
 
     def boost(self, dtrain, grad, hess):
         """Boost the booster for one iteration, with customized gradient
-        statistics.  Like :func:`xgboost.core.Booster.update`, this
+        statistics.  Like :func:`boxhed_kernel.core.Booster.update`, this
         function should not be called directly by users.
 
         Parameters
@@ -1661,7 +1661,7 @@ class Booster(object):
         among the various XGBoost interfaces. Auxiliary attributes of the
         Python Booster object (such as feature_names) will not be saved.  See:
 
-          https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html
+          https://boxhed_kernel.readthedocs.io/en/latest/tutorials/saving_model.html
 
         for more info.
 
@@ -1699,7 +1699,7 @@ class Booster(object):
         various XGBoost interfaces. Auxiliary attributes of the Python Booster
         object (such as feature_names) will not be loaded.  See:
 
-          https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html
+          https://boxhed_kernel.readthedocs.io/en/latest/tutorials/saving_model.html
 
         for more info.
 

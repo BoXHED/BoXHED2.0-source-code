@@ -4,15 +4,15 @@
 #include <dmlc/registry.h>
 #include <mutex>
 
-#include "xgboost/predictor.h"
-#include "xgboost/data.h"
-#include "xgboost/generic_parameters.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/generic_parameters.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::PredictorReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::PredictorReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 void PredictionContainer::ClearExpiredEntries() {
   std::vector<DMatrix*> expired;
   for (auto& kv : container_) {
@@ -58,9 +58,9 @@ Predictor* Predictor::Create(
   auto p_predictor = (e->body)(generic_param);
   return p_predictor;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace predictor {
 // List of files that will be force linked in static links.
 #ifdef XGBOOST_USE_CUDA
@@ -68,4 +68,4 @@ DMLC_REGISTRY_LINK_TAG(gpu_predictor);
 #endif  // XGBOOST_USE_CUDA
 DMLC_REGISTRY_LINK_TAG(cpu_predictor);
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace boxhed_kernel

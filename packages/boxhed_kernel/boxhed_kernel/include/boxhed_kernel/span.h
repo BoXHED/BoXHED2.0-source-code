@@ -29,8 +29,8 @@
 #ifndef XGBOOST_SPAN_H_
 #define XGBOOST_SPAN_H_
 
-#include <xgboost/base.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/logging.h>
 
 #include <cinttypes>          // size_t
 #include <limits>             // numeric_limits
@@ -68,7 +68,7 @@
 
 #endif  // defined(_MSC_VER) && _MSC_VER < 1910
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 // Usual logging facility is not available inside device code.
@@ -94,7 +94,7 @@ namespace common {
 #define SPAN_CHECK(cond)                                                       \
   do {                                                                         \
     if (XGBOOST_EXPECT(!(cond), false)) {                                      \
-      fprintf(stderr, "[xgboost] Condition %s failed.\n", #cond);              \
+      fprintf(stderr, "[boxhed_kernel] Condition %s failed.\n", #cond);              \
       fflush(stderr);  /* It seems stderr on Windows is beffered? */           \
       std::terminate();                                                        \
     }                                                                          \
@@ -104,7 +104,7 @@ namespace common {
 #if defined(__CUDA_ARCH__)
 #define SPAN_LT(lhs, rhs)                                                      \
   if (!((lhs) < (rhs))) {                                                      \
-    printf("[xgboost] Condition: %lu < %lu failed\n",                          \
+    printf("[boxhed_kernel] Condition: %lu < %lu failed\n",                          \
            static_cast<size_t>(lhs), static_cast<size_t>(rhs));                \
     asm("trap;");                                                              \
   }
@@ -659,7 +659,7 @@ XGBOOST_DEVICE auto as_writable_bytes(Span<T, E> s) __span_noexcept ->  // NOLIN
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #if defined(_MSC_VER) &&_MSC_VER < 1910
 #undef constexpr

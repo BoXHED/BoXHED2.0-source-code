@@ -9,10 +9,10 @@
 #include <dmlc/registry.h>
 #include "survival_util.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 DMLC_REGISTER_PARAMETER(AFTParam);
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

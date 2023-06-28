@@ -499,7 +499,7 @@ XGB_DLL int XGDMatrixGetStrFeatureInfo(DMatrixHandle handle, const char *field,
  * \param data   Pointer to consecutive memory storing data.
  * \param size   Size of the data, this is relative to size of type.  (Meaning NOT number
  *               of bytes.)
- * \param type   Indicator of data type.  This is defined in xgboost::DataType enum class.
+ * \param type   Indicator of data type.  This is defined in boxhed_kernel::DataType enum class.
  *
  *    float    = 1
  *    double   = 2
@@ -564,7 +564,7 @@ XGB_DLL int XGDMatrixNumCol(DMatrixHandle handle,
                             bst_ulong *out);
 // --- start XGBoost class
 /*!
- * \brief create xgboost learner
+ * \brief create boxhed_kernel learner
  * \param dmats matrices that are set to be cached
  * \param len length of dmats
  * \param out handle to the result booster
@@ -642,7 +642,7 @@ XGB_DLL int XGBoosterBoostOneIter(BoosterHandle handle,
                                   float *hess,
                                   bst_ulong len);
 /*!
- * \brief get evaluation statistics for xgboost
+ * \brief get evaluation statistics for boxhed_kernel
  * \param handle handle
  * \param iter current iteration rounds
  * \param dmats pointers to data to be evaluated
@@ -739,7 +739,7 @@ XGB_DLL int XGBoosterLoadModelFromBuffer(BoosterHandle handle,
                                          bst_ulong len);
 /*!
  * \brief save model into binary raw bytes, return header of the array
- * user must copy the result out, before next xgboost call
+ * user must copy the result out, before next boxhed_kernel call
  * \param handle handle
  * \param out_len the argument to hold the output length
  * \param out_dptr the argument to hold the output data pointer

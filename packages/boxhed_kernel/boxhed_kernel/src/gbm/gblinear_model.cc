@@ -3,10 +3,10 @@
  */
 #include <utility>
 #include <limits>
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 #include "gblinear_model.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 
 void GBLinearModel::SaveModel(Json* p_out) const {
@@ -35,4 +35,4 @@ void GBLinearModel::LoadModel(Json const& in) {
 
 DMLC_REGISTER_PARAMETER(DeprecatedGBLinearModelParam);
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include <vector>
 #include "dmlc/io.h"
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 #include <cstdarg>
 
 #if !defined(__GNUC__) || defined(__FreeBSD__)
@@ -128,7 +128,7 @@ auto Max(T const& l, T const& r) {
   return l > r ? l : r;
 }
 
-// easy utils that can be directly accessed in xgboost
+// easy utils that can be directly accessed in boxhed_kernel
 /*! \brief get the beginning address of a vector */
 template<typename T>
 inline T *BeginPtr(std::vector<T> &vec) {  // NOLINT(*)

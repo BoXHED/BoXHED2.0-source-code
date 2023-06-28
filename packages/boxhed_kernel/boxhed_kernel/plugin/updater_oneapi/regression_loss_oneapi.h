@@ -5,12 +5,12 @@
 #define XGBOOST_OBJECTIVE_REGRESSION_LOSS_ONEAPI_H_
 
 #include <dmlc/omp.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 #include <algorithm>
 
 #include "CL/sycl.hpp"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 /*!
@@ -140,6 +140,6 @@ struct LogisticRawOneAPI : public LogisticRegressionOneAPI {
 };
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_OBJECTIVE_REGRESSION_LOSS_ONEAPI_H_

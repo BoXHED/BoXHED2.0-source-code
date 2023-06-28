@@ -7,8 +7,8 @@
 #ifndef XGBOOST_COMMON_HIST_UTIL_H_
 #define XGBOOST_COMMON_HIST_UTIL_H_
 
-#include <xgboost/data.h>
-#include <xgboost/generic_parameters.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/generic_parameters.h>
 #include <limits>
 #include <vector>
 #include <algorithm>
@@ -24,7 +24,7 @@
 #include "./timer.h"
 #include "../include/rabit/rabit.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief A single row in global histogram index.
@@ -252,7 +252,7 @@ struct GHistIndexMatrix {
   void SetIndexData(common::Span<BinIdxType> index_data_span,
                     size_t batch_threads, const SparsePage &batch,
                     size_t rbegin, size_t nbins, GetOffset get_offset) {
-    const xgboost::Entry *data_ptr = batch.data.HostVector().data();
+    const boxhed_kernel::Entry *data_ptr = batch.data.HostVector().data();
     const std::vector<bst_row_t> &offset_vec = batch.offset.HostVector();
     const size_t batch_size = batch.Size();
     CHECK_LT(batch_size, offset_vec.size());
@@ -365,7 +365,7 @@ class GHistIndexBlockMatrix {
 };
 
 template<typename GradientSumT>
-using GHistRow = Span<xgboost::detail::GradientPairInternal<GradientSumT> >;
+using GHistRow = Span<boxhed_kernel::detail::GradientPairInternal<GradientSumT> >;
 
 /*!
  * \brief fill a histogram by zeros
@@ -402,7 +402,7 @@ template<typename GradientSumT>
 class HistCollection {
  public:
   using GHistRowT = GHistRow<GradientSumT>;
-  using GradientPairT = xgboost::detail::GradientPairInternal<GradientSumT>;
+  using GradientPairT = boxhed_kernel::detail::GradientPairInternal<GradientSumT>;
 
   // access histogram for i-th node
   GHistRowT operator[](bst_uint nid) const {
@@ -674,5 +674,5 @@ class GHistBuilder {
   uint32_t nbins_ { 0 };
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_HIST_UTIL_H_

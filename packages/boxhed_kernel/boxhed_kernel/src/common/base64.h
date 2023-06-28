@@ -8,13 +8,13 @@
 #ifndef XGBOOST_COMMON_BASE64_H_
 #define XGBOOST_COMMON_BASE64_H_
 
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 #include <cctype>
 #include <cstdio>
 #include <string>
 #include "./io.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*! \brief buffer reader of the stream that allows you to get */
 class StreamBufferReader {
@@ -268,5 +268,5 @@ class Base64OutStream: public dmlc::Stream {
   }
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_BASE64_H_

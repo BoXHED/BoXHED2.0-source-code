@@ -3,15 +3,15 @@
  * \file updater_sync.cc
  * \brief synchronize the tree in all distributed nodes
  */
-#include <xgboost/tree_updater.h>
+#include <boxhed_kernel/tree_updater.h>
 #include <vector>
 #include <string>
 #include <limits>
 
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 #include "../common/io.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_sync);
@@ -57,4 +57,4 @@ XGBOOST_REGISTER_TREE_UPDATER(TreeSyncher, "sync")
     return new TreeSyncher();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

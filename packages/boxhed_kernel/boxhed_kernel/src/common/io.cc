@@ -13,10 +13,10 @@
 #include <utility>
 #include <cstdio>
 
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 #include "io.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 size_t PeekableInStream::Read(void* dptr, size_t size) {
@@ -143,4 +143,4 @@ std::string LoadSequentialFile(std::string uri, bool stream) {
   return buffer;
 }
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

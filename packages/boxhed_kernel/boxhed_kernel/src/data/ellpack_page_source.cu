@@ -10,7 +10,7 @@
 #include "ellpack_page_source.h"
 #include "sparse_page_source.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 // Build the quantile sketch across the whole input data, then use the histogram cuts to compress
@@ -86,4 +86,4 @@ void EllpackPageSource::WriteEllpackPages(int device, DMatrix* dmat,
 }
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

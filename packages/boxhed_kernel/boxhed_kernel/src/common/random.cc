@@ -4,7 +4,7 @@
  */
 #include "random.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 std::shared_ptr<HostDeviceVector<bst_feature_t>> ColumnSampler::ColSample(
     std::shared_ptr<HostDeviceVector<bst_feature_t>> p_features,
@@ -35,4 +35,4 @@ std::shared_ptr<HostDeviceVector<bst_feature_t>> ColumnSampler::ColSample(
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

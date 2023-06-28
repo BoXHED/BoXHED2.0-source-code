@@ -2,7 +2,7 @@
  * Copyright 2018~2020 XGBoost contributors
  */
 
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 
 #include <thrust/copy.h>
 #include <thrust/functional.h>
@@ -25,10 +25,10 @@
 #include "math.h"  // NOLINT
 #include "quantile.h"
 #include "categorical.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 constexpr float SketchContainer::kFactor;
@@ -450,4 +450,4 @@ HistogramCuts DeviceSketch(int device, DMatrix* dmat, int max_bins,
   return cuts;
 }
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

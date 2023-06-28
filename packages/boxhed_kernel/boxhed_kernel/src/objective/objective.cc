@@ -3,24 +3,24 @@
  * \file objective.cc
  * \brief Registry of all objective functions.
  */
-#include <xgboost/objective.h>
+#include <boxhed_kernel/objective.h>
 #include <dmlc/registry.h>
 
 #include <sstream>
 
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::ObjFunctionReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::ObjFunctionReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 // implement factory functions
 ObjFunction* ObjFunction::Create(const std::string& name, GenericParameter const* tparam) {
-  auto *e = ::dmlc::Registry< ::xgboost::ObjFunctionReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::boxhed_kernel::ObjFunctionReg>::Get()->Find(name);
   if (e == nullptr) {
     std::stringstream ss;
-    for (const auto& entry : ::dmlc::Registry< ::xgboost::ObjFunctionReg>::List()) {
+    for (const auto& entry : ::dmlc::Registry< ::boxhed_kernel::ObjFunctionReg>::List()) {
       ss << "Objective candidate: " << entry->name << "\n";
     }
     LOG(FATAL) << "Unknown objective function: `" << name << "`\n"
@@ -31,9 +31,9 @@ ObjFunction* ObjFunction::Create(const std::string& name, GenericParameter const
   return pobj;
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 // List of files that will be force linked in static links.
 #ifdef XGBOOST_USE_CUDA
@@ -48,4 +48,4 @@ DMLC_REGISTRY_LINK_TAG(multiclass_obj);
 DMLC_REGISTRY_LINK_TAG(rank_obj);
 #endif  // XGBOOST_USE_CUDA
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

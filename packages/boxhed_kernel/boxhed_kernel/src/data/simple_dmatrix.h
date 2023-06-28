@@ -7,14 +7,14 @@
 #ifndef XGBOOST_DATA_SIMPLE_DMATRIX_H_
 #define XGBOOST_DATA_SIMPLE_DMATRIX_H_
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
 
 #include <memory>
 #include <string>
 
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 // Used for single batch data.
 class SimpleDMatrix : public DMatrix {
@@ -59,5 +59,5 @@ class SimpleDMatrix : public DMatrix {
   }
 };
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_SIMPLE_DMATRIX_H_

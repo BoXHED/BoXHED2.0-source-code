@@ -10,7 +10,7 @@
 #include <cinttypes>
 #include <functional>
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*!
  * \brief Helper class for embedding reference counting into client objects.  See
  *        https://www.boost.org/doc/libs/1_74_0/doc/html/atomic/usage_examples.html for
@@ -201,16 +201,16 @@ std::basic_ostream<E, T> &operator<<(std::basic_ostream<E, T> &os,
   os << p.get();
   return os;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 namespace std {
 template <class T>
-void swap(xgboost::IntrusivePtr<T> &x,  // NOLINT
-          xgboost::IntrusivePtr<T> &y) noexcept {
+void swap(boxhed_kernel::IntrusivePtr<T> &x,  // NOLINT
+          boxhed_kernel::IntrusivePtr<T> &y) noexcept {
   x.swap(y);
 }
 
 template <typename T>
-struct hash<xgboost::IntrusivePtr<T>> : public xgboost::IntrusivePtr<T>::Hash {};
+struct hash<boxhed_kernel::IntrusivePtr<T>> : public boxhed_kernel::IntrusivePtr<T>::Hash {};
 }      // namespace std
 #endif  // XGBOOST_INTRUSIVE_PTR_H_

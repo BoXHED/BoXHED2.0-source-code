@@ -7,12 +7,12 @@
 #include <tuple>
 #include <vector>
 
-#include "xgboost/logging.h"
-#include "xgboost/json.h"
-#include "xgboost/version_config.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/version_config.h"
 #include "version.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 const Version::TripletT Version::kInvalid {-1, -1, -1};
 
@@ -88,4 +88,4 @@ bool Version::Same(TripletT const& triplet) {
   return triplet == Self();
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel

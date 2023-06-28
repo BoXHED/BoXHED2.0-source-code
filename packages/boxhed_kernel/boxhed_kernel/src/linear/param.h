@@ -5,9 +5,9 @@
  */
 #ifndef XGBOOST_LINEAR_PARAM_H_
 #define XGBOOST_LINEAR_PARAM_H_
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/parameter.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 /**
  * \brief A set of available FeatureSelector's
@@ -66,6 +66,6 @@ struct LinearTrainParam : public XGBoostParameter<LinearTrainParam> {
 };
 
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_LINEAR_PARAM_H_

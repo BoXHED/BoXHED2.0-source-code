@@ -10,13 +10,13 @@
 #include <string>
 #include <set>
 
-#include "xgboost/logging.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/span.h"
 #include "constraints.cuh"
 #include "param.h"
 #include "../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 size_t FeatureInteractionConstraintDevice::Features() const {
   return d_sets_ptr_.size() - 1;
@@ -332,4 +332,4 @@ void FeatureInteractionConstraintDevice::Split(
       node, left, right);
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel

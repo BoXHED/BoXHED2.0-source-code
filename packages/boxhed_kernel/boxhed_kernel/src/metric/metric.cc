@@ -4,12 +4,12 @@
  * \brief Registry of objective functions.
  */
 #include <dmlc/registry.h>
-#include <xgboost/metric.h>
-#include <xgboost/generic_parameters.h>
+#include <boxhed_kernel/metric.h>
+#include <boxhed_kernel/generic_parameters.h>
 
 #include "metric_common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 template <typename MetricRegistry>
 Metric* CreateMetricImpl(const std::string& name) {
   std::string buf = name;
@@ -68,14 +68,14 @@ GPUMetric::CreateGPUMetric(const std::string& name, GenericParameter const* tpar
   static_cast<GPUMetric *>(metric)->tparam_ = tparam;
   return metric;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::MetricReg);
-DMLC_REGISTRY_ENABLE(::xgboost::MetricGPUReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::MetricReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::MetricGPUReg);
 }
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // List of files that will be force linked in static links.
 DMLC_REGISTRY_LINK_TAG(elementwise_metric);
@@ -86,4 +86,4 @@ DMLC_REGISTRY_LINK_TAG(rank_metric);
 DMLC_REGISTRY_LINK_TAG(rank_metric_gpu);
 #endif
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -5,16 +5,16 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <boxhed_kernel/tree_updater.h>
 
 #include <vector>
 #include <limits>
 
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 #include "./param.h"
 #include "../common/io.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_refresh);
@@ -138,9 +138,9 @@ class TreeRefresher: public TreeUpdater {
       }
     } else {
       tree.Stat(nid).loss_chg = static_cast<bst_float>(
-          xgboost::tree::CalcGain(param_, gstats[tree[nid].LeftChild()]) +
-          xgboost::tree::CalcGain(param_, gstats[tree[nid].RightChild()]) -
-          xgboost::tree::CalcGain(param_, gstats[nid]));
+          boxhed_kernel::tree::CalcGain(param_, gstats[tree[nid].LeftChild()]) +
+          boxhed_kernel::tree::CalcGain(param_, gstats[tree[nid].RightChild()]) -
+          boxhed_kernel::tree::CalcGain(param_, gstats[nid]));
       this->Refresh(gstats, tree[nid].LeftChild(), p_tree);
       this->Refresh(gstats, tree[nid].RightChild(), p_tree);
     }
@@ -157,4 +157,4 @@ XGBOOST_REGISTER_TREE_UPDATER(TreeRefresher, "refresh")
     return new TreeRefresher();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

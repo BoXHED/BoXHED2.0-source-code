@@ -6,8 +6,8 @@
 #if DMLC_ENABLE_STD_THREAD
 
 #include "ellpack_page_source.h"
-#include <xgboost/data.h>
-namespace xgboost {
+#include <boxhed_kernel/data.h>
+namespace boxhed_kernel {
 namespace data {
 
 EllpackPageSource::EllpackPageSource(DMatrix* dmat,
@@ -19,6 +19,6 @@ EllpackPageSource::EllpackPageSource(DMatrix* dmat,
 }
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // DMLC_ENABLE_STD_THREAD
 #endif  // XGBOOST_USE_CUDA

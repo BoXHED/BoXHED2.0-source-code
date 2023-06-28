@@ -11,14 +11,14 @@
 #include <string>
 #include <utility>
 
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/json.h"
-#include "xgboost/logging.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/span.h"
 #include "../common/bitfield.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 // Common errors in parsing columnar format.
 struct ArrayInterfaceErrors {
   static char const* Contigious() {
@@ -346,5 +346,5 @@ class ArrayInterface {
   char type[3];
 };
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_ARRAY_INTERFACE_H_

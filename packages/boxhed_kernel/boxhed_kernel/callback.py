@@ -334,7 +334,7 @@ def _allreduce_metric(score):
         return score
     if isinstance(score, tuple):  # has mean and stdv
         raise ValueError(
-            'xgboost.cv function should not be used in distributed environment.')
+            'boxhed_kernel.cv function should not be used in distributed environment.')
     score = numpy.array([score])
     score = rabit.allreduce(score, rabit.Op.SUM) / world
     return score[0]

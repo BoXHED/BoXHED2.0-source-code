@@ -4,7 +4,7 @@
  * \brief Plugin to load in libsvm, but fill all the missing entries with zeros.
  *  This plugin is mainly used for benchmark purposes and do not need to be included.
  */
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 #include <dmlc/data.h>
 #include <memory>
 
@@ -66,7 +66,7 @@ class DensifyParser : public dmlc::Parser<IndexType> {
   uint32_t num_col_;
   std::vector<size_t> offset_;
   std::vector<IndexType> dense_index_;
-  std::vector<xgboost::bst_float> dense_value_;
+  std::vector<boxhed_kernel::bst_float> dense_value_;
 };
 
 template<typename IndexType, typename DType = real_t>

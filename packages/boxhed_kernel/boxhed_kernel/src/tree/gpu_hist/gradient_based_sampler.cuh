@@ -2,14 +2,14 @@
  * Copyright 2019 by XGBoost Contributors
  */
 #pragma once
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/span.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/span.h>
 
 #include "../../common/device_helpers.cuh"
 #include "../../data/ellpack_page.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 struct GradientBasedSample {
@@ -148,4 +148,4 @@ class GradientBasedSampler {
   std::unique_ptr<SamplingStrategy> strategy_;
 };
 };  // namespace tree
-};  // namespace xgboost
+};  // namespace boxhed_kernel

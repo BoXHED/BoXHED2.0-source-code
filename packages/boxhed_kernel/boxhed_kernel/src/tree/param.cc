@@ -5,7 +5,7 @@
 #include <vector>
 #include <utility>
 
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 #include "param.h"
 
 namespace std {
@@ -81,7 +81,7 @@ std::istream &operator>>(std::istream &is, std::vector<int> &t) {
 }
 }  // namespace std
 
-namespace xgboost {
+namespace boxhed_kernel {
 void ParseInteractionConstraint(
     std::string const &constraint_str,
     std::vector<std::vector<bst_feature_t>> *p_out) {
@@ -107,4 +107,4 @@ void ParseInteractionConstraint(
     }
   }
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel

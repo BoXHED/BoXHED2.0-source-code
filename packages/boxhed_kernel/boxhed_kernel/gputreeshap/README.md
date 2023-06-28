@@ -3,7 +3,7 @@
 GPUTreeShap is a cuda implementation of the TreeShap algorithm by Lundberg et al. [1] for Nvidia GPUs. It is a header only module designed to be included in decision tree libraries as a fast backend for model interpretability using SHAP values.
 
 ## Performance
-Using the benchmark script `benchmark/benchmark.py` we run GPUTreeShap as a backend for xgboost and compare its performance against multithreaded CPU based implementation. Test models are generated on four different datasets at different sizes. The below comparison is run on an Nvidia DGX-1 system, comparing a single V100 to 2X 20-Core Intel Xeon
+Using the benchmark script `benchmark/benchmark.py` we run GPUTreeShap as a backend for boxhed_kernel and compare its performance against multithreaded CPU based implementation. Test models are generated on four different datasets at different sizes. The below comparison is run on an Nvidia DGX-1 system, comparing a single V100 to 2X 20-Core Intel Xeon
 E5-2698 CPUs (40 physical cores total).
 
 |       model       |trees|leaves |max_depth|average_depth|

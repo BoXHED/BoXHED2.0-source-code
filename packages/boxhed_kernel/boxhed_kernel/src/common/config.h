@@ -16,9 +16,9 @@
 #include <iterator>
 #include <utility>
 
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief Implementation of config reader
@@ -170,5 +170,5 @@ class ConfigParser {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_CONFIG_H_

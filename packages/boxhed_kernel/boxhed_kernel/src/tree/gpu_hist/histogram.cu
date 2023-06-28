@@ -7,7 +7,7 @@
 #include <ctgmath>
 #include <limits>
 
-#include "xgboost/base.h"
+#include "boxhed_kernel/base.h"
 #include "row_partitioner.cuh"
 
 #include "histogram.cuh"
@@ -15,7 +15,7 @@
 #include "../../data/ellpack_page.cuh"
 #include "../../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 // Following 2 functions are slightly modifed version of fbcuda.
 
@@ -228,4 +228,4 @@ template void BuildGradientHistogram<GradientPairPrecise>(
     GradientPairPrecise rounding);
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

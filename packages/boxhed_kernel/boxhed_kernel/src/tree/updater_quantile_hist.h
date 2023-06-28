@@ -9,7 +9,7 @@
 
 #include <dmlc/timer.h>
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <boxhed_kernel/tree_updater.h>
 
 #include <memory>
 #include <vector>
@@ -19,8 +19,8 @@
 #include <unordered_map>
 #include <utility>
 
-#include "xgboost/data.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/json.h"
 #include "constraints.h"
 #include "./param.h"
 #include "./split_evaluator.h"
@@ -30,7 +30,7 @@
 #include "../common/row_set.h"
 #include "../common/column_matrix.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 /*!
  * \brief A C-style array with in-stack allocation. As long as the array is smaller than MaxStackSize, it will be allocated inside the stack. Otherwise, it will be heap-allocated.
@@ -68,15 +68,15 @@ class MemStackAllocator {
 
 namespace tree {
 
-using xgboost::common::GHistIndexMatrix;
-using xgboost::common::GHistIndexBlockMatrix;
-using xgboost::common::GHistIndexRow;
-using xgboost::common::HistCollection;
-using xgboost::common::RowSetCollection;
-using xgboost::common::GHistRow;
-using xgboost::common::GHistBuilder;
-using xgboost::common::ColumnMatrix;
-using xgboost::common::Column;
+using boxhed_kernel::common::GHistIndexMatrix;
+using boxhed_kernel::common::GHistIndexBlockMatrix;
+using boxhed_kernel::common::GHistIndexRow;
+using boxhed_kernel::common::HistCollection;
+using boxhed_kernel::common::RowSetCollection;
+using boxhed_kernel::common::GHistRow;
+using boxhed_kernel::common::GHistBuilder;
+using boxhed_kernel::common::ColumnMatrix;
+using boxhed_kernel::common::Column;
 
 template <typename GradientSumT>
 class HistSynchronizer;
@@ -139,7 +139,7 @@ class QuantileHistMaker: public TreeUpdater {
         << "using saveRDS() or pickle.dump() so that the model remains accessible in current and "
         << "upcoming XGBoost releases. Please use xgb.save() instead to preserve models for the "
         << "long term. For more details and explanation, see "
-        << "https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html";
+        << "https://boxhed_kernel.readthedocs.io/en/latest/tutorials/saving_model.html";
       this->hist_maker_param_.UpdateAllowUnknown(Args{});
     }
   }
@@ -200,7 +200,7 @@ class QuantileHistMaker: public TreeUpdater {
   struct Builder {
    public:
     using GHistRowT = GHistRow<GradientSumT>;
-    using GradientPairT = xgboost::detail::GradientPairInternal<GradientSumT>;
+    using GradientPairT = boxhed_kernel::detail::GradientPairInternal<GradientSumT>;
     // constructor
     explicit Builder(const TrainParam& param,
                      std::unique_ptr<TreeUpdater> pruner,
@@ -536,6 +536,6 @@ class DistributedHistRowsAdder: public HistRowsAdder<GradientSumT> {
 
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_TREE_UPDATER_QUANTILE_HIST_H_

@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 #ifndef __CUDACC__
@@ -120,6 +120,6 @@ struct ExtremeDistribution {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_PROBABILITY_DISTRIBUTION_H_

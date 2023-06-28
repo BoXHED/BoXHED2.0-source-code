@@ -21,20 +21,20 @@
 #include <vector>
 
 #include "dmlc/any.h"
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/model.h"
-#include "xgboost/predictor.h"
-#include "xgboost/feature_map.h"
-#include "xgboost/gbm.h"
-#include "xgboost/generic_parameters.h"
-#include "xgboost/host_device_vector.h"
-#include "xgboost/json.h"
-#include "xgboost/learner.h"
-#include "xgboost/logging.h"
-#include "xgboost/metric.h"
-#include "xgboost/objective.h"
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/model.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/feature_map.h"
+#include "boxhed_kernel/gbm.h"
+#include "boxhed_kernel/generic_parameters.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/learner.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/metric.h"
+#include "boxhed_kernel/objective.h"
+#include "boxhed_kernel/parameter.h"
 
 #include "common/common.h"
 #include "common/io.h"
@@ -50,16 +50,16 @@ namespace {
 const char* kMaxDeltaStepDefaultValue = "0.7";
 }  // anonymous namespace
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 enum class DataSplitMode : int {
   kAuto = 0, kCol = 1, kRow = 2
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-DECLARE_FIELD_ENUM_CLASS(xgboost::DataSplitMode);
+DECLARE_FIELD_ENUM_CLASS(boxhed_kernel::DataSplitMode);
 
-namespace xgboost {
+namespace boxhed_kernel {
 // implementation of base learner.
 bool Learner::AllowLazyCheckPoint() const {
   return gbm_->AllowLazyCheckPoint();
@@ -923,7 +923,7 @@ class LearnerIO : public LearnerConfiguration {
   first, then load it back in current version.  There's a simple script for helping
   the process. See:
 
-    https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html
+    https://boxhed_kernel.readthedocs.io/en/latest/tutorials/saving_model.html
 
   for reference to the script, and more details about differences between saving model and
   serializing.
@@ -1203,4 +1203,4 @@ Learner* Learner::Create(
     const std::vector<std::shared_ptr<DMatrix> >& cache_data) {
   return new LearnerImpl(cache_data);
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel

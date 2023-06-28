@@ -10,11 +10,11 @@
 #include <dmlc/io.h>
 #include <dmlc/parameter.h>
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/logging.h>
-#include <xgboost/feature_map.h>
-#include <xgboost/model.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/feature_map.h>
+#include <boxhed_kernel/model.h>
 
 #include <limits>
 #include <vector>
@@ -24,7 +24,7 @@
 #include <tuple>
 #include <stack>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 struct PathElement;  // forward declaration
 
@@ -126,7 +126,7 @@ struct RTreeNodeStat {
 
 /*!
  * \brief define regression tree to be the most common tree model.
- *  This is the data structure used in xgboost's major tree models.
+ *  This is the data structure used in boxhed_kernel's major tree models.
  */
 class RegTree : public Model {
  public:
@@ -757,5 +757,5 @@ inline int RegTree::GetNext(int pid, bst_float fvalue, bool is_unknown) const {
   }
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_TREE_MODEL_H_

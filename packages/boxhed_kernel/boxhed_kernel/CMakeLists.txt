@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
-project(xgboost LANGUAGES CXX C VERSION 1.3.0)
+project(boxhed_kernel LANGUAGES CXX C VERSION 1.3.0)
 include(cmake/Utils.cmake)
-list(APPEND CMAKE_MODULE_PATH "${xgboost_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${boxhed_kernel_SOURCE_DIR}/cmake/modules")
 cmake_policy(SET CMP0022 NEW)
 cmake_policy(SET CMP0079 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0063 NEW)
@@ -17,9 +17,9 @@ if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
   message(FATAL_ERROR "GCC version must be at least 5.0!")
 endif()
 
-include(${xgboost_SOURCE_DIR}/cmake/FindPrefetchIntrinsics.cmake)
+include(${boxhed_kernel_SOURCE_DIR}/cmake/FindPrefetchIntrinsics.cmake)
 find_prefetch_intrinsics()
-include(${xgboost_SOURCE_DIR}/cmake/Version.cmake)
+include(${boxhed_kernel_SOURCE_DIR}/cmake/Version.cmake)
 write_version()
 set_default_configuration_release()
 
@@ -67,7 +67,7 @@ option(PLUGIN_DENSE_PARSER "Build dense parser plugin" OFF)
 option(PLUGIN_RMM "Build with RAPIDS Memory Manager (RMM)" OFF)
 ## TODO: 1. Add check if DPC++ compiler is used for building
 option(PLUGIN_UPDATER_ONEAPI "DPC++ updater" OFF)
-option(ADD_PKGCONFIG "Add xgboost.pc into system." ON)
+option(ADD_PKGCONFIG "Add boxhed_kernel.pc into system." ON)
 
 #-- Checks for building XGBoost
 if (USE_DEBUG_OUTPUT AND (NOT (CMAKE_BUILD_TYPE MATCHES Debug)))
@@ -107,7 +107,7 @@ if (ENABLE_ALL_WARNINGS)
   endif ((NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang") AND (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 endif (ENABLE_ALL_WARNINGS)
 if (BUILD_STATIC_LIB AND (R_LIB OR JVM_BINDINGS))
-  message(SEND_ERROR "Cannot build a static library libxgboost.a when R or JVM packages are enabled.")
+  message(SEND_ERROR "Cannot build a static library libboxhed_kernel.a when R or JVM packages are enabled.")
 endif (BUILD_STATIC_LIB AND (R_LIB OR JVM_BINDINGS))
 
 #-- Sanitizer
@@ -142,7 +142,7 @@ find_package(Threads REQUIRED)
 if (USE_OPENMP)
   if (APPLE)
     # Require CMake 3.16+ on Mac OSX, as previous versions of CMake had trouble locating
-    # OpenMP on Mac. See https://github.com/dmlc/xgboost/pull/5146#issuecomment-568312706
+    # OpenMP on Mac. See https://github.com/dmlc/boxhed_kernel/pull/5146#issuecomment-568312706
     cmake_minimum_required(VERSION 3.16)
   endif (APPLE)
   find_package(OpenMP REQUIRED)
@@ -150,7 +150,7 @@ endif (USE_OPENMP)
 
 # dmlc-core
 msvc_use_static_runtime()
-add_subdirectory(${xgboost_SOURCE_DIR}/dmlc-core)
+add_subdirectory(${boxhed_kernel_SOURCE_DIR}/dmlc-core)
 set_target_properties(dmlc PROPERTIES
   CXX_STANDARD 14
   CXX_STANDARD_REQUIRED ON
@@ -170,84 +170,84 @@ endif (ENABLE_ALL_WARNINGS)
 # rabit
 add_subdirectory(rabit)
 
-# core xgboost
-add_subdirectory(${xgboost_SOURCE_DIR}/src)
-target_link_libraries(objxgboost PUBLIC dmlc)
+# core boxhed_kernel
+add_subdirectory(${boxhed_kernel_SOURCE_DIR}/src)
+target_link_libraries(objboxhed_kernel PUBLIC dmlc)
 
 # Exports some R specific definitions and objects
 if (R_LIB)
-  add_subdirectory(${xgboost_SOURCE_DIR}/R-package)
+  add_subdirectory(${boxhed_kernel_SOURCE_DIR}/R-package)
 endif (R_LIB)
 
 # Plugin
-add_subdirectory(${xgboost_SOURCE_DIR}/plugin)
+add_subdirectory(${boxhed_kernel_SOURCE_DIR}/plugin)
 
 #-- library
 if (BUILD_STATIC_LIB)
-  add_library(xgboost STATIC)
+  add_library(boxhed_kernel STATIC)
 else (BUILD_STATIC_LIB)
-  add_library(xgboost SHARED)
+  add_library(boxhed_kernel SHARED)
 endif (BUILD_STATIC_LIB)
-target_link_libraries(xgboost PRIVATE objxgboost)
+target_link_libraries(boxhed_kernel PRIVATE objboxhed_kernel)
 
 if (USE_CUDA)
-  xgboost_set_cuda_flags(xgboost)
+  boxhed_kernel_set_cuda_flags(boxhed_kernel)
 endif (USE_CUDA)
 
 #-- Hide all C++ symbols
 if (HIDE_CXX_SYMBOLS)
-  foreach(target objxgboost xgboost dmlc)
+  foreach(target objboxhed_kernel boxhed_kernel dmlc)
     set_target_properties(${target} PROPERTIES CXX_VISIBILITY_PRESET hidden)
   endforeach()
 endif (HIDE_CXX_SYMBOLS)
 
-target_include_directories(xgboost
+target_include_directories(boxhed_kernel
   INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 
-# This creates its own shared library `xgboost4j'.
+# This creates its own shared library `boxhed_kernel4j'.
 if (JVM_BINDINGS)
-  add_subdirectory(${xgboost_SOURCE_DIR}/jvm-packages)
+  add_subdirectory(${boxhed_kernel_SOURCE_DIR}/jvm-packages)
 endif (JVM_BINDINGS)
 #-- End shared library
 
-#-- CLI for xgboost
-add_executable(runxgboost ${xgboost_SOURCE_DIR}/src/cli_main.cc)
-target_link_libraries(runxgboost PRIVATE objxgboost)
+#-- CLI for boxhed_kernel
+add_executable(runboxhed_kernel ${boxhed_kernel_SOURCE_DIR}/src/cli_main.cc)
+target_link_libraries(runboxhed_kernel PRIVATE objboxhed_kernel)
 if (USE_NVTX)
-  enable_nvtx(runxgboost)
+  enable_nvtx(runboxhed_kernel)
 endif (USE_NVTX)
 
-target_include_directories(runxgboost
+target_include_directories(runboxhed_kernel
   PRIVATE
-  ${xgboost_SOURCE_DIR}/include
-  ${xgboost_SOURCE_DIR}/dmlc-core/include
-  ${xgboost_SOURCE_DIR}/rabit/include)
+  ${boxhed_kernel_SOURCE_DIR}/include
+  ${boxhed_kernel_SOURCE_DIR}/dmlc-core/include
+  ${boxhed_kernel_SOURCE_DIR}/rabit/include)
 set_target_properties(
-  runxgboost PROPERTIES
-  OUTPUT_NAME xgboost
+  runboxhed_kernel PROPERTIES
+  OUTPUT_NAME boxhed_kernel
   CXX_STANDARD 14
   CXX_STANDARD_REQUIRED ON)
-#-- End CLI for xgboost
+#-- End CLI for boxhed_kernel
 
-set_output_directory(runxgboost ${xgboost_SOURCE_DIR})
-set_output_directory(xgboost ${xgboost_SOURCE_DIR}/lib)
+set_output_directory(runboxhed_kernel ${boxhed_kernel_SOURCE_DIR})
+set_output_directory(boxhed_kernel ${boxhed_kernel_SOURCE_DIR}/lib)
 # Ensure these two targets do not build simultaneously, as they produce outputs with conflicting names
-add_dependencies(xgboost runxgboost)
+add_dependencies(boxhed_kernel runboxhed_kernel)
 
 #-- Installing XGBoost
 if (R_LIB)
   include(cmake/RPackageInstallTargetSetup.cmake)
-  set_target_properties(xgboost PROPERTIES PREFIX "")
+  set_target_properties(boxhed_kernel PROPERTIES PREFIX "")
   if (APPLE)
-    set_target_properties(xgboost PROPERTIES SUFFIX ".so")
+    set_target_properties(boxhed_kernel PROPERTIES SUFFIX ".so")
   endif (APPLE)
-  setup_rpackage_install_target(xgboost "${CMAKE_CURRENT_BINARY_DIR}/R-package-install")
+  setup_rpackage_install_target(boxhed_kernel "${CMAKE_CURRENT_BINARY_DIR}/R-package-install")
   set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/dummy_inst")
 endif (R_LIB)
 if (MINGW)
-  set_target_properties(xgboost PROPERTIES PREFIX "")
+  set_target_properties(boxhed_kernel PROPERTIES PREFIX "")
 endif (MINGW)
 
 if (BUILD_C_DOC)
@@ -257,20 +257,20 @@ endif (BUILD_C_DOC)
 
 include(GNUInstallDirs)
 # Install all headers.  Please note that currently the C++ headers does not form an "API".
-install(DIRECTORY ${xgboost_SOURCE_DIR}/include/xgboost
+install(DIRECTORY ${boxhed_kernel_SOURCE_DIR}/include/boxhed_kernel
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# Install libraries. If `xgboost` is a static lib, specify `objxgboost` also, to avoid the
+# Install libraries. If `boxhed_kernel` is a static lib, specify `objboxhed_kernel` also, to avoid the
 # following error:
 #
-#  > install(EXPORT ...) includes target "xgboost" which requires target "objxgboost" that is not
+#  > install(EXPORT ...) includes target "boxhed_kernel" which requires target "objboxhed_kernel" that is not
 #  > in any export set.
 #
-# https://github.com/dmlc/xgboost/issues/6085
+# https://github.com/dmlc/boxhed_kernel/issues/6085
 if (BUILD_STATIC_LIB)
-  set(INSTALL_TARGETS xgboost runxgboost objxgboost dmlc)
+  set(INSTALL_TARGETS boxhed_kernel runboxhed_kernel objboxhed_kernel dmlc)
 else (BUILD_STATIC_LIB)
-  set(INSTALL_TARGETS xgboost runxgboost)
+  set(INSTALL_TARGETS boxhed_kernel runboxhed_kernel)
 endif (BUILD_STATIC_LIB)
 
 install(TARGETS ${INSTALL_TARGETS}
@@ -281,58 +281,58 @@ install(TARGETS ${INSTALL_TARGETS}
   INCLUDES DESTINATION ${LIBLEGACY_INCLUDE_DIRS})
 install(EXPORT XGBoostTargets
   FILE XGBoostTargets.cmake
-  NAMESPACE xgboost::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xgboost)
+  NAMESPACE boxhed_kernel::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/boxhed_kernel)
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-  ${CMAKE_CURRENT_LIST_DIR}/cmake/xgboost-config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/cmake/xgboost-config.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xgboost)
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/boxhed_kernel-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake/boxhed_kernel-config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/boxhed_kernel)
 write_basic_package_version_file(
-  ${CMAKE_BINARY_DIR}/cmake/xgboost-config-version.cmake
+  ${CMAKE_BINARY_DIR}/cmake/boxhed_kernel-config-version.cmake
   VERSION ${XGBOOST_VERSION}
   COMPATIBILITY AnyNewerVersion)
 install(
   FILES
-  ${CMAKE_BINARY_DIR}/cmake/xgboost-config.cmake
-  ${CMAKE_BINARY_DIR}/cmake/xgboost-config-version.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xgboost)
+  ${CMAKE_BINARY_DIR}/cmake/boxhed_kernel-config.cmake
+  ${CMAKE_BINARY_DIR}/cmake/boxhed_kernel-config-version.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/boxhed_kernel)
 
 #-- Test
 if (GOOGLE_TEST)
   enable_testing()
   # Unittests.
-  add_subdirectory(${xgboost_SOURCE_DIR}/tests/cpp)
+  add_subdirectory(${boxhed_kernel_SOURCE_DIR}/tests/cpp)
   add_test(
     NAME TestXGBoostLib
-    COMMAND testxgboost
-    WORKING_DIRECTORY ${xgboost_BINARY_DIR})
+    COMMAND testboxhed_kernel
+    WORKING_DIRECTORY ${boxhed_kernel_BINARY_DIR})
 
   # CLI tests
   configure_file(
-    ${xgboost_SOURCE_DIR}/tests/cli/machine.conf.in
-    ${xgboost_BINARY_DIR}/tests/cli/machine.conf
+    ${boxhed_kernel_SOURCE_DIR}/tests/cli/machine.conf.in
+    ${boxhed_kernel_BINARY_DIR}/tests/cli/machine.conf
     @ONLY)
   add_test(
     NAME TestXGBoostCLI
-    COMMAND runxgboost ${xgboost_BINARY_DIR}/tests/cli/machine.conf
-    WORKING_DIRECTORY ${xgboost_BINARY_DIR})
+    COMMAND runboxhed_kernel ${boxhed_kernel_BINARY_DIR}/tests/cli/machine.conf
+    WORKING_DIRECTORY ${boxhed_kernel_BINARY_DIR})
   set_tests_properties(TestXGBoostCLI
     PROPERTIES
     PASS_REGULAR_EXPRESSION ".*test-rmse:0.087.*")
 endif (GOOGLE_TEST)
 
 # For MSVC: Call msvc_use_static_runtime() once again to completely
-# replace /MD with /MT. See https://github.com/dmlc/xgboost/issues/4462
+# replace /MD with /MT. See https://github.com/dmlc/boxhed_kernel/issues/4462
 # for issues caused by mixing of /MD and /MT flags
 msvc_use_static_runtime()
 
-# Add xgboost.pc
+# Add boxhed_kernel.pc
 if (ADD_PKGCONFIG)
-  configure_file(${xgboost_SOURCE_DIR}/cmake/xgboost.pc.in ${xgboost_BINARY_DIR}/xgboost.pc @ONLY)
+  configure_file(${boxhed_kernel_SOURCE_DIR}/cmake/boxhed_kernel.pc.in ${boxhed_kernel_BINARY_DIR}/boxhed_kernel.pc @ONLY)
 
   install(
-    FILES ${xgboost_BINARY_DIR}/xgboost.pc
+    FILES ${boxhed_kernel_BINARY_DIR}/boxhed_kernel.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif (ADD_PKGCONFIG)

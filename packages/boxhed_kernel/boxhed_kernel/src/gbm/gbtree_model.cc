@@ -3,12 +3,12 @@
  */
 #include <utility>
 
-#include "xgboost/json.h"
-#include "xgboost/logging.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/logging.h"
 #include "gbtree_model.h"
 #include "gbtree.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 void GBTreeModel::Save(dmlc::Stream* fo) const {
   CHECK_EQ(param.num_trees, static_cast<int32_t>(trees.size()));
@@ -109,4 +109,4 @@ void GBTreeModel::LoadModel(Json const& in) {
 }
 
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

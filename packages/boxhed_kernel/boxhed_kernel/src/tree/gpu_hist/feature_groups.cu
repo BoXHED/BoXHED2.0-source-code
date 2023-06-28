@@ -2,7 +2,7 @@
  * Copyright 2020 by XGBoost Contributors
  */
 
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 #include <algorithm>
 #include <vector>
 
@@ -11,7 +11,7 @@
 #include "../../common/device_helpers.cuh"
 #include "../../common/hist_util.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 FeatureGroups::FeatureGroups(const common::HistogramCuts& cuts, bool is_dense,
@@ -61,4 +61,4 @@ void FeatureGroups::InitSingle(const common::HistogramCuts& cuts) {
 }
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

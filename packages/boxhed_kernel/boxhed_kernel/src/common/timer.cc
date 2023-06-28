@@ -8,13 +8,13 @@
 #include <vector>
 #include <sstream>
 #include "timer.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 
 #if defined(XGBOOST_USE_NVTX)
 #include <nvToolsExt.h>
 #endif  // defined(XGBOOST_USE_NVTX)
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 void Monitor::Start(std::string const &name) {
@@ -136,4 +136,4 @@ void Monitor::Print() const {
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

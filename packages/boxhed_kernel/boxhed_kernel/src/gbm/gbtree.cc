@@ -14,13 +14,13 @@
 #include <limits>
 #include <algorithm>
 
-#include "xgboost/data.h"
-#include "xgboost/gbm.h"
-#include "xgboost/logging.h"
-#include "xgboost/json.h"
-#include "xgboost/predictor.h"
-#include "xgboost/tree_updater.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/gbm.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "gbtree.h"
 #include "gbtree_model.h"
@@ -28,7 +28,7 @@
 #include "../common/random.h"
 #include "../common/timer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 
 DMLC_REGISTRY_FILE_TAG(gbtree);
@@ -338,7 +338,7 @@ void GBTree::LoadConfig(Json const& in) {
   // This would cause all trees to be pushed to trees_to_update
   // e.g. updating a model, then saving and loading it would result in an empty model
   tparam_.process_type = TreeProcessType::kDefault;
-  int32_t const n_gpus = xgboost::common::AllVisibleGPUs();
+  int32_t const n_gpus = boxhed_kernel::common::AllVisibleGPUs();
   if (n_gpus == 0 && tparam_.predictor == PredictorType::kGPUPredictor) {
     LOG(WARNING)
         << "Loading from a raw memory buffer on CPU only machine.  "
@@ -874,4 +874,4 @@ XGBOOST_REGISTER_GBM(Dart, "dart")
     return p;
   });
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -4,8 +4,8 @@
 #include <thrust/functional.h>
 #include <thrust/random.h>
 #include <thrust/transform.h>
-#include <xgboost/host_device_vector.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/logging.h>
 
 #include <algorithm>
 #include <limits>
@@ -14,7 +14,7 @@
 #include "../../common/random.h"
 #include "gradient_based_sampler.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 /*! \brief A functor that returns random weights. */
@@ -379,4 +379,4 @@ size_t GradientBasedSampler::CalculateThresholdIndex(
 }
 
 };  // namespace tree
-};  // namespace xgboost
+};  // namespace boxhed_kernel

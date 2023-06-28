@@ -3,13 +3,13 @@
  * \author Rory Mitchell
  */
 
-#include <xgboost/linear_updater.h>
+#include <boxhed_kernel/linear_updater.h>
 #include "./param.h"
 #include "../common/timer.h"
 #include "coordinate_common.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/json.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 
 DMLC_REGISTER_PARAMETER(CoordinateParam);
@@ -102,4 +102,4 @@ XGBOOST_REGISTER_LINEAR_UPDATER(CoordinateUpdater, "coord_descent")
     .describe("Update linear model according to coordinate descent algorithm.")
     .set_body([]() { return new CoordinateUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel

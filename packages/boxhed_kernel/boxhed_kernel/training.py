@@ -15,7 +15,7 @@ from . import callback
 def _configure_deprecated_callbacks(
         verbose_eval, early_stopping_rounds, maximize, start_iteration,
         num_boost_round, feval, evals_result, callbacks, show_stdv, cvfolds):
-    link = 'https://xgboost.readthedocs.io/en/latest/python/callbacks.html'
+    link = 'https://boxhed_kernel.readthedocs.io/en/latest/python/callbacks.html'
     warnings.warn(f'Old style callback is deprecated.  See: {link}', UserWarning)
     # Most of legacy advanced options becomes callbacks
     if early_stopping_rounds is not None:

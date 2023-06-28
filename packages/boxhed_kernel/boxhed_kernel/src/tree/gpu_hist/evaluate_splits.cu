@@ -5,7 +5,7 @@
 #include "evaluate_splits.cuh"
 #include "../../common/categorical.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 // With constraints
@@ -339,4 +339,4 @@ template void EvaluateSingleSplit<GradientPairPrecise>(
     TreeEvaluator::SplitEvaluator<GPUTrainingParam> evaluator,
     EvaluateSplitInputs<GradientPairPrecise> input);
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

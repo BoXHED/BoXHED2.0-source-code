@@ -9,12 +9,12 @@
 #define XGBOOST_LEARNER_H_
 
 #include <dmlc/any.h>
-#include <xgboost/base.h>
-#include <xgboost/feature_map.h>
-#include <xgboost/predictor.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/host_device_vector.h>
-#include <xgboost/model.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/feature_map.h>
+#include <boxhed_kernel/predictor.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/model.h>
 
 #include <utility>
 #include <map>
@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Metric;
 class GradientBooster;
@@ -48,7 +48,7 @@ struct XGBAPIThreadLocalEntry {
 
 /*!
  * \brief Learner class that does training and prediction.
- *  This is the user facing module of xgboost training.
+ *  This is the user facing module of boxhed_kernel training.
  *  The Load/Save function corresponds to the model used in python/R.
  *  \code
  *
@@ -265,5 +265,5 @@ struct LearnerModelParam {
   bool Initialized() const { return num_feature != 0; }
 };
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_LEARNER_H_

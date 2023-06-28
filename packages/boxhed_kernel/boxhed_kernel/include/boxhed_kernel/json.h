@@ -4,9 +4,9 @@
 #ifndef XGBOOST_JSON_H_
 #define XGBOOST_JSON_H_
 
-#include <xgboost/logging.h>
-#include <xgboost/parameter.h>
-#include <xgboost/intrusive_ptr.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/parameter.h>
+#include <boxhed_kernel/intrusive_ptr.h>
 
 #include <map>
 #include <memory>
@@ -15,7 +15,7 @@
 #include <utility>
 #include <string>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 class JsonReader;
@@ -25,7 +25,7 @@ class Value {
  private:
   mutable class IntrusivePtrCell ref_;
   friend IntrusivePtrCell &
-  IntrusivePtrRefCount(xgboost::Value const *t) noexcept {
+  IntrusivePtrRefCount(boxhed_kernel::Value const *t) noexcept {
     return t->ref_;
   }
 
@@ -576,5 +576,5 @@ void FromJson(Json const& obj, Parameter* param) {
   }
   param->UpdateAllowUnknown(m);
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_JSON_H_

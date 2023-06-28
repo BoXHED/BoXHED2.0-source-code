@@ -3,7 +3,7 @@
  */
 #include "common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 int AllVisibleGPUs() {
@@ -19,4 +19,4 @@ int AllVisibleGPUs() {
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

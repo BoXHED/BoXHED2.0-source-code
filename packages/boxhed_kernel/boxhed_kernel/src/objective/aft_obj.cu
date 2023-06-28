@@ -10,22 +10,22 @@
 #include <memory>
 #include <utility>
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/json.h"
-#include "xgboost/parameter.h"
-#include "xgboost/span.h"
-#include "xgboost/logging.h"
-#include "xgboost/objective.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/objective.h"
 
 #include "../common/transform.h"
 #include "../common/survival_util.h"
 
-using AFTParam = xgboost::common::AFTParam;
-using ProbabilityDistributionType = xgboost::common::ProbabilityDistributionType;
+using AFTParam = boxhed_kernel::common::AFTParam;
+using ProbabilityDistributionType = boxhed_kernel::common::ProbabilityDistributionType;
 template <typename Distribution>
-using AFTLoss = xgboost::common::AFTLoss<Distribution>;
+using AFTLoss = boxhed_kernel::common::AFTLoss<Distribution>;
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 #if defined(XGBOOST_USE_CUDA)
@@ -144,4 +144,4 @@ XGBOOST_REGISTER_OBJECTIVE(AFTObj, "survival:aft")
     .set_body([]() { return new AFTObj(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

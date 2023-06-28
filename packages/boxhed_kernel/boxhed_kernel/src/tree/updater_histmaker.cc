@@ -8,16 +8,16 @@
 #include <vector>
 #include <algorithm>
 
-#include "xgboost/tree_updater.h"
-#include "xgboost/base.h"
-#include "xgboost/logging.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/logging.h"
 
 #include "../common/quantile.h"
 #include "../common/group_data.h"
 #include "./updater_basemaker-inl.h"
 #include "constraints.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_histmaker);
@@ -743,4 +743,4 @@ XGBOOST_REGISTER_TREE_UPDATER(HistMaker, "grow_histmaker")
     return new GlobalProposalHistMaker();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

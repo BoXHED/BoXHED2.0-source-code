@@ -1,7 +1,7 @@
 /*!
  * Copyright 2014-2020 by Contributors
  * \file cli_main.cc
- * \brief The command line interface program of xgboost.
+ * \brief The command line interface program of boxhed_kernel.
  *  This file is not included in dynamic library.
  */
 #define _CRT_SECURE_NO_WARNINGS
@@ -9,11 +9,11 @@
 #define NOMINMAX
 #include <dmlc/timer.h>
 
-#include <xgboost/learner.h>
-#include <xgboost/data.h>
-#include <xgboost/json.h>
-#include <xgboost/logging.h>
-#include <xgboost/parameter.h>
+#include <boxhed_kernel/learner.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/json.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/parameter.h>
 
 #include <iomanip>
 #include <ctime>
@@ -26,7 +26,7 @@
 #include "common/io.h"
 #include "common/version.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 enum CLITask {
   kTrain = 0,
   kDumpModel = 1,
@@ -156,11 +156,11 @@ constexpr char const* const CLIParam::kNull;
 DMLC_REGISTER_PARAMETER(CLIParam);
 
 std::string CliHelp() {
-  return "Use xgboost -h for showing help information.\n";
+  return "Use boxhed_kernel -h for showing help information.\n";
 }
 
 void CLIError(dmlc::Error const& e) {
-  std::cerr << "Error running xgboost:\n\n"
+  std::cerr << "Error running boxhed_kernel:\n\n"
             << e.what() << "\n"
             << CliHelp()
             << std::endl;
@@ -376,7 +376,7 @@ class CLI {
   }
 
   void PrintHelp() const {
-    std::cout << "Usage: xgboost [ -h ] [ -V ] [ config file ] [ arguments ]" << std::endl;
+    std::cout << "Usage: boxhed_kernel [ -h ] [ -V ] [ config file ] [ arguments ]" << std::endl;
     std::stringstream ss;
     ss << R"(
   Options and arguments:
@@ -395,7 +395,7 @@ class CLI {
 
   General XGBoost parameters:
 
-    https://xgboost.readthedocs.io/en/latest/parameter.html
+    https://boxhed_kernel.readthedocs.io/en/latest/parameter.html
 
   Command line interface specfic parameters:
 
@@ -501,7 +501,7 @@ class CLI {
         break;
       }
     } catch (dmlc::Error const& e) {
-      xgboost::CLIError(e);
+      boxhed_kernel::CLIError(e);
       return 1;
     }
     return 0;
@@ -511,15 +511,15 @@ class CLI {
     rabit::Finalize();
   }
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 int main(int argc, char *argv[]) {
   try {
-    xgboost::CLI cli(argc, argv);
+    boxhed_kernel::CLI cli(argc, argv);
     return cli.Run();
   } catch (dmlc::Error const& e) {
     // This captures only the initialization error.
-    xgboost::CLIError(e);
+    boxhed_kernel::CLIError(e);
     return 1;
   }
   return 0;

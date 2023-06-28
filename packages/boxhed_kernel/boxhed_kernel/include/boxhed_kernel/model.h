@@ -10,7 +10,7 @@ namespace dmlc {
 class Stream;
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 
@@ -41,6 +41,6 @@ struct Configurable {
    */
   virtual void SaveConfig(Json* out) const = 0;
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_MODEL_H_

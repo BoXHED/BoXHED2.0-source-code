@@ -5,7 +5,7 @@
  * \author Kailong Chen, Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <boxhed_kernel/metric.h>
 #include <cmath>
 
 #include "metric_common.h"
@@ -21,7 +21,7 @@
 #include "../common/device_helpers.cuh"
 #endif  // XGBOOST_USE_CUDA
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(multiclass_metric);
@@ -242,4 +242,4 @@ XGBOOST_REGISTER_METRIC(MultiLogLoss, "mlogloss")
 .describe("Multiclass negative loglikelihood.")
 .set_body([](const char* param) { return new EvalMultiLogLoss(); });
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel

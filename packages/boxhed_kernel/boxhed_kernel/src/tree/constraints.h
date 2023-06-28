@@ -8,12 +8,12 @@
 #include <unordered_set>
 #include <vector>
 
-#include "xgboost/span.h"
-#include "xgboost/base.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/base.h"
 
 #include "param.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*!
  * \brief Feature interaction constraint implementation for CPU tree updaters.
  *
@@ -60,6 +60,6 @@ class FeatureInteractionConstraintHost {
 
   void Configure(tree::TrainParam const& param, bst_feature_t const n_features);
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_TREE_CONSTRAINTS_H_

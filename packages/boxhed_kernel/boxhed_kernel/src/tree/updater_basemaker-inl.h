@@ -16,9 +16,9 @@
 #include <limits>
 #include <utility>
 
-#include "xgboost/base.h"
-#include "xgboost/json.h"
-#include "xgboost/tree_updater.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/tree_updater.h"
 #include "param.h"
 #include "constraints.h"
 
@@ -26,7 +26,7 @@
 #include "../common/random.h"
 #include "../common/quantile.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 /*!
  * \brief base tree maker class that defines common operation
@@ -480,5 +480,5 @@ class BaseMaker: public TreeUpdater {
   }
 };
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_TREE_UPDATER_BASEMAKER_INL_H_

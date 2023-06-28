@@ -5,12 +5,12 @@
 #ifndef XGBOOST_GENERIC_PARAMETERS_H_
 #define XGBOOST_GENERIC_PARAMETERS_H_
 
-#include <xgboost/logging.h>
-#include <xgboost/parameter.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/parameter.h>
 
 #include <string>
 
-namespace xgboost {
+namespace boxhed_kernel {
 struct GenericParameter : public XGBoostParameter<GenericParameter> {
   // Constant representing the device ID of CPU.
   static int32_t constexpr kCpuId = -1;
@@ -88,6 +88,6 @@ struct GenericParameter : public XGBoostParameter<GenericParameter> {
   // number of devices to use (deprecated).
   int n_gpus {0};  // NOLINT
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_GENERIC_PARAMETERS_H_

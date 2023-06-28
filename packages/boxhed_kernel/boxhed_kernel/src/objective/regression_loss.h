@@ -5,11 +5,11 @@
 #define XGBOOST_OBJECTIVE_REGRESSION_LOSS_H_
 
 #include <dmlc/omp.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 #include <algorithm>
 #include "../common/math.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 // common regressions
@@ -168,6 +168,6 @@ struct LogisticRaw : public LogisticRegression {
 };
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_OBJECTIVE_REGRESSION_LOSS_H_

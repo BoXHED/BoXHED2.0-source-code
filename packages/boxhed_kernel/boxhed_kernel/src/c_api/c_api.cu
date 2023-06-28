@@ -1,11 +1,11 @@
 // Copyright (c) 2019-2020 by Contributors
-#include "xgboost/data.h"
-#include "xgboost/c_api.h"
-#include "xgboost/learner.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/c_api.h"
+#include "boxhed_kernel/learner.h"
 #include "c_api_error.h"
 #include "../data/device_adapter.cuh"
 
-using namespace xgboost;  // NOLINT
+using namespace boxhed_kernel;  // NOLINT
 
 XGB_DLL int XGDMatrixCreateFromArrayInterfaceColumns(char const* c_json_strs,
                                                      bst_float missing,
@@ -37,8 +37,8 @@ XGB_DLL int XGBoosterPredictFromArrayInterfaceColumns(BoosterHandle handle,
                                                       unsigned iteration_begin,
                                                       unsigned iteration_end,
                                                       char const* c_type,
-                                                      xgboost::bst_ulong cache_id,
-                                                      xgboost::bst_ulong *out_len,
+                                                      boxhed_kernel::bst_ulong cache_id,
+                                                      boxhed_kernel::bst_ulong *out_len,
                                                       float const** out_result) {
   API_BEGIN();
   CHECK_HANDLE();
@@ -54,7 +54,7 @@ XGB_DLL int XGBoosterPredictFromArrayInterfaceColumns(BoosterHandle handle,
   CHECK(p_predt->DeviceCanRead());
 
   *out_result = p_predt->ConstDevicePointer();
-  *out_len = static_cast<xgboost::bst_ulong>(p_predt->Size());
+  *out_len = static_cast<boxhed_kernel::bst_ulong>(p_predt->Size());
 
   API_END();
 }
@@ -65,8 +65,8 @@ XGB_DLL int XGBoosterPredictFromArrayInterface(BoosterHandle handle,
                                                unsigned iteration_begin,
                                                unsigned iteration_end,
                                                char const* c_type,
-                                               xgboost::bst_ulong cache_id,
-                                               xgboost::bst_ulong *out_len,
+                                               boxhed_kernel::bst_ulong cache_id,
+                                               boxhed_kernel::bst_ulong *out_len,
                                                float const** out_result) {
   API_BEGIN();
   CHECK_HANDLE();
@@ -82,7 +82,7 @@ XGB_DLL int XGBoosterPredictFromArrayInterface(BoosterHandle handle,
   CHECK(p_predt->DeviceCanRead());
 
   *out_result = p_predt->ConstDevicePointer();
-  *out_len = static_cast<xgboost::bst_ulong>(p_predt->Size());
+  *out_len = static_cast<boxhed_kernel::bst_ulong>(p_predt->Size());
 
   API_END();
 }

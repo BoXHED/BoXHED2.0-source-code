@@ -3,7 +3,7 @@
  */
 #include "sparse_page_source.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 void DataPool::Slice(std::shared_ptr<SparsePage> out, size_t offset,
                      size_t n_rows, size_t entry_offset) const {
@@ -74,4 +74,4 @@ size_t DataPool::Finalize() {
   return inferred_num_rows_;
 }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

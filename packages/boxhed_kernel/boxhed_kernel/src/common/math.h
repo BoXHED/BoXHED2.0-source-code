@@ -7,7 +7,7 @@
 #ifndef XGBOOST_COMMON_MATH_H_
 #define XGBOOST_COMMON_MATH_H_
 
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 
 #include <algorithm>
 #include <cmath>
@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief calculate the sigmoid of the input.
@@ -192,5 +192,5 @@ XGBOOST_DEVICE inline T LogGamma(T v) {
 #endif  // XGBOOST_STRICT_R_MODE && !defined(XGBOOST_USE_CUDA)
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_MATH_H_

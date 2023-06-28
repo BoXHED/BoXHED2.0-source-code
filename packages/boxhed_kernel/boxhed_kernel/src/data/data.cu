@@ -4,15 +4,15 @@
  * \file data.cu
  * \brief Handles setting metainfo from array interface.
  */
-#include "xgboost/data.h"
-#include "xgboost/logging.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/json.h"
 #include "array_interface.h"
 #include "../common/device_helpers.cuh"
 #include "device_adapter.cuh"
 #include "simple_dmatrix.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 void CopyInfoImpl(ArrayInterface column, HostDeviceVector<float>* out) {
   auto SetDeviceToPtr = [](void* ptr) {
@@ -129,4 +129,4 @@ template DMatrix* DMatrix::Create<data::CudfAdapter>(
 template DMatrix* DMatrix::Create<data::CupyAdapter>(
     data::CupyAdapter* adapter, float missing, int nthread,
     const std::string& cache_prefix, size_t page_size);
-}  // namespace xgboost
+}  // namespace boxhed_kernel

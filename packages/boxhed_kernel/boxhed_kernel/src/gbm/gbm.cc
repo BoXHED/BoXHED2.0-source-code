@@ -8,20 +8,20 @@
 #include <vector>
 #include <memory>
 
-#include "xgboost/gbm.h"
-#include "xgboost/learner.h"
-#include "xgboost/generic_parameters.h"
+#include "boxhed_kernel/gbm.h"
+#include "boxhed_kernel/learner.h"
+#include "boxhed_kernel/generic_parameters.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::GradientBoosterReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::GradientBoosterReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 GradientBooster* GradientBooster::Create(
     const std::string& name,
     GenericParameter const* generic_param,
     LearnerModelParam const* learner_model_param) {
-  auto *e = ::dmlc::Registry< ::xgboost::GradientBoosterReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::boxhed_kernel::GradientBoosterReg>::Get()->Find(name);
   if (e == nullptr) {
     LOG(FATAL) << "Unknown gbm type " << name;
   }
@@ -29,12 +29,12 @@ GradientBooster* GradientBooster::Create(
   p_bst->generic_param_ = generic_param;
   return p_bst;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 // List of files that will be force linked in static links.
 DMLC_REGISTRY_LINK_TAG(gblinear);
 DMLC_REGISTRY_LINK_TAG(gbtree);
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

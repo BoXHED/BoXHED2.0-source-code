@@ -15,7 +15,7 @@
 #include "timer.h"
 #include "../data/device_adapter.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 namespace detail {
@@ -294,6 +294,6 @@ void AdapterDeviceSketch(Batch batch, int num_bins,
   }
 }
 }      // namespace common
-}      // namespace xgboost
+}      // namespace boxhed_kernel
 
 #endif  // COMMON_HIST_UTIL_CUH_

@@ -1,13 +1,13 @@
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/objective.h>
 #include <cmath>
 #include <memory>
 #include <vector>
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/json.h"
-#include "xgboost/parameter.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/span.h"
 
 #include "../../src/common/transform.h"
 #include "../../src/common/common.h"
@@ -15,7 +15,7 @@
 
 #include "CL/sycl.hpp"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 DMLC_REGISTRY_FILE_TAG(regression_obj_oneapi);
@@ -179,4 +179,4 @@ XGBOOST_REGISTER_OBJECTIVE(LogisticRawOneAPI, LogisticRawOneAPI::Name())
 .set_body([]() { return new RegLossObjOneAPI<LogisticRawOneAPI>(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

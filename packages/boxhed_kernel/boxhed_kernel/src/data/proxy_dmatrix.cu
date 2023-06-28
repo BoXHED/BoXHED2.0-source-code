@@ -4,7 +4,7 @@
 #include "proxy_dmatrix.h"
 #include "device_adapter.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 void DMatrixProxy::FromCudaColumnar(std::string interface_str) {
@@ -25,4 +25,4 @@ void DMatrixProxy::FromCudaArray(std::string interface_str) {
 }
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

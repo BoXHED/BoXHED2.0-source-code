@@ -29,9 +29,9 @@
 #include <vector>
 #include <tuple>
 
-#include "xgboost/logging.h"
-#include "xgboost/host_device_vector.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/span.h"
 
 #include "common.h"
 
@@ -177,7 +177,7 @@ inline size_t MaxSharedMemoryOptin(int device_idx) {
 }
 
 inline void CheckComputeCapability() {
-  for (int d_idx = 0; d_idx < xgboost::common::AllVisibleGPUs(); ++d_idx) {
+  for (int d_idx = 0; d_idx < boxhed_kernel::common::AllVisibleGPUs(); ++d_idx) {
     cudaDeviceProp prop;
     safe_cuda(cudaGetDeviceProperties(&prop, d_idx));
     std::ostringstream oss;
@@ -196,17 +196,17 @@ XGBOOST_DEV_INLINE void AtomicOrByte(unsigned int *__restrict__ buffer,
 }
 
 template <typename T>
-__device__ xgboost::common::Range GridStrideRange(T begin, T end) {
+__device__ boxhed_kernel::common::Range GridStrideRange(T begin, T end) {
   begin += blockDim.x * blockIdx.x + threadIdx.x;
-  xgboost::common::Range r(begin, end);
+  boxhed_kernel::common::Range r(begin, end);
   r.Step(gridDim.x * blockDim.x);
   return r;
 }
 
 template <typename T>
-__device__ xgboost::common::Range BlockStrideRange(T begin, T end) {
+__device__ boxhed_kernel::common::Range BlockStrideRange(T begin, T end) {
   begin += threadIdx.x;
-  xgboost::common::Range r(begin, end);
+  boxhed_kernel::common::Range r(begin, end);
   r.Step(blockDim.x);
   return r;
 }
@@ -275,7 +275,7 @@ inline void LaunchN(int device_idx, size_t n, cudaStream_t stream, L lambda) {
     return;
   }
   const int GRID_SIZE =
-      static_cast<int>(xgboost::common::DivRoundUp(n, ITEMS_PER_THREAD * BLOCK_THREADS));
+      static_cast<int>(boxhed_kernel::common::DivRoundUp(n, ITEMS_PER_THREAD * BLOCK_THREADS));
   LaunchNKernel<<<GRID_SIZE, BLOCK_THREADS, 0, stream>>>(  // NOLINT
       static_cast<size_t>(0), n, lambda);
 }
@@ -321,7 +321,7 @@ class MemoryLogger {
 
 public:
   void RegisterAllocation(void *ptr, size_t n) {
-    if (!xgboost::ConsoleLogger::ShouldLog(xgboost::ConsoleLogger::LV::kDebug)) {
+    if (!boxhed_kernel::ConsoleLogger::ShouldLog(boxhed_kernel::ConsoleLogger::LV::kDebug)) {
       return;
     }
     std::lock_guard<std::mutex> guard(mutex_);
@@ -330,7 +330,7 @@ public:
     stats_.RegisterAllocation(ptr, n);
   }
   void RegisterDeallocation(void *ptr, size_t n) {
-    if (!xgboost::ConsoleLogger::ShouldLog(xgboost::ConsoleLogger::LV::kDebug)) {
+    if (!boxhed_kernel::ConsoleLogger::ShouldLog(boxhed_kernel::ConsoleLogger::LV::kDebug)) {
       return;
     }
     std::lock_guard<std::mutex> guard(mutex_);
@@ -350,7 +350,7 @@ public:
   }
 
   void Log() {
-    if (!xgboost::ConsoleLogger::ShouldLog(xgboost::ConsoleLogger::LV::kDebug)) {
+    if (!boxhed_kernel::ConsoleLogger::ShouldLog(boxhed_kernel::ConsoleLogger::LV::kDebug)) {
       return;
     }
     std::lock_guard<std::mutex> guard(mutex_);
@@ -471,7 +471,7 @@ struct XGBCachingDeviceAllocatorImpl : XGBBaseDeviceAllocator<T> {
 };
 }  // namespace detail
 
-// Declare xgboost allocators
+// Declare boxhed_kernel allocators
 // Replacement of allocator with custom backend should occur here
 template <typename T>
 using XGBDeviceAllocator = detail::XGBDefaultDeviceAllocatorImpl<T>;
@@ -522,7 +522,7 @@ class TemporaryArray {
  * \param           src Copy source. Must be device memory.
  */
 template <typename T>
-void CopyDeviceSpanToVector(std::vector<T> *dst, xgboost::common::Span<T> src) {
+void CopyDeviceSpanToVector(std::vector<T> *dst, boxhed_kernel::common::Span<T> src) {
   CHECK_EQ(dst->size(), src.size());
   dh::safe_cuda(cudaMemcpyAsync(dst->data(), src.data(), dst->size() * sizeof(T),
                                 cudaMemcpyDeviceToHost));
@@ -536,7 +536,7 @@ void CopyDeviceSpanToVector(std::vector<T> *dst, xgboost::common::Span<T> src) {
  * \param           src Copy source. Must be device memory.
  */
 template <typename T>
-void CopyDeviceSpanToVector(std::vector<T> *dst, xgboost::common::Span<const T> src) {
+void CopyDeviceSpanToVector(std::vector<T> *dst, boxhed_kernel::common::Span<const T> src) {
   CHECK_EQ(dst->size(), src.size());
   dh::safe_cuda(cudaMemcpyAsync(dst->data(), src.data(), dst->size() * sizeof(T),
                                 cudaMemcpyDeviceToHost));
@@ -565,18 +565,18 @@ struct PinnedMemory {
   ~PinnedMemory() { Free(); }
 
   template <typename T>
-  xgboost::common::Span<T> GetSpan(size_t size) {
+  boxhed_kernel::common::Span<T> GetSpan(size_t size) {
     size_t num_bytes = size * sizeof(T);
     if (num_bytes > temp_storage_bytes) {
       Free();
       safe_cuda(cudaMallocHost(&temp_storage, num_bytes));
       temp_storage_bytes = num_bytes;
     }
-    return xgboost::common::Span<T>(static_cast<T *>(temp_storage), size);
+    return boxhed_kernel::common::Span<T>(static_cast<T *>(temp_storage), size);
   }
 
   template <typename T>
-  xgboost::common::Span<T> GetSpan(size_t size, T init) {
+  boxhed_kernel::common::Span<T> GetSpan(size_t size, T init) {
     auto result = this->GetSpan<T>(size);
     for (auto &e : result) {
       e = init;
@@ -800,8 +800,8 @@ class AllReducer {
 };
 
 template <typename VectorT, typename T = typename VectorT::value_type,
-  typename IndexT = typename xgboost::common::Span<T>::index_type>
-xgboost::common::Span<T> ToSpan(
+  typename IndexT = typename boxhed_kernel::common::Span<T>::index_type>
+boxhed_kernel::common::Span<T> ToSpan(
     VectorT &vec,
     IndexT offset = 0,
     IndexT size = std::numeric_limits<size_t>::max()) {
@@ -811,49 +811,49 @@ xgboost::common::Span<T> ToSpan(
 }
 
 template <typename T>
-xgboost::common::Span<T> ToSpan(thrust::device_vector<T>& vec,
+boxhed_kernel::common::Span<T> ToSpan(thrust::device_vector<T>& vec,
                                 size_t offset, size_t size) {
   return ToSpan(vec, offset, size);
 }
 
 // thrust begin, similiar to std::begin
 template <typename T>
-thrust::device_ptr<T> tbegin(xgboost::HostDeviceVector<T>& vector) {  // NOLINT
+thrust::device_ptr<T> tbegin(boxhed_kernel::HostDeviceVector<T>& vector) {  // NOLINT
   return thrust::device_ptr<T>(vector.DevicePointer());
 }
 
 template <typename T>
-thrust::device_ptr<T> tend(xgboost::HostDeviceVector<T>& vector) {  // // NOLINT
+thrust::device_ptr<T> tend(boxhed_kernel::HostDeviceVector<T>& vector) {  // // NOLINT
   return tbegin(vector) + vector.Size();
 }
 
 template <typename T>
-thrust::device_ptr<T const> tcbegin(xgboost::HostDeviceVector<T> const& vector) {  // NOLINT
+thrust::device_ptr<T const> tcbegin(boxhed_kernel::HostDeviceVector<T> const& vector) {  // NOLINT
   return thrust::device_ptr<T const>(vector.ConstDevicePointer());
 }
 
 template <typename T>
-thrust::device_ptr<T const> tcend(xgboost::HostDeviceVector<T> const& vector) {  // NOLINT
+thrust::device_ptr<T const> tcend(boxhed_kernel::HostDeviceVector<T> const& vector) {  // NOLINT
   return tcbegin(vector) + vector.Size();
 }
 
 template <typename T>
-thrust::device_ptr<T> tbegin(xgboost::common::Span<T>& span) {  // NOLINT
+thrust::device_ptr<T> tbegin(boxhed_kernel::common::Span<T>& span) {  // NOLINT
   return thrust::device_ptr<T>(span.data());
 }
 
 template <typename T>
-thrust::device_ptr<T> tend(xgboost::common::Span<T>& span) {  // NOLINT
+thrust::device_ptr<T> tend(boxhed_kernel::common::Span<T>& span) {  // NOLINT
   return tbegin(span) + span.size();
 }
 
 template <typename T>
-thrust::device_ptr<T const> tcbegin(xgboost::common::Span<T> const& span) {  // NOLINT
+thrust::device_ptr<T const> tcbegin(boxhed_kernel::common::Span<T> const& span) {  // NOLINT
   return thrust::device_ptr<T const>(span.data());
 }
 
 template <typename T>
-thrust::device_ptr<T const> tcend(xgboost::common::Span<T> const& span) {  // NOLINT
+thrust::device_ptr<T const> tcend(boxhed_kernel::common::Span<T> const& span) {  // NOLINT
   return tcbegin(span) + span.size();
 }
 
@@ -918,24 +918,24 @@ class SegmentSorter {
 
   // Accessors that returns device pointer
   inline uint32_t GetNumItems() const { return ditems_.size(); }
-  inline const xgboost::common::Span<const T> GetItemsSpan() const {
+  inline const boxhed_kernel::common::Span<const T> GetItemsSpan() const {
     return { ditems_.data().get(), ditems_.size() };
   }
 
-  inline const xgboost::common::Span<const uint32_t> GetOriginalPositionsSpan() const {
+  inline const boxhed_kernel::common::Span<const uint32_t> GetOriginalPositionsSpan() const {
     return { doriginal_pos_.data().get(), doriginal_pos_.size() };
   }
 
-  inline const xgboost::common::Span<const uint32_t> GetGroupSegmentsSpan() const {
+  inline const boxhed_kernel::common::Span<const uint32_t> GetGroupSegmentsSpan() const {
     return { group_segments_.data().get(), group_segments_.size() };
   }
 
   inline uint32_t GetNumGroups() const { return dgroups_.size() - 1; }
-  inline const xgboost::common::Span<const uint32_t> GetGroupsSpan() const {
+  inline const boxhed_kernel::common::Span<const uint32_t> GetGroupsSpan() const {
     return { dgroups_.data().get(), dgroups_.size() };
   }
 
-  inline const xgboost::common::Span<const uint32_t> GetIndexableSortedPositionsSpan() const {
+  inline const boxhed_kernel::common::Span<const uint32_t> GetIndexableSortedPositionsSpan() const {
     return { dindexable_sorted_pos_.data().get(), dindexable_sorted_pos_.size() };
   }
 
@@ -956,7 +956,7 @@ class SegmentSorter {
   // is used.
   template <typename Comparator = thrust::greater<T>>
   void SortItems(const T *ditems, uint32_t item_size,
-                 const xgboost::common::Span<const uint32_t> &group_segments,
+                 const boxhed_kernel::common::Span<const uint32_t> &group_segments,
                  const Comparator &comp = Comparator()) {
     this->Init(item_size);
 
@@ -1055,7 +1055,7 @@ size_t XGBOOST_DEVICE SegmentId(It first, It last, size_t idx) {
 }
 
 template <typename T>
-size_t XGBOOST_DEVICE SegmentId(xgboost::common::Span<T> segments_ptr, size_t idx) {
+size_t XGBOOST_DEVICE SegmentId(boxhed_kernel::common::Span<T> segments_ptr, size_t idx) {
   return SegmentId(segments_ptr.cbegin(), segments_ptr.cend(), idx);
 }
 

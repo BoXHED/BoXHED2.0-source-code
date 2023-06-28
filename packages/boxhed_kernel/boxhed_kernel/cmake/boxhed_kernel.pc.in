@@ -1,12 +1,12 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-version=@xgboost_VERSION@
+version=@boxhed_kernel_VERSION@
 exec_prefix=${prefix}/bin
 libdir=${prefix}/lib
 includedir=${prefix}/include
 
-Name: xgboost
+Name: boxhed_kernel
 Description: XGBoost - Scalable and Flexible Gradient Boosting.
 Version: ${version}
 
 Cflags: -I${includedir}
-Libs: -L${libdir} -lxgboost
+Libs: -L${libdir} -lboxhed_kernel

@@ -3,12 +3,12 @@
  */
 #ifndef DRIVER_CUH_
 #define DRIVER_CUH_
-#include <xgboost/span.h>
+#include <boxhed_kernel/span.h>
 #include <queue>
 #include "../param.h"
 #include "evaluate_splits.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 struct ExpandEntry {
   int nid;
@@ -122,6 +122,6 @@ class Driver {
   ExpandQueue queue_;
 };
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // DRIVER_CUH_

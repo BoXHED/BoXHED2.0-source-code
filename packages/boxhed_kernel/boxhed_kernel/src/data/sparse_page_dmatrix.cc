@@ -12,7 +12,7 @@
 
 #include "./simple_batch_iterator.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 MetaInfo& SparsePageDMatrix::Info() {
@@ -55,5 +55,5 @@ BatchSet<EllpackPage> SparsePageDMatrix::GetEllpackBatches(const BatchParam& par
 }
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // DMLC_ENABLE_STD_THREAD

@@ -2,7 +2,7 @@
  * Copyright by Contributors 2017-2019
  */
 #pragma once
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 #include <chrono>
 #include <iostream>
 #include <map>
@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 struct Timer {
@@ -84,4 +84,4 @@ struct Monitor {
   void Stop(const std::string &name);
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

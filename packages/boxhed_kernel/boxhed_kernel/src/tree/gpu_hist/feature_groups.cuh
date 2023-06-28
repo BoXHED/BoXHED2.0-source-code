@@ -4,10 +4,10 @@
 #ifndef FEATURE_GROUPS_CUH_
 #define FEATURE_GROUPS_CUH_
 
-#include <xgboost/host_device_vector.h>
-#include <xgboost/span.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/span.h>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 // Forward declarations.
 namespace common {
@@ -114,6 +114,6 @@ private:
 }; 
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // FEATURE_GROUPS_CUH_

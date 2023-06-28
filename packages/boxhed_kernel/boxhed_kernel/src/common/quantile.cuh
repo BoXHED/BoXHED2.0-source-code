@@ -3,13 +3,13 @@
 
 #include <memory>
 
-#include "xgboost/span.h"
-#include "xgboost/data.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/data.h"
 #include "device_helpers.cuh"
 #include "quantile.h"
 #include "timer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 class HistogramCuts;
@@ -165,6 +165,6 @@ struct SketchUnique {
 };
 }  // namespace detail
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_QUANTILE_CUH_

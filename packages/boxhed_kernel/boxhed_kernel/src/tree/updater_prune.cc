@@ -5,17 +5,17 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <boxhed_kernel/tree_updater.h>
 
 #include <string>
 #include <memory>
 
-#include "xgboost/base.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/json.h"
 #include "./param.h"
 #include "../common/io.h"
 #include "../common/timer.h"
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_prune);
@@ -117,4 +117,4 @@ XGBOOST_REGISTER_TREE_UPDATER(TreePruner, "prune")
     return new TreePruner();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

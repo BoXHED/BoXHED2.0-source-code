@@ -5,12 +5,12 @@
 #include <unordered_set>
 #include <vector>
 
-#include "xgboost/span.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/json.h"
 #include "constraints.h"
 #include "param.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 void FeatureInteractionConstraintHost::Configure(tree::TrainParam const& param,
                                                  bst_feature_t const n_features) {
   if (param.interaction_constraints.empty()) {
@@ -100,4 +100,4 @@ void FeatureInteractionConstraintHost::SplitImpl(
     }
   }
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel

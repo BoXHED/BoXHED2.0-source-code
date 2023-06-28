@@ -1,9 +1,9 @@
 function (write_version)
-  message(STATUS "xgboost VERSION: ${xgboost_VERSION}")
+  message(STATUS "boxhed_kernel VERSION: ${boxhed_kernel_VERSION}")
   configure_file(
-    ${xgboost_SOURCE_DIR}/cmake/version_config.h.in
-    ${xgboost_SOURCE_DIR}/include/xgboost/version_config.h @ONLY)
+    ${boxhed_kernel_SOURCE_DIR}/cmake/version_config.h.in
+    ${boxhed_kernel_SOURCE_DIR}/include/boxhed_kernel/version_config.h @ONLY)
   configure_file(
-    ${xgboost_SOURCE_DIR}/cmake/Python_version.in
-    ${xgboost_SOURCE_DIR}/python-package/xgboost/VERSION @ONLY)
+    ${boxhed_kernel_SOURCE_DIR}/cmake/Python_version.in
+    ${boxhed_kernel_SOURCE_DIR}/python-package/boxhed_kernel/VERSION @ONLY)
 endfunction (write_version)

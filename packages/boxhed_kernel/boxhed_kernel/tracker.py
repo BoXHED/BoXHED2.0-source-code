@@ -1,6 +1,6 @@
 """
 This script is a variant of dmlc-core/dmlc_tracker/tracker.py,
-which is a specialized version for xgboost tasks.
+which is a specialized version for boxhed_kernel tasks.
 """
 
 # pylint: disable=invalid-name, missing-docstring, too-many-arguments, too-many-locals

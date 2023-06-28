@@ -3,11 +3,11 @@
  * \file sparse_page_raw_format.cc
  *  Raw binary format of sparse page.
  */
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <dmlc/registry.h>
 #include "./sparse_page_writer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 DMLC_REGISTRY_FILE_TAG(sparse_page_raw_format);
@@ -115,4 +115,4 @@ XGBOOST_REGISTER_SORTED_CSC_PAGE_FORMAT(raw)
   });
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

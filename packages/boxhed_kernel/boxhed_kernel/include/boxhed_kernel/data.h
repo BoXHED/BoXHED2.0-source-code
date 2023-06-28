@@ -1,7 +1,7 @@
 /*!
  * Copyright (c) 2015 by Contributors
  * \file data.h
- * \brief The input data structure of xgboost.
+ * \brief The input data structure of boxhed_kernel.
  * \author Tianqi Chen
  */
 #ifndef XGBOOST_DATA_H_
@@ -10,9 +10,9 @@
 #include <dmlc/base.h>
 #include <dmlc/data.h>
 #include <dmlc/serializer.h>
-#include <xgboost/base.h>
-#include <xgboost/span.h>
-#include <xgboost/host_device_vector.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/span.h>
+#include <boxhed_kernel/host_device_vector.h>
 
 #include <memory>
 #include <numeric>
@@ -21,11 +21,11 @@
 #include <utility>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 // forward declare dmatrix.
 class DMatrix;
 
-/*! \brief data type accepted by xgboost interface */
+/*! \brief data type accepted by boxhed_kernel interface */
 enum class DataType : uint8_t {
   kFloat32 = 1,
   kDouble = 2,
@@ -64,7 +64,7 @@ class MetaInfo {
   HostDeviceVector<bst_float> weights_;  // NOLINT
   /*!
    * \brief initialized margins,
-   * if specified, xgboost will start from this init margin
+   * if specified, boxhed_kernel will start from this init margin
    * can be used to specify initial prediction to boost from.
    */
   HostDeviceVector<bst_float> base_margin_;  // NOLINT
@@ -592,21 +592,21 @@ template<>
 inline BatchSet<EllpackPage> DMatrix::GetBatches(const BatchParam& param) {
   return GetEllpackBatches(param);
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 namespace dmlc {
-DMLC_DECLARE_TRAITS(is_pod, xgboost::Entry, true);
+DMLC_DECLARE_TRAITS(is_pod, boxhed_kernel::Entry, true);
 
 namespace serializer {
 
 template <>
-struct Handler<xgboost::Entry> {
-  inline static void Write(Stream* strm, const xgboost::Entry& data) {
+struct Handler<boxhed_kernel::Entry> {
+  inline static void Write(Stream* strm, const boxhed_kernel::Entry& data) {
     strm->Write(data.index);
     strm->Write(data.fvalue);
   }
 
-  inline static bool Read(Stream* strm, xgboost::Entry* data) {
+  inline static bool Read(Stream* strm, boxhed_kernel::Entry* data) {
     return strm->Read(&data->index) && strm->Read(&data->fvalue);
   }
 };

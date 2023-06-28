@@ -3,7 +3,7 @@
  * \file compressed_iterator.h
  */
 #pragma once
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 #include <cmath>
 #include <cstddef>
 #include <algorithm>
@@ -14,7 +14,7 @@
 #include "device_helpers.cuh"
 #endif  // __CUDACC__
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 using CompressedByteT = unsigned char;
@@ -220,4 +220,4 @@ class CompressedIterator {
   }
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel

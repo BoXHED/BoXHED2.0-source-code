@@ -4,11 +4,11 @@
 #pragma once
 
 #include <dmlc/registry.h>
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/host_device_vector.h>
-#include <xgboost/model.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/model.h>
 
 #include <functional>
 #include <string>
@@ -16,7 +16,7 @@
 #include <vector>
 
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 
@@ -71,9 +71,9 @@ struct LinearUpdaterReg
  * \brief Macro to register linear updater.
  */
 #define XGBOOST_REGISTER_LINEAR_UPDATER(UniqueId, Name)                        \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::LinearUpdaterReg&                    \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::LinearUpdaterReg&                    \
       __make_##LinearUpdaterReg##_##UniqueId##__ =                             \
-          ::dmlc::Registry< ::xgboost::LinearUpdaterReg>::Get()->__REGISTER__( \
+          ::dmlc::Registry< ::boxhed_kernel::LinearUpdaterReg>::Get()->__REGISTER__( \
               Name)
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel

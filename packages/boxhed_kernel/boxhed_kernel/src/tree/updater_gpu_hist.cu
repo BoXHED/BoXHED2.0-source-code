@@ -3,7 +3,7 @@
  */
 #include <thrust/copy.h>
 #include <thrust/reduce.h>
-#include <xgboost/tree_updater.h>
+#include <boxhed_kernel/tree_updater.h>
 #include <algorithm>
 #include <cmath>
 #include <memory>
@@ -11,10 +11,10 @@
 #include <utility>
 #include <vector>
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/parameter.h"
-#include "xgboost/span.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/span.h"
+#include "boxhed_kernel/json.h"
 
 #include "../common/io.h"
 #include "../common/device_helpers.cuh"
@@ -35,7 +35,7 @@
 #include "gpu_hist/evaluate_splits.cuh"
 #include "gpu_hist/driver.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 #if !defined(GTEST_TEST)
 DMLC_REGISTRY_FILE_TAG(updater_gpu_hist);
@@ -774,7 +774,7 @@ class GPUHistMakerSpecialised {
     param_.learning_rate = lr / trees.size();
     // build tree
     try {
-      for (xgboost::RegTree* tree : trees) {
+      for (boxhed_kernel::RegTree* tree : trees) {
         this->UpdateTree(gpair, dmat, tree);
 
         if (hist_maker_param_.debug_synchronize) {
@@ -966,4 +966,4 @@ XGBOOST_REGISTER_TREE_UPDATER(GPUHistMaker, "grow_gpu_hist")
 #endif  // !defined(GTEST_TEST)
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

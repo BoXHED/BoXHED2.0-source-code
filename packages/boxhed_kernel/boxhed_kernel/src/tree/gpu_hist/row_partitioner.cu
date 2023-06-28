@@ -8,7 +8,7 @@
 #include "../../common/device_helpers.cuh"
 #include "row_partitioner.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 struct IndicateLeftTransform {
@@ -184,4 +184,4 @@ void RowPartitioner::SortPositionAndCopy(const Segment& segment,
   });
 }
 };  // namespace tree
-};  // namespace xgboost
+};  // namespace boxhed_kernel

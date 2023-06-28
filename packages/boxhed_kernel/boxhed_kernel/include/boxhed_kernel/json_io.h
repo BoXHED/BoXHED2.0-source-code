@@ -3,8 +3,8 @@
  */
 #ifndef XGBOOST_JSON_IO_H_
 #define XGBOOST_JSON_IO_H_
-#include <xgboost/json.h>
-#include <xgboost/base.h>
+#include <boxhed_kernel/json.h>
+#include <boxhed_kernel/base.h>
 
 #include <vector>
 #include <memory>
@@ -16,7 +16,7 @@
 #include <locale>
 #include <cinttypes>
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*
  * \brief A json reader, currently error checking and utf-8 is not fully supported.
  */
@@ -134,6 +134,6 @@ class JsonWriter {
   virtual void Visit(JsonString const* str);
   virtual void Visit(JsonBoolean const* boolean);
 };
-}      // namespace xgboost
+}      // namespace boxhed_kernel
 
 #endif  // XGBOOST_JSON_IO_H_

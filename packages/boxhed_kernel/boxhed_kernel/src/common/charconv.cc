@@ -32,7 +32,7 @@
 #include <cstring>
 #include <cmath>
 
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 #include "charconv.h"
 
 #if defined(_MSC_VER)
@@ -54,7 +54,7 @@
  * with m, r, p like {vr, vm, vp}.  Here we name them more verbosely.
  */
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace detail {
 static constexpr char kItoaLut[200] = {
     '0', '0', '0', '1', '0', '2', '0', '3', '0', '4', '0', '5', '0', '6', '0',
@@ -939,4 +939,4 @@ from_chars_result FromCharFloatImpl(const char *buffer, const int len,
   return {};
 }
 }  // namespace detail
-}  // namespace xgboost
+}  // namespace boxhed_kernel

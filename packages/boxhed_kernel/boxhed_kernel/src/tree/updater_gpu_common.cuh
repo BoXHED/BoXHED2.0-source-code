@@ -12,7 +12,7 @@
 #include "../common/random.h"
 #include "param.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 struct GPUTrainingParam {
@@ -133,4 +133,4 @@ struct SumCallbackOp {
   }
 };
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

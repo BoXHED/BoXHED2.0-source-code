@@ -7,14 +7,14 @@ XGBoost Python Package
 Installation
 ============
 
-From `PyPI <https://pypi.python.org/pypi/xgboost>`_
+From `PyPI <https://pypi.python.org/pypi/boxhed_kernel>`_
 ---------------------------------------------------
 
 For a stable version, install using ``pip``::
 
-    pip install xgboost
+    pip install boxhed_kernel
 
-.. |PyPI version| image:: https://badge.fury.io/py/xgboost.svg
-   :target: http://badge.fury.io/py/xgboost
+.. |PyPI version| image:: https://badge.fury.io/py/boxhed_kernel.svg
+   :target: http://badge.fury.io/py/boxhed_kernel
 
-For building from source, see `build <https://xgboost.readthedocs.io/en/latest/build.html>`_.
+For building from source, see `build <https://boxhed_kernel.readthedocs.io/en/latest/build.html>`_.

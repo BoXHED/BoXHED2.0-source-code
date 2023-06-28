@@ -4,9 +4,9 @@
 #ifndef XGBOOST_DATA_SIMPLE_BATCH_ITERATOR_H_
 #define XGBOOST_DATA_SIMPLE_BATCH_ITERATOR_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 template<typename T>
@@ -29,5 +29,5 @@ class SimpleBatchIteratorImpl : public BatchIteratorImpl<T> {
 };
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_SIMPLE_BATCH_ITERATOR_H_

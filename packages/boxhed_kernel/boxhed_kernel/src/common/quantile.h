@@ -8,8 +8,8 @@
 #define XGBOOST_COMMON_QUANTILE_H_
 
 #include <dmlc/base.h>
-#include <xgboost/logging.h>
-#include <xgboost/data.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/data.h>
 #include <cmath>
 #include <vector>
 #include <cstring>
@@ -18,7 +18,7 @@
 
 #include "timer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief experimental wsummary
@@ -763,5 +763,5 @@ class HostSketchContainer {
   void MakeCuts(HistogramCuts* cuts);
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_QUANTILE_H_

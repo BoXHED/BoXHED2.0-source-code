@@ -6,8 +6,8 @@
 #ifndef XGBOOST_COMMON_COMMON_H_
 #define XGBOOST_COMMON_COMMON_H_
 
-#include <xgboost/base.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/logging.h>
 
 #include <algorithm>
 #include <exception>
@@ -50,7 +50,7 @@ inline cudaError_t ThrowOnCudaError(cudaError_t code, const char *file,
 #endif  // defined(__CUDACC__)
 }  // namespace dh
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief Split a string by delimiter
@@ -173,5 +173,5 @@ std::vector<Idx> ArgSort(std::vector<V> const &array, Comp comp = std::less<V>{}
   return result;
 }
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_COMMON_H_

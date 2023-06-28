@@ -13,11 +13,11 @@
 
 #include "param.h"
 #include "constraints.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/span.h"
 #include "../common/bitfield.h"
 #include "../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 // Feature interaction constraints built for GPU Hist updater.
 struct FeatureInteractionConstraintDevice {
  protected:
@@ -95,5 +95,5 @@ struct FeatureInteractionConstraintDevice {
   void Split(bst_node_t node_id, bst_feature_t feature_id, bst_node_t left_id, bst_node_t right_id);
 };
 
-}      // namespace xgboost
+}      // namespace boxhed_kernel
 #endif  // XGBOOST_TREE_CONSTRAINTS_H_

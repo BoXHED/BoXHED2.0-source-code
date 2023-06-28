@@ -5,14 +5,14 @@
  */
 #include <dmlc/registry.h>
 
-#include <xgboost/data.h>
-#include <xgboost/logging.h>
-#include <xgboost/parameter.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/parameter.h>
 #include <lz4.h>
 #include <lz4hc.h>
 #include "../../src/data/sparse_page_writer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 DMLC_REGISTRY_FILE_TAG(sparse_page_lz4_format);
@@ -330,4 +330,4 @@ XGBOOST_REGISTER_SPARSE_PAGE_FORMAT(lz4i16hc)
   });
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

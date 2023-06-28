@@ -13,7 +13,7 @@
 #include <memory>
 #include "hist_util.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 class ColumnMatrix;
@@ -244,7 +244,7 @@ class ColumnMatrix {
       /* to handle rows in all batches, sum of all batch sizes equal to gmat.row_ptr.size() - 1 */
       size_t rbegin = 0;
       for (const auto &batch : gmat.p_fmat->GetBatches<SparsePage>()) {
-        const xgboost::Entry* data_ptr = batch.data.HostVector().data();
+        const boxhed_kernel::Entry* data_ptr = batch.data.HostVector().data();
         const std::vector<bst_row_t>& offset_vec = batch.offset.HostVector();
         const size_t batch_size = batch.Size();
         CHECK_LT(batch_size, offset_vec.size());
@@ -279,7 +279,7 @@ class ColumnMatrix {
     T* local_index = reinterpret_cast<T*>(&index_[0]);
     size_t rbegin = 0;
     for (const auto &batch : gmat.p_fmat->GetBatches<SparsePage>()) {
-      const xgboost::Entry* data_ptr = batch.data.HostVector().data();
+      const boxhed_kernel::Entry* data_ptr = batch.data.HostVector().data();
       const std::vector<bst_row_t>& offset_vec = batch.offset.HostVector();
       const size_t batch_size = batch.Size();
       CHECK_LT(batch_size, offset_vec.size());
@@ -343,5 +343,5 @@ class ColumnMatrix {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_COLUMN_MATRIX_H_

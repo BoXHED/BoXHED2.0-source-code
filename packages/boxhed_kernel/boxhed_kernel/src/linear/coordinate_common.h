@@ -9,13 +9,13 @@
 #include <vector>
 #include <limits>
 
-#include "xgboost/data.h"
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/parameter.h"
 #include "./param.h"
 #include "../gbm/gblinear_model.h"
 #include "../common/random.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 
 struct CoordinateParam : public XGBoostParameter<CoordinateParam> {
@@ -477,4 +477,4 @@ inline FeatureSelector *FeatureSelector::Create(int choice) {
 }
 
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel

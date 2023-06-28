@@ -5,17 +5,17 @@
  */
 #include <dmlc/registry.h>
 
-#include "xgboost/tree_updater.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::TreeUpdaterReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::TreeUpdaterReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 TreeUpdater* TreeUpdater::Create(const std::string& name, GenericParameter const* tparam) {
-  auto *e = ::dmlc::Registry< ::xgboost::TreeUpdaterReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::boxhed_kernel::TreeUpdaterReg>::Get()->Find(name);
   if (e == nullptr) {
     LOG(FATAL) << "Unknown tree updater " << name;
   }
@@ -24,9 +24,9 @@ TreeUpdater* TreeUpdater::Create(const std::string& name, GenericParameter const
   return p_updater;
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 // List of files that will be force linked in static links.
 DMLC_REGISTRY_LINK_TAG(updater_colmaker);
@@ -39,4 +39,4 @@ DMLC_REGISTRY_LINK_TAG(updater_sync);
 DMLC_REGISTRY_LINK_TAG(updater_gpu_hist);
 #endif  // XGBOOST_USE_CUDA
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

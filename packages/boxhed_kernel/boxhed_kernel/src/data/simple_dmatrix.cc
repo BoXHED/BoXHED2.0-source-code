@@ -9,8 +9,8 @@
 #include <type_traits>
 #include <algorithm>
 
-#include "xgboost/data.h"
-#include "xgboost/c_api.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/c_api.h"
 
 #include "simple_dmatrix.h"
 #include "./simple_batch_iterator.h"
@@ -18,7 +18,7 @@
 #include "../common/threading_utils.h"
 #include "adapter.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 MetaInfo& SimpleDMatrix::Info() { return info_; }
 
@@ -221,4 +221,4 @@ template SimpleDMatrix::SimpleDMatrix(
         *adapter,
     float missing, int nthread);
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

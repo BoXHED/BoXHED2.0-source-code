@@ -3,10 +3,10 @@
  */
 #ifndef XGBOOST_USE_CUDA
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 
 // dummy implementation of EllpackPage in case CUDA is not used
-namespace xgboost {
+namespace boxhed_kernel {
 
 class EllpackPageImpl {};
 
@@ -32,6 +32,6 @@ size_t EllpackPage::Size() const {
   return 0;
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_USE_CUDA

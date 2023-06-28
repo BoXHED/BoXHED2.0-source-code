@@ -3,13 +3,13 @@
  */
 #ifndef EVALUATE_SPLITS_CUH_
 #define EVALUATE_SPLITS_CUH_
-#include <xgboost/span.h>
+#include <boxhed_kernel/span.h>
 #include "../../data/ellpack_page.cuh"
 #include "../split_evaluator.h"
 #include "../constraints.cuh"
 #include "../updater_gpu_common.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 template <typename GradientSumT>
@@ -34,6 +34,6 @@ void EvaluateSingleSplit(common::Span<DeviceSplitCandidate> out_split,
                          TreeEvaluator::SplitEvaluator<GPUTrainingParam> evaluator,
                          EvaluateSplitInputs<GradientSumT> input);
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // EVALUATE_SPLITS_CUH_

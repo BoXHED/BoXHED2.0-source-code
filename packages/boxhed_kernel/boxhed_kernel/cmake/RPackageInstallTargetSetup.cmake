@@ -4,7 +4,7 @@
 function(setup_rpackage_install_target rlib_target build_dir)
   configure_file(${PROJECT_SOURCE_DIR}/cmake/RPackageInstall.cmake.in ${PROJECT_BINARY_DIR}/RPackageInstall.cmake @ONLY)
   install(
-    DIRECTORY "${xgboost_SOURCE_DIR}/R-package"
+    DIRECTORY "${boxhed_kernel_SOURCE_DIR}/R-package"
     DESTINATION "${build_dir}"
     REGEX "src/*" EXCLUDE
     REGEX "R-package/configure" EXCLUDE

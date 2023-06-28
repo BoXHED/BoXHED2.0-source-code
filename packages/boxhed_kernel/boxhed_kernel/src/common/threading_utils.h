@@ -9,9 +9,9 @@
 #include <dmlc/common.h>
 #include <vector>
 #include <algorithm>
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 // Represent simple range of indexes [begin, end)
@@ -171,6 +171,6 @@ inline int32_t OmpSetNumThreadsWithoutHT(int32_t* p_threads) {
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_THREADING_UTILS_H_

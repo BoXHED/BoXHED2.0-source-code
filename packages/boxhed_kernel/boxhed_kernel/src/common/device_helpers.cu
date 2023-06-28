@@ -17,13 +17,13 @@ constexpr std::size_t kUuidLength =
     sizeof(std::declval<cudaDeviceProp>().uuid) / sizeof(uint64_t);
 
 void GetCudaUUID(int world_size, int rank, int device_ord,
-                 xgboost::common::Span<uint64_t, kUuidLength> uuid) {
+                 boxhed_kernel::common::Span<uint64_t, kUuidLength> uuid) {
   cudaDeviceProp prob;
   safe_cuda(cudaGetDeviceProperties(&prob, device_ord));
   std::memcpy(uuid.data(), static_cast<void*>(&(prob.uuid)), sizeof(prob.uuid));
 }
 
-std::string PrintUUID(xgboost::common::Span<uint64_t, kUuidLength> uuid) {
+std::string PrintUUID(boxhed_kernel::common::Span<uint64_t, kUuidLength> uuid) {
   std::stringstream ss;
   for (auto v : uuid) {
     ss << std::hex << v;
@@ -44,18 +44,18 @@ void AllReducer::Init(int _device_ordinal) {
   int32_t const world = rabit::GetWorldSize();
 
   std::vector<uint64_t> uuids(world * kUuidLength, 0);
-  auto s_uuid = xgboost::common::Span<uint64_t>{uuids.data(), uuids.size()};
+  auto s_uuid = boxhed_kernel::common::Span<uint64_t>{uuids.data(), uuids.size()};
   auto s_this_uuid = s_uuid.subspan(rank * kUuidLength, kUuidLength);
   GetCudaUUID(world, rank, device_ordinal_, s_this_uuid);
 
   // No allgather yet.
   rabit::Allreduce<rabit::op::Sum, uint64_t>(uuids.data(), uuids.size());
 
-  std::vector<xgboost::common::Span<uint64_t, kUuidLength>> converted(world);;
+  std::vector<boxhed_kernel::common::Span<uint64_t, kUuidLength>> converted(world);;
   size_t j = 0;
   for (size_t i = 0; i < uuids.size(); i += kUuidLength) {
     converted[j] =
-        xgboost::common::Span<uint64_t, kUuidLength>{uuids.data() + i, kUuidLength};
+        boxhed_kernel::common::Span<uint64_t, kUuidLength>{uuids.data() + i, kUuidLength};
     j++;
   }
 
@@ -111,7 +111,7 @@ AllReducer::~AllReducer() {
     dh::safe_cuda(cudaStreamDestroy(stream_));
     ncclCommDestroy(comm_);
   }
-  if (xgboost::ConsoleLogger::ShouldLog(xgboost::ConsoleLogger::LV::kDebug)) {
+  if (boxhed_kernel::ConsoleLogger::ShouldLog(boxhed_kernel::ConsoleLogger::LV::kDebug)) {
     LOG(CONSOLE) << "======== NCCL Statistics========";
     LOG(CONSOLE) << "AllReduce calls: " << allreduce_calls_;
     LOG(CONSOLE) << "AllReduce total MiB communicated: " << allreduce_bytes_/1048576;

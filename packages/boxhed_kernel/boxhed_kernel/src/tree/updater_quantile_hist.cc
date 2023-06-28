@@ -17,8 +17,8 @@
 #include <string>
 #include <utility>
 
-#include "xgboost/logging.h"
-#include "xgboost/tree_updater.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/tree_updater.h"
 
 #include "constraints.h"
 #include "param.h"
@@ -30,7 +30,7 @@
 #include "../common/column_matrix.h"
 #include "../common/threading_utils.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_quantile_hist);
@@ -84,7 +84,7 @@ void QuantileHistMaker::Update(HostDeviceVector<GradientPair> *gpair,
     }
     updater_monitor_.Stop("GmatInitialization");
     // A proper solution is puting cut matrix in DMatrix, see:
-    // https://github.com/dmlc/xgboost/issues/5143
+    // https://github.com/dmlc/boxhed_kernel/issues/5143
     is_gmat_initialized_ = true;
   }
   // rescale learning rate according to size of trees
@@ -1082,7 +1082,7 @@ void QuantileHistMaker::Builder<GradientSumT>::PartitionKernel(
 
   std::pair<size_t, size_t> child_nodes_sizes;
 
-  if (column_ptr->GetType() == xgboost::common::kDenseColumn) {
+  if (column_ptr->GetType() == boxhed_kernel::common::kDenseColumn) {
     const common::DenseColumn<BinIdxType>& column =
           static_cast<const common::DenseColumn<BinIdxType>& >(*(column_ptr.get()));
     if (default_left) {
@@ -1394,4 +1394,4 @@ XGBOOST_REGISTER_TREE_UPDATER(QuantileHistMaker, "grow_quantile_histmaker")
       return new QuantileHistMaker();
     });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

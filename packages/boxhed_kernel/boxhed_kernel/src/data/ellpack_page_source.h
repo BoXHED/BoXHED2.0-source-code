@@ -5,7 +5,7 @@
 #ifndef XGBOOST_DATA_ELLPACK_PAGE_SOURCE_H_
 #define XGBOOST_DATA_ELLPACK_PAGE_SOURCE_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <memory>
 #include <string>
 
@@ -13,7 +13,7 @@
 #include "../common/hist_util.h"
 #include "sparse_page_source.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 /*!
@@ -60,6 +60,6 @@ class EllpackPageSource {
 };
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_DATA_ELLPACK_PAGE_SOURCE_H_

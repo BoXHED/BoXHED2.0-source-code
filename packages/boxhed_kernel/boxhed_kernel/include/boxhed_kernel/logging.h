@@ -2,7 +2,7 @@
  * Copyright (c) 2015-2019 by Contributors
  * \file logging.h
  *
- * \brief defines console logging options for xgboost.  Use to enforce unified print
+ * \brief defines console logging options for boxhed_kernel.  Use to enforce unified print
  *  behavior.
  */
 #ifndef XGBOOST_LOGGING_H_
@@ -11,8 +11,8 @@
 #include <dmlc/logging.h>
 #include <dmlc/thread_local.h>
 
-#include <xgboost/base.h>
-#include <xgboost/parameter.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/parameter.h>
 
 #include <sstream>
 #include <map>
@@ -20,7 +20,7 @@
 #include <utility>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class BaseLogger {
  public:
@@ -118,29 +118,29 @@ using LogCallbackRegistryStore = dmlc::ThreadLocalStore<LogCallbackRegistry>;
 #undef  LOG_WARNING
 #endif  // defined(LOG_WARNING)
 #define LOG_WARNING                                                            \
-  if (::xgboost::ConsoleLogger::ShouldLog(                                     \
-          ::xgboost::ConsoleLogger::LV::kWarning))                             \
-  ::xgboost::ConsoleLogger(__FILE__, __LINE__,                                 \
-                           ::xgboost::ConsoleLogger::LogVerbosity::kWarning)
+  if (::boxhed_kernel::ConsoleLogger::ShouldLog(                                     \
+          ::boxhed_kernel::ConsoleLogger::LV::kWarning))                             \
+  ::boxhed_kernel::ConsoleLogger(__FILE__, __LINE__,                                 \
+                           ::boxhed_kernel::ConsoleLogger::LogVerbosity::kWarning)
 
 // Redefines LOG_INFO for controling verbosity
 #if defined(LOG_INFO)
 #undef  LOG_INFO
 #endif  // defined(LOG_INFO)
 #define LOG_INFO                                                               \
-  if (::xgboost::ConsoleLogger::ShouldLog(                                     \
-          ::xgboost::ConsoleLogger::LV::kInfo))                                \
-  ::xgboost::ConsoleLogger(__FILE__, __LINE__,                                 \
-                           ::xgboost::ConsoleLogger::LogVerbosity::kInfo)
+  if (::boxhed_kernel::ConsoleLogger::ShouldLog(                                     \
+          ::boxhed_kernel::ConsoleLogger::LV::kInfo))                                \
+  ::boxhed_kernel::ConsoleLogger(__FILE__, __LINE__,                                 \
+                           ::boxhed_kernel::ConsoleLogger::LogVerbosity::kInfo)
 
 #if defined(LOG_DEBUG)
 #undef LOG_DEBUG
 #endif  // defined(LOG_DEBUG)
 #define LOG_DEBUG                                                              \
-  if (::xgboost::ConsoleLogger::ShouldLog(                                     \
-          ::xgboost::ConsoleLogger::LV::kDebug))                               \
-  ::xgboost::ConsoleLogger(__FILE__, __LINE__,                                 \
-                           ::xgboost::ConsoleLogger::LogVerbosity::kDebug)
+  if (::boxhed_kernel::ConsoleLogger::ShouldLog(                                     \
+          ::boxhed_kernel::ConsoleLogger::LV::kDebug))                               \
+  ::boxhed_kernel::ConsoleLogger(__FILE__, __LINE__,                                 \
+                           ::boxhed_kernel::ConsoleLogger::LogVerbosity::kDebug)
 
 // redefines the logging macro if not existed
 #ifndef LOG
@@ -148,10 +148,10 @@ using LogCallbackRegistryStore = dmlc::ThreadLocalStore<LogCallbackRegistry>;
 #endif  // LOG
 
 // Enable LOG(CONSOLE) for print messages to console.
-#define LOG_CONSOLE ::xgboost::ConsoleLogger(           \
-    ::xgboost::ConsoleLogger::LogVerbosity::kIgnore)
+#define LOG_CONSOLE ::boxhed_kernel::ConsoleLogger(           \
+    ::boxhed_kernel::ConsoleLogger::LogVerbosity::kIgnore)
 // Enable LOG(TRACKER) for print messages to tracker
-#define LOG_TRACKER ::xgboost::TrackerLogger()
+#define LOG_TRACKER ::boxhed_kernel::TrackerLogger()
 
 #if defined(CHECK)
 #undef CHECK
@@ -161,5 +161,5 @@ using LogCallbackRegistryStore = dmlc::ThreadLocalStore<LogCallbackRegistry>;
         << "Check failed: " #cond << ": "
 #endif  // defined(CHECK)
 
-}  // namespace xgboost.
+}  // namespace boxhed_kernel.
 #endif  // XGBOOST_LOGGING_H_

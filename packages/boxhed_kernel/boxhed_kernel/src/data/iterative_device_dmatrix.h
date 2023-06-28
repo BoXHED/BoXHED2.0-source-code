@@ -10,12 +10,12 @@
 #include <utility>
 #include <memory>
 
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/c_api.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/c_api.h"
 #include "proxy_dmatrix.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 class IterativeDeviceDMatrix : public DMatrix {
@@ -71,6 +71,6 @@ class IterativeDeviceDMatrix : public DMatrix {
   }
 };
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_DATA_ITERATIVE_DEVICE_DMATRIX_H_

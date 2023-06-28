@@ -13,7 +13,7 @@
 #include "proxy_dmatrix.h"
 #include "device_adapter.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 template <typename Fn>
@@ -182,4 +182,4 @@ BatchSet<EllpackPage> IterativeDeviceDMatrix::GetEllpackBatches(const BatchParam
   return BatchSet<EllpackPage>(begin_iter);
 }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

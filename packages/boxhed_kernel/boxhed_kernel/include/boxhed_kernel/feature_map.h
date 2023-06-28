@@ -7,14 +7,14 @@
 #ifndef XGBOOST_FEATURE_MAP_H_
 #define XGBOOST_FEATURE_MAP_H_
 
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 
 #include <vector>
 #include <string>
 #include <cstring>
 #include <iostream>
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*!
  * \brief Feature map data structure to help text model dump.
  * TODO(tqchen) consider make it even more lightweight.
@@ -90,5 +90,5 @@ class FeatureMap {
   /*! \brief type of the feature */
   std::vector<Type> types_;
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_FEATURE_MAP_H_

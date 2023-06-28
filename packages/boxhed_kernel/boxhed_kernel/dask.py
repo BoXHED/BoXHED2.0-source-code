@@ -2,15 +2,15 @@
 # pylint: disable=missing-class-docstring, invalid-name
 # pylint: disable=too-many-lines
 """Dask extensions for distributed training. See
-https://xgboost.readthedocs.io/en/latest/tutorials/dask.html for simple
-tutorial.  Also xgboost/demo/dask for some examples.
+https://boxhed_kernel.readthedocs.io/en/latest/tutorials/dask.html for simple
+tutorial.  Also boxhed_kernel/demo/dask for some examples.
 
 There are two sets of APIs in this module, one is the functional API including
 ``train`` and ``predict`` methods.  Another is stateful Scikit-Learner wrapper
 inherited from single-node Scikit-Learn interface.
 
-The implementation is heavily influenced by dask_xgboost:
-https://github.com/dask/dask-xgboost
+The implementation is heavily influenced by dask_boxhed_kernel:
+https://github.com/dask/dask-boxhed_kernel
 
 """
 import platform
@@ -35,7 +35,7 @@ from .core import _deprecate_positional_args
 from .training import train as worker_train
 from .tracker import RabitTracker
 from .sklearn import XGBModel, XGBRegressorBase, XGBClassifierBase
-from .sklearn import xgboost_model_doc
+from .sklearn import boxhed_kernel_model_doc
 
 
 dd = LazyLoader('dd', globals(), 'dask.dataframe')
@@ -64,7 +64,7 @@ distributed = LazyLoader('distributed', globals(), 'dask.distributed')
 #       to do the switch.
 
 
-LOGGER = logging.getLogger('[xgboost.dask]')
+LOGGER = logging.getLogger('[boxhed_kernel.dask]')
 
 
 def _start_tracker(n_workers):
@@ -90,7 +90,7 @@ def _assert_dask_support():
             'Dask needs to be installed in order to use this module') from e
 
     if platform.system() == 'Windows':
-        msg = 'Windows is not officially supported for dask/xgboost,'
+        msg = 'Windows is not officially supported for dask/boxhed_kernel,'
         msg += ' contribution are welcomed.'
         LOGGER.warning(msg)
 
@@ -101,7 +101,7 @@ class RabitContext:
         self.args = args
         worker = distributed.get_worker()
         self.args.append(
-            ('DMLC_TASK_ID=[xgboost.dask]:' + str(worker.address)).encode())
+            ('DMLC_TASK_ID=[boxhed_kernel.dask]:' + str(worker.address)).encode())
 
     def __enter__(self):
         rabit.init(self.args)
@@ -260,7 +260,7 @@ class DaskDMatrix:
                      label_upper_bound]:
             if meta is not None:
                 meta = meta.persist()
-        # Breaking data into partitions, a trick borrowed from dask_xgboost.
+        # Breaking data into partitions, a trick borrowed from dask_boxhed_kernel.
 
         # `to_delayed` downgrades high-level objects into numpy or pandas
         # equivalents.
@@ -357,7 +357,7 @@ def _get_worker_parts_ordered(meta_names, list_of_keys, list_of_parts, partition
         base_margin = None
         label_lower_bound = None
         label_upper_bound = None
-        # Iterate through all possible meta info, brings small overhead as in xgboost
+        # Iterate through all possible meta info, brings small overhead as in boxhed_kernel
         # there are constant number of meta info available.
         for j, blob in enumerate(list_of_parts[i][1:]):
             if meta_names[j] == 'labels':
@@ -720,7 +720,7 @@ def train(client, params, dtrain, *args, evals=(), early_stopping_rounds=None,
         Specify the dask client used for training.  Use default client
         returned from dask if it's set to None.
     \\*\\*kwargs:
-        Other parameters are the same as `xgboost.train` except for
+        Other parameters are the same as `boxhed_kernel.train` except for
         `evals_result`, which is returned as part of function return value
         instead of argument.
 
@@ -728,11 +728,11 @@ def train(client, params, dtrain, *args, evals=(), early_stopping_rounds=None,
     -------
     results: dict
         A dictionary containing trained booster and evaluation history.
-        `history` field is the same as `eval_result` from `xgboost.train`.
+        `history` field is the same as `eval_result` from `boxhed_kernel.train`.
 
         .. code-block:: python
 
-            {'booster': xgboost.Booster,
+            {'booster': boxhed_kernel.Booster,
              'history': {'train': {'logloss': ['0.48253', '0.35953']},
                          'eval': {'logloss': ['0.480385', '0.357756']}}}
 
@@ -898,7 +898,7 @@ def predict(client, model, data, missing=numpy.nan, **kwargs):
     client: dask.distributed.Client
         Specify the dask client used for training.  Use default client
         returned from dask if it's set to None.
-    model: A Booster or a dictionary returned by `xgboost.dask.train`.
+    model: A Booster or a dictionary returned by `boxhed_kernel.dask.train`.
         The trained model.
     data: DaskDMatrix/dask.dataframe.DataFrame/dask.array.Array
         Input data used for prediction.  When input is a dataframe object,
@@ -1086,7 +1086,7 @@ class DaskScikitLearnBase(XGBModel):
         self._client = clt
 
 
-@xgboost_model_doc("""Implementation of the Scikit-Learn API for XGBoost.""",
+@boxhed_kernel_model_doc("""Implementation of the Scikit-Learn API for XGBoost.""",
                    ['estimators', 'model'])
 class DaskXGBRegressor(DaskScikitLearnBase, XGBRegressorBase):
     # pylint: disable=missing-class-docstring
@@ -1157,7 +1157,7 @@ class DaskXGBRegressor(DaskScikitLearnBase, XGBRegressorBase):
                                 base_margin=base_margin)
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     'Implementation of the scikit-learn API for XGBoost classification.',
     ['estimators', 'model'])
 class DaskXGBClassifier(DaskScikitLearnBase, XGBClassifierBase):

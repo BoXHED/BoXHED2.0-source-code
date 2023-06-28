@@ -8,11 +8,11 @@
 #include <GPUTreeShap/gpu_treeshap.h>
 #include <memory>
 
-#include "xgboost/data.h"
-#include "xgboost/predictor.h"
-#include "xgboost/tree_model.h"
-#include "xgboost/tree_updater.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/tree_model.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/host_device_vector.h"
 
 #include "../gbm/gbtree_model.h"
 #include "../data/ellpack_page.cuh"
@@ -22,7 +22,7 @@
 #include "../common/categorical.h"
 #include "../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace predictor {
 
 DMLC_REGISTRY_FILE_TAG(gpu_predictor);
@@ -494,7 +494,7 @@ size_t SharedMemoryBytes(size_t cols, size_t max_shared_memory_bytes) {
 }
 }  // anonymous namespace
 
-class GPUPredictor : public xgboost::Predictor {
+class GPUPredictor : public boxhed_kernel::Predictor {
  private:
   void PredictInternal(const SparsePage& batch,
                        size_t num_features,
@@ -914,4 +914,4 @@ XGBOOST_REGISTER_PREDICTOR(GPUPredictor, "gpu_predictor")
           });
 
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace boxhed_kernel

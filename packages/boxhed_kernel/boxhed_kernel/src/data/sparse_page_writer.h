@@ -6,7 +6,7 @@
 #ifndef XGBOOST_DATA_SPARSE_PAGE_WRITER_H_
 #define XGBOOST_DATA_SPARSE_PAGE_WRITER_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <dmlc/io.h>
 #include <vector>
 #include <algorithm>
@@ -21,7 +21,7 @@
 #include <thread>
 #endif  // DMLC_ENABLE_STD_THREAD
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 template<typename T>
@@ -209,5 +209,5 @@ struct SparsePageFormatReg
   DMLC_REGISTRY_REGISTER(SparsePageFormatReg<EllpackPage>, EllpackPageFm, Name)
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_SPARSE_PAGE_WRITER_H_

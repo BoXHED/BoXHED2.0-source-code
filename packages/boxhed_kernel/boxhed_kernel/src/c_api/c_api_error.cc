@@ -4,7 +4,7 @@
  * \brief C error handling
  */
 #include <dmlc/thread_local.h>
-#include "xgboost/c_api.h"
+#include "boxhed_kernel/c_api.h"
 #include "./c_api_error.h"
 
 struct XGBAPIErrorEntry {

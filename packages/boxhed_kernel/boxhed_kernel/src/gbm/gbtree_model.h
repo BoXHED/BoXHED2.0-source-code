@@ -7,17 +7,17 @@
 
 #include <dmlc/parameter.h>
 #include <dmlc/io.h>
-#include <xgboost/model.h>
-#include <xgboost/tree_model.h>
-#include <xgboost/parameter.h>
-#include <xgboost/learner.h>
+#include <boxhed_kernel/model.h>
+#include <boxhed_kernel/tree_model.h>
+#include <boxhed_kernel/parameter.h>
+#include <boxhed_kernel/learner.h>
 
 #include <memory>
 #include <utility>
 #include <string>
 #include <vector>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 
@@ -136,6 +136,6 @@ struct GBTreeModel : public Model {
   std::vector<int> tree_info;
 };
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_GBM_GBTREE_MODEL_H_

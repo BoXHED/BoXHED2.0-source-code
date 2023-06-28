@@ -19,7 +19,7 @@ def _objective_decorator(func):
     """Decorate an objective function
 
     Converts an objective function using the typical sklearn metrics
-    signature so that it is usable with ``xgboost.training.train``
+    signature so that it is usable with ``boxhed_kernel.training.train``
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def _objective_decorator(func):
     Returns
     -------
     new_func: callable
-        The new objective function as expected by ``xgboost.training.train``.
+        The new objective function as expected by ``boxhed_kernel.training.train``.
         The signature is ``new_func(preds, dmatrix)``:
 
         preds: array_like, shape [n_samples]
@@ -74,7 +74,7 @@ __model_doc = '''
         available.  It's recommended to study this option from parameters
         document.
     n_jobs : int
-        Number of parallel threads used to run xgboost.  When used with other Scikit-Learn
+        Number of parallel threads used to run boxhed_kernel.  When used with other Scikit-Learn
         algorithms like grid search, you may choose which algorithm to parallelize and
         balance the threads.  Creating thread contention will significantly slow dowm both
         algorithms.
@@ -129,7 +129,7 @@ __model_doc = '''
     \\*\\*kwargs : dict, optional
         Keyword arguments for XGBoost Booster object.  Full documentation of
         parameters can be found here:
-        https://github.com/dmlc/xgboost/blob/master/doc/parameter.rst.
+        https://github.com/dmlc/boxhed_kernel/blob/master/doc/parameter.rst.
         Attempting to set a parameter via the constructor args and \\*\\*kwargs
         dict simultaneously will result in a TypeError.
 
@@ -159,7 +159,7 @@ __custom_obj_note = '''
 '''
 
 
-def xgboost_model_doc(header, items, extra_parameters=None, end_note=None):
+def boxhed_kernel_model_doc(header, items, extra_parameters=None, end_note=None):
     '''Obtain documentation for Scikit-Learn wrappers
 
     Parameters
@@ -200,7 +200,7 @@ Parameters
     return adddoc
 
 
-@xgboost_model_doc("""Implementation of the Scikit-Learn API for XGBoost.""",
+@boxhed_kernel_model_doc("""Implementation of the Scikit-Learn API for XGBoost.""",
                    ['estimators', 'model', 'objective'])
 class XGBModel(XGBModelBase):
     # pylint: disable=too-many-arguments, too-many-instance-attributes, missing-docstring
@@ -298,13 +298,13 @@ class XGBModel(XGBModelBase):
         return {'allow_nan': True, 'no_validation': True}
 
     def get_booster(self):
-        """Get the underlying xgboost Booster of this model.
+        """Get the underlying boxhed_kernel Booster of this model.
 
         This will raise an exception when fit was not called
 
         Returns
         -------
-        booster : a xgboost booster of underlying model
+        booster : a boxhed_kernel booster of underlying model
         """
         if not hasattr(self, '_Booster'):
             from sklearn.exceptions import NotFittedError
@@ -313,7 +313,7 @@ class XGBModel(XGBModelBase):
 
     def set_params(self, **params):
         """Set the parameters of this estimator.  Modification of the sklearn method to
-        allow unknown kwargs. This allows using the full range of xgboost
+        allow unknown kwargs. This allows using the full range of boxhed_kernel
         parameters that are not defined as member variables in sklearn grid
         search.
 
@@ -387,7 +387,7 @@ class XGBModel(XGBModelBase):
         return params
 
     def get_xgb_params(self):
-        """Get xgboost specific parameters."""
+        """Get boxhed_kernel specific parameters."""
         params = self.get_params()
         # Parameters that should not go into native learner.
         wrapper_specific = {
@@ -399,7 +399,7 @@ class XGBModel(XGBModelBase):
         return filtered
 
     def get_num_boosting_rounds(self):
-        """Gets the number of xgboost boosting rounds."""
+        """Gets the number of boxhed_kernel boosting rounds."""
         return self.n_estimators
 
     def save_model(self, fname: str):
@@ -413,7 +413,7 @@ class XGBModel(XGBModelBase):
 
             See:
 
-            https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html
+            https://boxhed_kernel.readthedocs.io/en/latest/tutorials/saving_model.html
 
         Parameters
         ----------
@@ -798,7 +798,7 @@ class XGBModel(XGBModelBase):
         return np.array(json.loads(b.get_dump(dump_format='json')[0])['bias'])
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     "Implementation of the scikit-learn API for XGBoost classification.",
     ['model', 'objective'], extra_parameters='''
     n_estimators : int
@@ -1070,7 +1070,7 @@ class XGBClassifier(XGBModel, XGBClassifierBase):
         return evals_result
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     "scikit-learn API for XGBoost random forest classification.",
     ['model', 'objective'],
     extra_parameters='''
@@ -1106,7 +1106,7 @@ class XGBRFClassifier(XGBClassifier):
         return 1
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     "Implementation of the scikit-learn API for XGBoost regression.",
     ['estimators', 'model', 'objective'])
 class XGBRegressor(XGBModel, XGBRegressorBase):
@@ -1116,7 +1116,7 @@ class XGBRegressor(XGBModel, XGBRegressorBase):
         super().__init__(objective=objective, **kwargs)
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     "scikit-learn API for XGBoost random forest regression.",
     ['model', 'objective'], extra_parameters='''
     n_estimators : int
@@ -1140,7 +1140,7 @@ class XGBRFRegressor(XGBRegressor):
         return 1
 
 
-@xgboost_model_doc(
+@boxhed_kernel_model_doc(
     'Implementation of the Scikit-Learn API for XGBoost Ranking.',
     ['estimators', 'model'],
     end_note='''

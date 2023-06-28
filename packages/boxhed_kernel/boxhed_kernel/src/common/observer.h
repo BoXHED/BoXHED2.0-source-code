@@ -11,11 +11,11 @@
 #include <string>
 #include <vector>
 
-#include "xgboost/host_device_vector.h"
-#include "xgboost/parameter.h"
-#include "xgboost/json.h"
-#include "xgboost/base.h"
-#include "xgboost/tree_model.h"
+#include "boxhed_kernel/host_device_vector.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/tree_model.h"
 
 #if defined(XGBOOST_STRICT_R_MODE) && XGBOOST_STRICT_R_MODE == 1
 #define OBSERVER_PRINT LOG(INFO)
@@ -27,7 +27,7 @@
 #define OBSERVER_NEWLINE "\n"
 #endif  // defined(XGBOOST_STRICT_R_MODE) && XGBOOST_STRICT_R_MODE == 1
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*\brief  An observer for logging internal data structures.
  *
  *  This class is designed to be `diff` tool friendly, which means it uses plain
@@ -129,5 +129,5 @@ class TrainingObserver {
     return observer;
   }
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_OBSERVER_H_

@@ -1,18 +1,18 @@
 /*!
  * Copyright 2018
  */
-#include <xgboost/linear_updater.h>
+#include <boxhed_kernel/linear_updater.h>
 #include <dmlc/registry.h>
 #include "./param.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::LinearUpdaterReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::LinearUpdaterReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 LinearUpdater* LinearUpdater::Create(const std::string& name, GenericParameter const* lparam) {
-  auto *e = ::dmlc::Registry< ::xgboost::LinearUpdaterReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::boxhed_kernel::LinearUpdaterReg>::Get()->Find(name);
   if (e == nullptr) {
     LOG(FATAL) << "Unknown linear updater " << name;
   }
@@ -21,9 +21,9 @@ LinearUpdater* LinearUpdater::Create(const std::string& name, GenericParameter c
   return p_linear;
 }
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 DMLC_REGISTER_PARAMETER(LinearTrainParam);
 
@@ -34,4 +34,4 @@ DMLC_REGISTRY_LINK_TAG(updater_coordinate);
 DMLC_REGISTRY_LINK_TAG(updater_gpu_coordinate);
 #endif  // XGBOOST_USE_CUDA
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel

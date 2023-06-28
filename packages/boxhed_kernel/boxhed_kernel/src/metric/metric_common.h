@@ -10,10 +10,10 @@
 
 #include "../common/common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 // This creates a GPU metric instance dynamically and adds it to the GPU metric registry, if not
-// present already. This is created when there is a device ordinal present and if xgboost
+// present already. This is created when there is a device ordinal present and if boxhed_kernel
 // is compiled with CUDA support
 struct GPUMetric : Metric {
   static Metric *CreateGPUMetric(const std::string& name, GenericParameter const* tparam);
@@ -46,8 +46,8 @@ struct MetricGPUReg
 // Note: Metric names registered in the GPU registry should follow this convention:
 // - GPU metric types should be registered with the same name as the non GPU metric types
 #define XGBOOST_REGISTER_GPU_METRIC(UniqueId, Name)                         \
-  ::xgboost::MetricGPUReg&  __make_ ## MetricGPUReg ## _ ## UniqueId ## __ =  \
-      ::dmlc::Registry< ::xgboost::MetricGPUReg>::Get()->__REGISTER__(Name)
+  ::boxhed_kernel::MetricGPUReg&  __make_ ## MetricGPUReg ## _ ## UniqueId ## __ =  \
+      ::dmlc::Registry< ::boxhed_kernel::MetricGPUReg>::Get()->__REGISTER__(Name)
 
 namespace metric {
 
@@ -85,6 +85,6 @@ class PackedReduceResult {
 };
 
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_METRIC_METRIC_COMMON_H_

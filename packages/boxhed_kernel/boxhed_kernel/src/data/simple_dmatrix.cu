@@ -5,12 +5,12 @@
 #include <thrust/copy.h>
 #include <thrust/execution_policy.h>
 #include <thrust/sort.h>
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include "../common/random.h"
 #include "./simple_dmatrix.h"
 #include "device_adapter.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 
@@ -104,4 +104,4 @@ template SimpleDMatrix::SimpleDMatrix(CudfAdapter* adapter, float missing,
 template SimpleDMatrix::SimpleDMatrix(CupyAdapter* adapter, float missing,
                                       int nthread);
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

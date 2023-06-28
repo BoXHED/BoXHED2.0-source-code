@@ -1,5 +1,5 @@
 # coding: utf-8
-"""Find the path to xgboost dynamic library files."""
+"""Find the path to boxhed_kernel dynamic library files."""
 
 import os
 import platform
@@ -7,16 +7,16 @@ import sys
 
 
 class XGBoostLibraryNotFound(Exception):
-    """Error thrown by when xgboost is not found"""
+    """Error thrown by when boxhed_kernel is not found"""
 
 
 def find_lib_path():
-    """Find the path to xgboost dynamic library files.
+    """Find the path to boxhed_kernel dynamic library files.
 
     Returns
     -------
     lib_path: list(string)
-       List of all found library path to xgboost
+       List of all found library path to boxhed_kernel
     """
     curr_path = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
     dll_path = [
@@ -24,7 +24,7 @@ def find_lib_path():
         os.path.join(curr_path, 'lib'),
         # editable installation, no copying is performed.
         os.path.join(curr_path, os.path.pardir, os.path.pardir, 'lib'),
-        # use libxgboost from a system prefix, if available.  This should be the last
+        # use libboxhed_kernel from a system prefix, if available.  This should be the last
         # option.
         os.path.join(sys.prefix, 'lib'),
     ]
@@ -41,20 +41,20 @@ def find_lib_path():
             # hack for pip installation when copy all parent source
             # directory here
             dll_path.append(os.path.join(curr_path, './windows/Release/'))
-        dll_path = [os.path.join(p, 'xgboost.dll') for p in dll_path]
+        dll_path = [os.path.join(p, 'boxhed_kernel.dll') for p in dll_path]
     elif sys.platform.startswith('linux') or sys.platform.startswith(
             'freebsd'):
-        dll_path = [os.path.join(p, 'libxgboost.so') for p in dll_path]
+        dll_path = [os.path.join(p, 'libboxhed_kernel.so') for p in dll_path]
     elif sys.platform == 'darwin':
-        dll_path = [os.path.join(p, 'libxgboost.dylib') for p in dll_path]
+        dll_path = [os.path.join(p, 'libboxhed_kernel.dylib') for p in dll_path]
     elif sys.platform == 'cygwin':
-        dll_path = [os.path.join(p, 'cygxgboost.dll') for p in dll_path]
+        dll_path = [os.path.join(p, 'cygboxhed_kernel.dll') for p in dll_path]
 
     lib_path = [p for p in dll_path if os.path.exists(p) and os.path.isfile(p)]
 
     # XGBOOST_BUILD_DOC is defined by sphinx conf.
     if not lib_path and not os.environ.get('XGBOOST_BUILD_DOC', False):
-        link = 'https://xgboost.readthedocs.io/en/latest/build.html'
+        link = 'https://boxhed_kernel.readthedocs.io/en/latest/build.html'
         msg = 'Cannot find XGBoost Library in the candidate path.  ' + \
             'List of candidates:\n- ' + ('\n- '.join(dll_path)) + \
             '\nXGBoost Python package path: ' + curr_path + \

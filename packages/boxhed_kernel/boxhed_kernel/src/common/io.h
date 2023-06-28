@@ -15,7 +15,7 @@
 
 #include "common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 using MemoryFixSizeBuffer = rabit::utils::MemoryFixSizeBuffer;
 using MemoryBufferStream = rabit::utils::MemoryBufferStream;
@@ -96,5 +96,5 @@ inline std::string FileExtension(std::string const& fname) {
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_IO_H_

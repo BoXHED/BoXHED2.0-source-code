@@ -19,10 +19,10 @@
 #include "device_helpers.cuh"
 #endif  // defined(__CUDACC__)
 
-#include "xgboost/span.h"
+#include "boxhed_kernel/span.h"
 #include "common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 #if defined(__CUDACC__)
 using BitFieldAtomicType = unsigned long long;  // NOLINT
@@ -226,6 +226,6 @@ using RBitField8 = BitFieldContainer<uint8_t, RBitsPolicy<unsigned char>>;
 
 using LBitField32 = BitFieldContainer<uint32_t, LBitsPolicy<uint32_t>>;
 using CLBitField32 = BitFieldContainer<uint32_t, LBitsPolicy<uint32_t, true>, true>;
-}       // namespace xgboost
+}       // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_BITFIELD_H_

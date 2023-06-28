@@ -1,25 +1,25 @@
 /*!
  * Copyright 2014 by Contributors
  * \file metric.h
- * \brief interface of evaluation metric function supported in xgboost.
+ * \brief interface of evaluation metric function supported in boxhed_kernel.
  * \author Tianqi Chen, Kailong Chen
  */
 #ifndef XGBOOST_METRIC_H_
 #define XGBOOST_METRIC_H_
 
 #include <dmlc/registry.h>
-#include <xgboost/model.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/data.h>
-#include <xgboost/base.h>
-#include <xgboost/host_device_vector.h>
+#include <boxhed_kernel/model.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/host_device_vector.h>
 
 #include <vector>
 #include <string>
 #include <functional>
 #include <utility>
 
-namespace xgboost {
+namespace boxhed_kernel {
 /*!
  * \brief interface of evaluation metric used to evaluate model performance.
  *  This has nothing to do with training, but merely act as evaluation purpose.
@@ -100,7 +100,7 @@ struct MetricReg
  * \endcode
  */
 #define XGBOOST_REGISTER_METRIC(UniqueId, Name)                         \
-  ::xgboost::MetricReg&  __make_ ## MetricReg ## _ ## UniqueId ## __ =  \
-      ::dmlc::Registry< ::xgboost::MetricReg>::Get()->__REGISTER__(Name)
-}  // namespace xgboost
+  ::boxhed_kernel::MetricReg&  __make_ ## MetricReg ## _ ## UniqueId ## __ =  \
+      ::dmlc::Registry< ::boxhed_kernel::MetricReg>::Get()->__REGISTER__(Name)
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_METRIC_H_

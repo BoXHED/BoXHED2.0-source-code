@@ -13,10 +13,10 @@
 #include <string>
 #include <vector>
 
-#include "xgboost/parameter.h"
-#include "xgboost/data.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/data.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 /*! \brief training parameters for regression tree */
@@ -505,8 +505,8 @@ using SplitEntry = SplitEntryContainer<GradStats>;
  */
 void ParseInteractionConstraint(
     std::string const &constraint_str,
-    std::vector<std::vector<xgboost::bst_feature_t>> *p_out);
-}  // namespace xgboost
+    std::vector<std::vector<boxhed_kernel::bst_feature_t>> *p_out);
+}  // namespace boxhed_kernel
 
 // define string serializer for vector, to get the arguments
 namespace std {

@@ -2,13 +2,13 @@
  * Copyright 2019 XGBoost contributors
  */
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 #include <dmlc/registry.h>
 
 #include "./ellpack_page.cuh"
 #include "./sparse_page_writer.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 DMLC_REGISTRY_FILE_TAG(ellpack_page_raw_format);
@@ -56,4 +56,4 @@ XGBOOST_REGISTER_ELLPACK_PAGE_FORMAT(raw)
     });
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel

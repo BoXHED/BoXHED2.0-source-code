@@ -6,9 +6,9 @@
 #include <dmlc/registry.h>
 #include <dmlc/json.h>
 
-#include <xgboost/tree_model.h>
-#include <xgboost/logging.h>
-#include <xgboost/json.h>
+#include <boxhed_kernel/tree_model.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/json.h>
 
 #include <sstream>
 #include <limits>
@@ -20,7 +20,7 @@
 #include "../common/common.h"
 #include "../common/categorical.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 // register tree parameter
 DMLC_REGISTER_PARAMETER(TreeParam);
 
@@ -140,14 +140,14 @@ struct TreeGenReg : public dmlc::FunctionRegEntryBase<
   std::function<TreeGenerator* (
       FeatureMap const& fmap, std::string attrs, bool with_stats)> > {
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::TreeGenReg);
+DMLC_REGISTRY_ENABLE(::boxhed_kernel::TreeGenReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 TreeGenerator* TreeGenerator::Create(std::string const& attrs, FeatureMap const& fmap,
                                      bool with_stats) {
@@ -165,7 +165,7 @@ TreeGenerator* TreeGenerator::Create(std::string const& attrs, FeatureMap const&
   } else {
     name = attrs;
   }
-  auto *e = ::dmlc::Registry< ::xgboost::TreeGenReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::boxhed_kernel::TreeGenReg>::Get()->Find(name);
   if (e == nullptr) {
     LOG(FATAL) << "Unknown Model Builder:" << name;
   }
@@ -174,9 +174,9 @@ TreeGenerator* TreeGenerator::Create(std::string const& attrs, FeatureMap const&
 }
 
 #define XGBOOST_REGISTER_TREE_IO(UniqueId, Name)                        \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::TreeGenReg&                   \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::TreeGenReg&                   \
   __make_ ## TreeGenReg ## _ ## UniqueId ## __ =                        \
-                  ::dmlc::Registry< ::xgboost::TreeGenReg>::Get()->__REGISTER__(Name)
+                  ::dmlc::Registry< ::boxhed_kernel::TreeGenReg>::Get()->__REGISTER__(Name)
 
 
 class TextGenerator : public TreeGenerator {
@@ -1252,4 +1252,4 @@ void RegTree::CalculateContributions(const RegTree::FVec &feat,
   TreeShap(feat, out_contribs, 0, 0, unique_path_data.data(),
            1, 1, -1, condition, condition_feature, 1);
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel

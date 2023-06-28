@@ -1,7 +1,7 @@
 /*!
  * Copyright (c) 2015 by Contributors
  * \file base.h
- * \brief defines configuration macros of xgboost.
+ * \brief defines configuration macros of boxhed_kernel.
  */
 #ifndef XGBOOST_BASE_H_
 #define XGBOOST_BASE_H_
@@ -106,8 +106,8 @@
 
 #endif  // !defined(XGBOOST_MM_PREFETCH_PRESENT) && !defined()
 
-/*! \brief namespace of xgboost*/
-namespace xgboost {
+/*! \brief namespace of boxhed_kernel*/
+namespace boxhed_kernel {
 
 /*! \brief unsigned integer type used for feature index. */
 using bst_uint = uint32_t;  // NOLINT
@@ -281,6 +281,6 @@ using XGBoostVersionT = int32_t;
 #define final
 #endif  // __GNUC__ == 4 && __GNUC_MINOR__ < 8
 #endif  // DMLC_USE_CXX11 && defined(__GNUC__) && !defined(__clang_version__)
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_BASE_H_

@@ -10,16 +10,16 @@
 #include <cmath>
 #include <algorithm>
 
-#include "xgboost/parameter.h"
-#include "xgboost/tree_updater.h"
-#include "xgboost/logging.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/tree_updater.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/json.h"
 #include "param.h"
 #include "constraints.h"
 #include "../common/random.h"
 #include "split_evaluator.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_colmaker);
@@ -623,4 +623,4 @@ XGBOOST_REGISTER_TREE_UPDATER(ColMaker, "grow_colmaker")
     return new ColMaker();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel

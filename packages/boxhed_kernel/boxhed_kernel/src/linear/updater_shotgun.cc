@@ -3,10 +3,10 @@
  * \author Tianqi Chen, Rory Mitchell
  */
 
-#include <xgboost/linear_updater.h>
+#include <boxhed_kernel/linear_updater.h>
 #include "coordinate_common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace linear {
 
 DMLC_REGISTRY_FILE_TAG(updater_shotgun);
@@ -101,4 +101,4 @@ XGBOOST_REGISTER_LINEAR_UPDATER(ShotgunUpdater, "shotgun")
         "algorithm.")
     .set_body([]() { return new ShotgunUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace boxhed_kernel

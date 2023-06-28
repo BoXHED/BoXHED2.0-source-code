@@ -3,14 +3,14 @@
  */
 #include <dmlc/omp.h>
 #include <dmlc/timer.h>
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <boxhed_kernel/logging.h>
+#include <boxhed_kernel/objective.h>
 #include <vector>
 #include <algorithm>
 #include <utility>
 
-#include "xgboost/json.h"
-#include "xgboost/parameter.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/parameter.h"
 
 #include "../common/math.h"
 #include "../common/random.h"
@@ -27,7 +27,7 @@
 #include "../common/device_helpers.cuh"
 #endif
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 #if defined(XGBOOST_USE_CUDA) && !defined(GTEST_TEST)
@@ -951,4 +951,4 @@ XGBOOST_REGISTER_OBJECTIVE(LambdaRankObjMAP, MAPLambdaWeightComputer::Name())
 #endif
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

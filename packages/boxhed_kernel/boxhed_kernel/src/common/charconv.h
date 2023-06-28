@@ -13,9 +13,9 @@
 #include <iterator>
 #include <limits>
 
-#include "xgboost/logging.h"
+#include "boxhed_kernel/logging.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 struct to_chars_result {  // NOLINT
   char* ptr;
@@ -98,6 +98,6 @@ inline from_chars_result from_chars(const char *buffer, const char *end, // NOLI
       detail::FromCharFloatImpl(buffer, std::distance(buffer, end), &value);
   return res;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif   // XGBOOST_COMMON_CHARCONV_H_

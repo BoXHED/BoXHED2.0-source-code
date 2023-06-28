@@ -2,10 +2,10 @@
  * Copyright 2017-2019 XGBoost contributors
  */
 #pragma once
-#include "xgboost/base.h"
+#include "boxhed_kernel/base.h"
 #include "../../common/device_helpers.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 /*! \brief Count how many rows are assigned to left node. */
@@ -190,4 +190,4 @@ class RowPartitioner {
   };
 };
 };  // namespace tree
-};  // namespace xgboost
+};  // namespace boxhed_kernel

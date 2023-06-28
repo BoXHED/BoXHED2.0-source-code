@@ -13,18 +13,18 @@
 #include <sstream>
 #include <algorithm>
 
-#include "xgboost/gbm.h"
-#include "xgboost/json.h"
-#include "xgboost/predictor.h"
-#include "xgboost/linear_updater.h"
-#include "xgboost/logging.h"
-#include "xgboost/learner.h"
+#include "boxhed_kernel/gbm.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/predictor.h"
+#include "boxhed_kernel/linear_updater.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/learner.h"
 
 #include "gblinear_model.h"
 #include "../common/timer.h"
 #include "../common/common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace gbm {
 
 DMLC_REGISTRY_FILE_TAG(gblinear);
@@ -311,4 +311,4 @@ XGBOOST_REGISTER_GBM(GBLinear, "gblinear")
       return new GBLinear(booster_config);
     });
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace boxhed_kernel

@@ -14,19 +14,19 @@
 #include <utility>
 #include <vector>
 
-#include "xgboost/logging.h"
-#include "xgboost/base.h"
-#include "xgboost/data.h"
-#include "xgboost/span.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/span.h"
 
 #include "array_interface.h"
 #include "../c_api/c_api_error.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 /**  External data formats should implement an adapter as below. The
- * adapter provides a uniform access to data outside xgboost, allowing
+ * adapter provides a uniform access to data outside boxhed_kernel, allowing
  * construction of DMatrix objects from a range of sources without duplicating
  * code.
  *
@@ -600,5 +600,5 @@ class IteratorAdapter : public dmlc::DataIter<FileAdapterBatch> {
   std::unique_ptr<FileAdapterBatch> batch_;
 };
 };  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_ADAPTER_H_

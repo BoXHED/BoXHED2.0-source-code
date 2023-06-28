@@ -9,7 +9,7 @@
 
 #include "../../data/ellpack_page.cuh"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace tree {
 
 template <typename GradientSumT>
@@ -28,6 +28,6 @@ void BuildGradientHistogram(EllpackDeviceAccessor const& matrix,
                             common::Span<GradientSumT> histogram,
                             GradientSumT rounding);
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // HISTOGRAM_CUH_

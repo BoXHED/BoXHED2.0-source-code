@@ -9,19 +9,19 @@
 #define XGBOOST_TREE_UPDATER_H_
 
 #include <dmlc/registry.h>
-#include <xgboost/base.h>
-#include <xgboost/data.h>
-#include <xgboost/tree_model.h>
-#include <xgboost/generic_parameters.h>
-#include <xgboost/host_device_vector.h>
-#include <xgboost/model.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
+#include <boxhed_kernel/tree_model.h>
+#include <boxhed_kernel/generic_parameters.h>
+#include <boxhed_kernel/host_device_vector.h>
+#include <boxhed_kernel/model.h>
 
 #include <functional>
 #include <vector>
 #include <utility>
 #include <string>
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 class Json;
 
@@ -109,9 +109,9 @@ struct TreeUpdaterReg
  * \endcode
  */
 #define XGBOOST_REGISTER_TREE_UPDATER(UniqueId, Name)                   \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::TreeUpdaterReg&               \
+  static DMLC_ATTRIBUTE_UNUSED ::boxhed_kernel::TreeUpdaterReg&               \
   __make_ ## TreeUpdaterReg ## _ ## UniqueId ## __ =                    \
-      ::dmlc::Registry< ::xgboost::TreeUpdaterReg>::Get()->__REGISTER__(Name)
+      ::dmlc::Registry< ::boxhed_kernel::TreeUpdaterReg>::Get()->__REGISTER__(Name)
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_TREE_UPDATER_H_

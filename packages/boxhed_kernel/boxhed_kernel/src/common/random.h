@@ -8,7 +8,7 @@
 #define XGBOOST_COMMON_RANDOM_H_
 
 #include <rabit/rabit.h>
-#include <xgboost/logging.h>
+#include <boxhed_kernel/logging.h>
 #include <algorithm>
 #include <functional>
 #include <vector>
@@ -19,10 +19,10 @@
 #include <random>
 #include <utility>
 
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/host_device_vector.h"
 #include "common.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 /*!
  * \brief Define mt19937 as default type Random Engine.
@@ -32,7 +32,7 @@ using RandomEngine = std::mt19937;
 #if XGBOOST_CUSTOMIZE_GLOBAL_PRNG
 /*!
  * \brief An customized random engine, used to be plugged in PRNG from other systems.
- *  The implementation of this library is not provided by xgboost core library.
+ *  The implementation of this library is not provided by boxhed_kernel core library.
  *  Instead the other library can implement this class, which will be used as GlobalRandomEngine
  *  If XGBOOST_RANDOM_CUSTOMIZE = 1, by default this is switched off.
  */
@@ -192,7 +192,7 @@ class ColumnSampler {
    * \return The sampled feature set.
    * \note If colsample_bynode_ < 1.0, this method creates a new feature set each time it
    * is called. Therefore, it should be called only once per node.
-   * \note With distributed xgboost, this function must be called exactly once for the
+   * \note With distributed boxhed_kernel, this function must be called exactly once for the
    * construction of each tree node, and must be called the same number of times in each
    * process and with the same parameters to return the same feature set across processes.
    */
@@ -215,5 +215,5 @@ class ColumnSampler {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_COMMON_RANDOM_H_

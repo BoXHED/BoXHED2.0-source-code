@@ -10,12 +10,12 @@
 #include <cmath>
 
 #include "charconv.h"
-#include "xgboost/base.h"
-#include "xgboost/logging.h"
-#include "xgboost/json.h"
-#include "xgboost/json_io.h"
+#include "boxhed_kernel/base.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/json.h"
+#include "boxhed_kernel/json_io.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 void JsonWriter::Save(Json json) {
   json.ptr_->Save(this);
@@ -744,4 +744,4 @@ void Json::Dump(Json json, std::string* str) {
 }
 
 Json& Json::operator=(Json const &other) = default;
-}  // namespace xgboost
+}  // namespace boxhed_kernel

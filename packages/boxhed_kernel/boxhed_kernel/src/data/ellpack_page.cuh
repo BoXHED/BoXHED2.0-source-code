@@ -5,14 +5,14 @@
 #ifndef XGBOOST_DATA_ELLPACK_PAGE_H_
 #define XGBOOST_DATA_ELLPACK_PAGE_H_
 
-#include <xgboost/data.h>
+#include <boxhed_kernel/data.h>
 
 #include "../common/compressed_iterator.h"
 #include "../common/device_helpers.cuh"
 #include "../common/hist_util.h"
 #include <thrust/binary_search.h>
 
-namespace xgboost {
+namespace boxhed_kernel {
 /** \brief Struct for accessing and manipulating an ellpack matrix on the
  * device. Does not own underlying memory and may be trivially copied into
  * kernels.*/
@@ -222,6 +222,6 @@ inline size_t GetRowStride(DMatrix* dmat) {
   }
   return row_stride;
 }
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_DATA_ELLPACK_PAGE_H_

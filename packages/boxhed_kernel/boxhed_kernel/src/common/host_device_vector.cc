@@ -5,15 +5,15 @@
 
 // dummy implementation of HostDeviceVector in case CUDA is not used
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <boxhed_kernel/base.h>
+#include <boxhed_kernel/data.h>
 #include <cstdint>
 #include <memory>
 #include <utility>
-#include "xgboost/tree_model.h"
-#include "xgboost/host_device_vector.h"
+#include "boxhed_kernel/tree_model.h"
+#include "boxhed_kernel/host_device_vector.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 
 template <typename T>
 struct HostDeviceVectorImpl {
@@ -190,6 +190,6 @@ template class HostDeviceVector<RegTree::Segment>;
 template class HostDeviceVector<std::size_t>;
 #endif  // defined(__APPLE__)
 
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_USE_CUDA

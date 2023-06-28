@@ -14,15 +14,15 @@
  * at https://arxiv.org/abs/2006.04920.
  */
 
-#include <xgboost/parameter.h>
+#include <boxhed_kernel/parameter.h>
 #include <memory>
 #include <algorithm>
 #include <limits>
 #include "probability_distribution.h"
 
-DECLARE_FIELD_ENUM_CLASS(xgboost::common::ProbabilityDistributionType);
+DECLARE_FIELD_ENUM_CLASS(boxhed_kernel::common::ProbabilityDistributionType);
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace common {
 
 #ifndef __CUDACC__
@@ -342,6 +342,6 @@ GetLimitHessAtInfPred<ExtremeDistribution>(CensoringType censor_type, bool sign,
 }  // namespace aft
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_COMMON_SURVIVAL_UTIL_H_

@@ -9,7 +9,7 @@
 #define XGBOOST_PARAMETER_H_
 
 #include <dmlc/parameter.h>
-#include <xgboost/base.h>
+#include <boxhed_kernel/base.h>
 #include <string>
 #include <type_traits>
 
@@ -79,7 +79,7 @@ class FieldEntry<EnumClass> : public FieldEntry<int> {  \
 }  /* namespace parameter */  \
 }  /* namespace dmlc */
 
-namespace xgboost {
+namespace boxhed_kernel {
 template <typename Type>
 struct XGBoostParameter : public dmlc::Parameter<Type> {
  protected:
@@ -101,6 +101,6 @@ struct XGBoostParameter : public dmlc::Parameter<Type> {
   }
   bool GetInitialised() const { return static_cast<bool>(this->initialised_); }
 };
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 
 #endif  // XGBOOST_PARAMETER_H_

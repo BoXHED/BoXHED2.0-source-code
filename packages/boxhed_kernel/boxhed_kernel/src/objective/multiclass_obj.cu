@@ -11,17 +11,17 @@
 #include <limits>
 #include <utility>
 
-#include "xgboost/parameter.h"
-#include "xgboost/data.h"
-#include "xgboost/logging.h"
-#include "xgboost/objective.h"
-#include "xgboost/json.h"
+#include "boxhed_kernel/parameter.h"
+#include "boxhed_kernel/data.h"
+#include "boxhed_kernel/logging.h"
+#include "boxhed_kernel/objective.h"
+#include "boxhed_kernel/json.h"
 
 #include "../common/common.h"
 #include "../common/math.h"
 #include "../common/transform.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace obj {
 
 #if defined(XGBOOST_USE_CUDA)
@@ -204,4 +204,4 @@ XGBOOST_REGISTER_OBJECTIVE(SoftprobMultiClass, "multi:softprob")
 .set_body([]() { return new SoftmaxMultiClassObj(true); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace boxhed_kernel

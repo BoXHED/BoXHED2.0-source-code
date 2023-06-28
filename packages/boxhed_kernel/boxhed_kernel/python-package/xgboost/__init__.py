@@ -1,7 +1,7 @@
 # coding: utf-8
 """XGBoost: eXtreme Gradient Boosting library.
 
-Contributors: https://github.com/dmlc/xgboost/blob/master/CONTRIBUTORS.md
+Contributors: https://github.com/dmlc/boxhed_kernel/blob/master/CONTRIBUTORS.md
 """
 
 import os

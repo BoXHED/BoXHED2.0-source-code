@@ -12,7 +12,7 @@
 #include "adapter.h"
 #include "array_interface.h"
 
-namespace xgboost {
+namespace boxhed_kernel {
 namespace data {
 
 struct IsValidFunctor : public thrust::unary_function<Entry, bool> {
@@ -228,5 +228,5 @@ size_t GetRowCounts(const AdapterBatchT batch, common::Span<size_t> offset,
   return row_stride;
 }
 };  // namespace data
-}  // namespace xgboost
+}  // namespace boxhed_kernel
 #endif  // XGBOOST_DATA_DEVICE_ADAPTER_H_
