@@ -76,7 +76,7 @@ def _run_batch_process(param_dict_, rslts):
         fold    = test_dict['fold']
 
         est       = trained_models[est_idx]
-        
+        #return f"{est.max_depth}, {n_trees}, {fold}"
         return est.score(
             X    [data_idx[fold]['test'], :], 
             delta[data_idx[fold]['test']],
@@ -98,9 +98,9 @@ def _run_batch_process(param_dict_, rslts):
         scores = Parallel(n_jobs = batch_size, prefer = "threads")(delayed (_get_score_batch_est)(idx_dicts_) 
             for idx_dicts_ in idx_dicts)
         scores = [item for sublist in scores for item in sublist]
-        rslts [batch_block_size*batch_idx:batch_block_size*(batch_idx+1)] = scores
+        rslts [batch_size*test_block_size*batch_idx:batch_size*test_block_size*(batch_idx+1)] = scores
+        #rslts [batch_block_size*batch_idx: batch_block_size*(batch_idx+1)] = scores
 
-    
     trained_models = Parallel(n_jobs=-1, prefer="threads")(delayed(_fit_single_model)(param_dict) 
             for param_dict in param_dicts_train[batch_idx*batch_size:
                 (batch_idx+1)*batch_size])
@@ -248,6 +248,10 @@ class collapsed_gs_:
                     ]
         srtd_rslts, srtd_param_dict_test = zip(*rslt__param_dict_test)
         srtd_rslts = np.array(srtd_rslts)
+        #print (srtd_rslts.reshape(-1, len(self.cv)))
+        #print (np.isnan(srtd_rslts).shape)
+        #print (srtd_param_dict_test.shape)
+        #print(np.array(srtd_param_dict_test)[np.logical_or(np.isnan(srtd_rslts), (srtd_rslts==0))])
         srtd_rslts = srtd_rslts.reshape(-1, len(self.cv))
 
         if 0 in srtd_rslts:
