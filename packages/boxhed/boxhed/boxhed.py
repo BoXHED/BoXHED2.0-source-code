@@ -23,7 +23,7 @@ class boxhed(BaseEstimator, RegressorMixin):
     For more information, see http://github.com/BoXHED/BoXHED2.0. 
     """
 
-    def __init__(self, max_depth=1, n_estimators=100, eta=0.1, gpu_id = -1, nthread = 1):
+    def __init__(self, max_depth=1, n_estimators=100, eta=0.1, min_child_events=1, gpu_id = -1, nthread = 1):
         """BoXHED instance initializer. 
 
         Parameters
@@ -39,11 +39,12 @@ class boxhed(BaseEstimator, RegressorMixin):
         nthread : int, optional
             If training with CPUs, this is the number of threads to use. Default is -1 (use all available threads)., by default 1
         """
-        self.max_depth     = max_depth
-        self.n_estimators  = n_estimators
-        self.eta           = eta
-        self.gpu_id        = gpu_id
-        self.nthread       = nthread
+        self.max_depth        = max_depth
+        self.n_estimators     = n_estimators
+        self.eta              = eta
+        self.min_child_events = min_child_events
+        self.gpu_id           = gpu_id
+        self.nthread          = nthread
 
 
     def __repr__(self):
@@ -180,7 +181,7 @@ class boxhed(BaseEstimator, RegressorMixin):
         self.params_         = {'objective':        self.objective_,
                                 'tree_method':      self.tree_method_,
                                 'booster':         'gbtree', 
-                                'min_child_weight': 0,
+                                'min_child_weight': self.min_child_events,
                                 'max_depth':        self.max_depth,
                                 'eta':              self.eta,
                                 'grow_policy':     'lossguide',
