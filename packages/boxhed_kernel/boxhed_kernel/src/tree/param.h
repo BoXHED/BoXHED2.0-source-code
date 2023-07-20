@@ -271,7 +271,7 @@ XGBOOST_DEVICE inline static T Sqr(T a) { return a * a; }
 template <typename TrainingParams, typename T>
 XGBOOST_DEVICE inline T CalcGainGivenWeight(const TrainingParams &p,
                                             T sum_grad, T sum_hess, T w) {
-  return ((sum_hess == T(0.0))||(sum_grad == T(0.0))) ? -std::numeric_limits<double>::infinity() : sum_hess * std::log(sum_hess/sum_grad);
+  return ((sum_hess <= T(0.0))||(sum_grad <= T(0.0))) ? -std::numeric_limits<double>::infinity() : sum_hess * std::log(sum_hess/sum_grad);
   /*
   return -(T(2.0) * sum_grad * w + (sum_hess + p.reg_lambda) * Sqr(w));
   */
@@ -297,7 +297,7 @@ XGBOOST_DEVICE inline T CalcWeight(const TrainingParams &p, T sum_grad,
 // calculate the cost of loss function
 template <typename TrainingParams, typename T>
 XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess) {
-  return ((sum_hess == T(0.0))||(sum_grad == T(0.0))) ? -std::numeric_limits<double>::infinity() : sum_hess*std::log(sum_hess/sum_grad);
+  return ((sum_hess <= T(0.0))||(sum_grad <= T(0.0))) ? -std::numeric_limits<double>::infinity() : sum_hess*std::log(sum_hess/sum_grad);
   /*
   if (sum_hess < p.min_child_weight) {
     return T(0.0);

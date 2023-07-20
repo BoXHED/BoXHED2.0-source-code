@@ -73,8 +73,12 @@ class TreeEvaluator {
                                         bst_feature_t fidx,
                                         tree::GradStats left,
                                         tree::GradStats right) const {
+      /*
       int constraint = constraints[fidx];
       const double negative_infinity = -std::numeric_limits<double>::infinity();
+      */
+      return this->CalcGain(nidx, param, left)+this->CalcGain(nidx, param, right);
+      /*
       double wleft = this->CalcWeight(nidx, param, left);
       double wright = this->CalcWeight(nidx, param, right);
 
@@ -88,10 +92,13 @@ class TreeEvaluator {
       } else {
         return wleft >= wright ? gain : negative_infinity;
       }
+      */
     }
 
     XGBOOST_DEVICE float CalcWeight(bst_node_t nodeid, const ParamT &param,
                                     tree::GradStats stats) const {
+      return ((stats.sum_grad == 0.0)||(stats.sum_hess == 0.0)) ? 0.0 : std::log(stats.sum_hess/stats.sum_grad);
+      /*
       float w = boxhed_kernel::tree::CalcWeight(param, stats);
       if (!has_constraint) {
         return w;
@@ -106,9 +113,14 @@ class TreeEvaluator {
       } else {
         return w;
       }
+      */
     }
     XGBOOST_DEVICE float CalcGainGivenWeight(bst_node_t, ParamT const &p,
                                              tree::GradStats stats, float w) const {
+      return ((stats.sum_hess <= 0.0)||(stats.sum_grad <= 0.0)) ? 
+                      -std::numeric_limits<double>::infinity() : 
+                      stats.sum_hess*std::log(stats.sum_hess/stats.sum_grad);
+      /*                
       if (stats.GetHess() <= 0) {
         return .0f;
       }
@@ -119,10 +131,17 @@ class TreeEvaluator {
       }
       return tree::CalcGainGivenWeight<ParamT, float>(p, stats.sum_grad,
                                                       stats.sum_hess, w);
+      */
     }
     XGBOOST_DEVICE float CalcGain(bst_node_t nid, ParamT const &p,
                                   tree::GradStats stats) const {
+      return ((stats.sum_hess <= 0.0)||(stats.sum_grad <= 0.0)) ? 
+                      -std::numeric_limits<double>::infinity() : 
+                      stats.sum_hess*std::log(stats.sum_hess/stats.sum_grad);
+      
+      /*
       return this->CalcGainGivenWeight(nid, p, stats, this->CalcWeight(nid, p, stats));
+      */
     }
   };
 

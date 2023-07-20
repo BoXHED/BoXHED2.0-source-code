@@ -332,6 +332,8 @@ struct GPUHistMakerDevice {
                                       left_nidx);
     auto matrix = page->GetDeviceAccessor(device_id);
 
+    //std::cout<<candidate.split.left_sum.GetGrad()<<" "<<candidate.split.left_sum.GetHess()<<std::endl;
+    //std::cout<<candidate.split.right_sum.GetGrad()<<" "<<candidate.split.right_sum.GetHess()<<std::endl;
     EvaluateSplitInputs<GradientSumT> left{
       left_nidx,
       {candidate.split.left_sum.GetGrad(),
@@ -568,6 +570,7 @@ struct GPUHistMakerDevice {
 
     // Decide whether to build the left histogram or right histogram
     // Use sum of Hessian as a heuristic to select node with fewest training instances
+    // std::cout<<candidate.split.left_sum.GetGrad()<<" "<<candidate.split.left_sum.GetHess()<<std::endl;
     bool fewer_right = candidate.split.right_sum.GetHess() < candidate.split.left_sum.GetHess();
     if (fewer_right) {
       std::swap(build_hist_nidx, subtraction_trick_nidx);
@@ -657,6 +660,7 @@ struct GPUHistMakerDevice {
     node_sum_gradients[kRootNIdx] = root_sum;
     p_tree->Stat(kRootNIdx).sum_hess = root_sum.GetHess();
     auto weight = CalcWeight(param, root_sum);
+    //std::cout<<"U:"<<root_sum.GetGrad()<<"      V:"<<root_sum.GetHess()<<"      root weight:"<<weight<<std::endl;
     p_tree->Stat(kRootNIdx).base_weight = weight;
     (*p_tree)[kRootNIdx].SetLeaf(param.learning_rate * weight);
 
@@ -688,6 +692,41 @@ struct GPUHistMakerDevice {
     auto& tree = *p_tree;
     Driver driver(static_cast<TrainParam::TreeGrowPolicy>(param.grow_policy));
 
+    /*
+    const std::vector<GradientPair>& preds_h = gpair_all->HostVector();
+    auto val = preds_h[0].GetGrad();
+    int cnt = 0;
+    for (auto & gpair:preds_h){
+      std::cout << gpair.GetGrad() << ", ";
+      cnt ++;
+      if (cnt>100)
+      {
+        std::cout << std::endl;
+        break;
+      }
+      if (gpair.GetGrad()<val){
+        val = gpair.GetGrad();
+      }
+      //std::cout<<gpair.GetGrad()<<" "<<gpair.GetHess()<<std::endl;
+    }
+    std::cout<<"MIN VAL:"<<" "<< val <<std::endl;
+    */
+
+    /*
+    const std::vector<GradientPair>& preds_h = gpair_all->HostVector();
+    auto val = preds_h[0].GetGrad();
+    auto val_ = preds_h[0].GetGrad();
+    for (auto & gpair:preds_h){
+      if (gpair.GetGrad()<val){
+        val = gpair.GetGrad();
+      }
+      if (gpair.GetGrad()>val_){
+        val_ = gpair.GetGrad();
+      }
+      //std::cout<<gpair.GetGrad()<<" "<<gpair.GetHess()<<std::endl;
+    }
+    std::cout<<"MIN/MAX VAL:"<<" "<< val - val_ <<std::endl;
+    */
     monitor.Start("Reset");
     this->Reset(gpair_all, p_fmat, p_fmat->Info().num_col_);
     monitor.Stop("Reset");
@@ -701,6 +740,7 @@ struct GPUHistMakerDevice {
     // The set of leaves that can be expanded asynchronously
     auto expand_set = driver.Pop();
     while (!expand_set.empty()) {
+      //std::cout << "size: " << expand_set.size() << std::endl;
       auto new_candidates =
           pinned.GetSpan<ExpandEntry>(expand_set.size() * 2, ExpandEntry());
 
@@ -715,6 +755,17 @@ struct GPUHistMakerDevice {
 
         int left_child_nidx = tree[candidate.nid].LeftChild();
         int right_child_nidx = tree[candidate.nid].RightChild();
+        /*
+        if (candidate.nid == 0)
+          std::cout << "0000000000000000000000000000" << std::endl;
+        
+        std::cout << candidate.nid << std::endl;
+        //std::cout<<": " << candidate.split << std::endl;
+        //std::cout<<"    "<<  left_child_nidx  << ": " << candidate.split.left_sum.GetGrad()/val  << "          " << candidate.split.left_sum.GetGrad()  << ", " << candidate.split.left_sum.GetHess()  <<std::endl;
+        //std::cout<<"    "<<  right_child_nidx << ": " << candidate.split.right_sum.GetGrad()/val << "          " << candidate.split.right_sum.GetGrad() << ", " << candidate.split.right_sum.GetHess() <<std::endl;
+        std::cout<<"    "<<  left_child_nidx  << ": " << std::log(candidate.split.left_sum.GetGrad()  / candidate.split.left_sum.GetHess())  << "          " << candidate.split.left_sum.GetGrad()  << ", " << candidate.split.left_sum.GetHess()  <<std::endl;
+        std::cout<<"    "<<  right_child_nidx << ": " << std::log(candidate.split.right_sum.GetGrad() / candidate.split.right_sum.GetHess()) << "          " << candidate.split.right_sum.GetGrad() << ", " << candidate.split.right_sum.GetHess() <<std::endl;
+        */
         // Only create child entries if needed
         if (ExpandEntry::ChildIsValid(param, tree.GetDepth(left_child_nidx),
                                       num_leaves)) {
