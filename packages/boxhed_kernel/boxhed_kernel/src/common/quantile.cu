@@ -56,19 +56,11 @@ __device__ SketchEntry BinarySearchQuery(EntryIter beg, EntryIter end, float ran
 
 template <typename InEntry, typename ToSketchEntry>
 void PruneImplUnique(int device,
-               common::Span<SketchContainer::OffsetT const> cuts_ptr,
                Span<InEntry const> unique_data,
                Span<SketchEntry> out_cuts,
                ToSketchEntry to_sketch_entry) {
   dh::LaunchN(device, out_cuts.size(), [=] __device__(size_t idx) {
-    size_t column_id = dh::SegmentId(cuts_ptr, idx);
-    auto out_column = out_cuts.subspan(
-        cuts_ptr[column_id], cuts_ptr[column_id + 1] - cuts_ptr[column_id]);
-    auto in_column = unique_data.subspan(cuts_ptr[column_id],
-                                         cuts_ptr[column_id + 1] -
-                                             cuts_ptr[column_id]);
-    idx -= cuts_ptr[column_id];
-    out_column[idx] = to_sketch_entry(idx, in_column, column_id);
+    out_cuts[idx] = to_sketch_entry(idx, unique_data);
   });
 }
 
@@ -332,7 +324,6 @@ void SketchContainer::Push(Span<Entry const> entries, Span<size_t> columns_ptr,
                            Span<Entry const> unique_entries,
                            common::Span<OffsetT> cuts_ptr,
                            size_t total_cuts, Span<float> weights) {
-  //XXX not sure what would happen if number of unique vals is less than ... (check your reasoning for cuts_ptr being the only one)
   Span<SketchEntry> out;
   dh::device_vector<SketchEntry> cuts;
   bool first_window = this->Current().empty();
@@ -343,47 +334,14 @@ void SketchContainer::Push(Span<Entry const> entries, Span<size_t> columns_ptr,
     this->Current().resize(total_cuts);
     out = dh::ToSpan(this->Current());
   }
-  auto ft = this->feature_types_.ConstDeviceSpan();
-  auto to_sketch_entry = [columns_ptr] __device__(
+  auto to_sketch_entry = [] __device__(
                                size_t sample_idx,
-                               Span<Entry const> const &unique_column,
-                               size_t column_id) {
-      size_t const column_size =
-          columns_ptr[column_id+1]-columns_ptr[column_id];
-      float rmin = column_size*sample_idx/unique_column.size();   
+                               Span<Entry const> const &unique_column) {
+      float rmin = sample_idx;
       float rmax = rmin + 1;
       return SketchEntry{rmin, rmax, 1, unique_column[sample_idx].fvalue};
     }; // NOLINT
-    PruneImplUnique<Entry>(device_, cuts_ptr, unique_entries, out, to_sketch_entry);
-
-  /*
-  if (weights.empty()) {
-    auto to_sketch_entry = [] __device__(size_t sample_idx,
-                                         Span<Entry const> const &column,
-                                         size_t) {
-      float rmin = sample_idx;
-      float rmax = sample_idx + 1;
-      return SketchEntry{rmin, rmax, 1, column[sample_idx].fvalue};
-    }; // NOLINT
-    PruneImpl<Entry>(device_, cuts_ptr, entries, columns_ptr, ft, out,
-                     to_sketch_entry);
-  } else {
-    auto to_sketch_entry = [weights, columns_ptr] __device__(
-                               size_t sample_idx,
-                               Span<Entry const> const &column,
-                               size_t column_id) {
-      Span<float const> column_weights_scan =
-          weights.subspan(columns_ptr[column_id], column.size());
-      float rmin = sample_idx > 0 ? column_weights_scan[sample_idx - 1] : 0.0f;
-      float rmax = column_weights_scan[sample_idx];
-      float wmin = rmax - rmin;
-      wmin = wmin < 0 ? kRtEps : wmin;  // GPU scan can generate floating error.
-      return SketchEntry{rmin, rmax, wmin, column[sample_idx].fvalue};
-    }; // NOLINT
-    PruneImpl<Entry>(device_, cuts_ptr, entries, columns_ptr, ft, out,
-                     to_sketch_entry);
-  }
-  */
+    PruneImplUnique<Entry>(device_, unique_entries, out, to_sketch_entry);
   auto n_uniques = this->ScanInput(out, cuts_ptr);
 
   if (!first_window) {
@@ -399,16 +357,6 @@ void SketchContainer::Push(Span<Entry const> entries, Span<size_t> columns_ptr,
     auto d_cuts_ptr = this->columns_ptr_.DeviceSpan();
     CopyTo(d_cuts_ptr, cuts_ptr);
   }
-  /*
-    std::vector<SketchEntry> cuts_;
-    cuts_.resize(out.size());
-    dh::CopyDeviceSpanToVector(&cuts_, out);
-
-    std::cout<<"___cuts vals__:"<<std::endl;
-    for (int i = 0; i<cuts_.size(); ++i){
-          std::cout<<i<<": "<<cuts_[i]<<std::endl;}
-    std::cout<<std::endl;
-  */
 }
 
 size_t SketchContainer::ScanInput(Span<SketchEntry> entries, Span<OffsetT> d_columns_ptr_in) {
