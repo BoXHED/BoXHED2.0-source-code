@@ -324,7 +324,7 @@ class preprocessor:
 
         #XXX: using np.float64---c_double
         self.nthread            = nthread
-        self.num_quantiles      = num_quantiles+1#min(num_quantiles, 256)
+        self.num_quantiles      = min(num_quantiles, 256)
         self.weighted           = weighted
         _is_cat                 = self._contig_bool(np.zeros((1, data.shape[1])))
         for cat_col in is_cat:
