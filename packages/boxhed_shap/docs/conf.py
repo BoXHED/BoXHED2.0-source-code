@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# SHAP documentation build configuration file, created by
+# boxhed_shap documentation build configuration file, created by
 # sphinx-quickstart on Tue May 22 10:44:55 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -23,7 +23,7 @@ import os
 import sys
 import shutil
 import sphinx_rtd_theme
-print(os.path.abspath('./shap'))
+print(os.path.abspath('./boxhed_shap'))
 sys.path.insert(0, os.path.abspath('..'))
 
 # make copy of notebooks in docs folder, as they must be here for sphinx to
@@ -78,7 +78,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'SHAP'
+project = 'boxhed_shap'
 copyright = '2018, Scott Lundberg'
 author = 'Scott Lundberg'
 
@@ -112,7 +112,7 @@ language = None
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = [
     '_build', 'Thumbs.db', '.DS_Store',
-    'example_notebooks/tabular_examples/tree_based_models/tree_shap_paper',
+    'example_notebooks/tabular_examples/tree_based_models/tree_boxhed_shap_paper',
     'user_studies',
     'local'
 ]
@@ -177,7 +177,7 @@ html_theme_options = {
 }
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'artwork/shap_logo_white.png'
+html_logo = 'artwork/boxhed_shap_logo_white.png'
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -185,7 +185,7 @@ html_logo = 'artwork/shap_logo_white.png'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = 'SHAP v0.16'
+# html_title = 'boxhed_shap v0.16'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -280,7 +280,7 @@ html_static_path = ['_static']
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SHAPdoc'
+htmlhelp_basename = 'boxhed_shapdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -306,7 +306,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SHAP.tex', 'SHAP Documentation',
+    (master_doc, 'boxhed_shap.tex', 'boxhed_shap Documentation',
      'Scott Lundberg', 'manual'),
 ]
 
@@ -348,7 +348,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'shap', 'SHAP Documentation',
+    (master_doc, 'boxhed_shap', 'boxhed_shap Documentation',
      [author], 1)
 ]
 
@@ -363,8 +363,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'SHAP', 'SHAP Documentation',
-     author, 'SHAP', 'One line description of project.',
+    (master_doc, 'boxhed_shap', 'boxhed_shap Documentation',
+     author, 'boxhed_shap', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -386,33 +386,33 @@ texinfo_documents = [
 
 
 def setup(app):
-    import shap
+    import boxhed_shap
     # need to assign the names here, otherwise autodoc won't document these classes,
     # and will instead just say 'alias of ...'
-    shap.explainers.Tree.__name__ = "Tree"
-    shap.explainers.Tree.__module__ = "shap.explainers"
-    shap.explainers.GPUTree.__name__ = "GPUTree"
-    shap.explainers.GPUTree.__module__ = "shap.explainers"
-    shap.explainers.Linear.__name__ = "Linear"
-    shap.explainers.Linear.__module__ = "shap.explainers"
-    shap.explainers.Permutation.__name__ = "Permutation"
-    shap.explainers.Permutation.__module__ = "shap.explainers"
-    shap.explainers.Partition.__name__ = "Partition"
-    shap.explainers.Partition.__module__ = "shap.explainers"
-    shap.explainers.Sampling.__name__ = "Sampling"
-    shap.explainers.Sampling.__module__ = "shap.explainers"
-    shap.explainers.Additive.__name__ = "Additive"
-    shap.explainers.Additive.__module__ = "shap.explainers"
-    # shap.TreeExplainer.__name__ = 'TreeExplainer'
-    # shap.GPUTreeExplainer.__name__ = 'GPUTreeExplainer'
-    # shap.LinearExplainer.__name__ = 'LinearExplainer'
-    # shap.KernelExplainer.__name__ = 'KernelExplainer'
-    # shap.SamplingExplainer.__name__ = 'SamplingExplainer'
-    # shap.DeepExplainer.__name__ = 'DeepExplainer'
-    # shap.GradientExplainer.__name__ = 'GradientExplainer'
-    # shap.PartitionExplainer.__name__ = 'PartitionExplainer'
-    # shap.PermutationExplainer.__name__ = 'PermutationExplainer'
-    # shap.AdditiveExplainer.__name__ = 'AdditiveExplainer'
+    boxhed_shap.explainers.Tree.__name__ = "Tree"
+    boxhed_shap.explainers.Tree.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.GPUTree.__name__ = "GPUTree"
+    boxhed_shap.explainers.GPUTree.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.Linear.__name__ = "Linear"
+    boxhed_shap.explainers.Linear.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.Permutation.__name__ = "Permutation"
+    boxhed_shap.explainers.Permutation.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.Partition.__name__ = "Partition"
+    boxhed_shap.explainers.Partition.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.Sampling.__name__ = "Sampling"
+    boxhed_shap.explainers.Sampling.__module__ = "boxhed_shap.explainers"
+    boxhed_shap.explainers.Additive.__name__ = "Additive"
+    boxhed_shap.explainers.Additive.__module__ = "boxhed_shap.explainers"
+    # boxhed_shap.TreeExplainer.__name__ = 'TreeExplainer'
+    # boxhed_shap.GPUTreeExplainer.__name__ = 'GPUTreeExplainer'
+    # boxhed_shap.LinearExplainer.__name__ = 'LinearExplainer'
+    # boxhed_shap.KernelExplainer.__name__ = 'KernelExplainer'
+    # boxhed_shap.SamplingExplainer.__name__ = 'SamplingExplainer'
+    # boxhed_shap.DeepExplainer.__name__ = 'DeepExplainer'
+    # boxhed_shap.GradientExplainer.__name__ = 'GradientExplainer'
+    # boxhed_shap.PartitionExplainer.__name__ = 'PartitionExplainer'
+    # boxhed_shap.PermutationExplainer.__name__ = 'PermutationExplainer'
+    # boxhed_shap.AdditiveExplainer.__name__ = 'AdditiveExplainer'
     app.connect('build-finished', build_finished)
 
 

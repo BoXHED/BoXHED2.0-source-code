@@ -11789,18 +11789,18 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.applications.vgg16</span> <span class="k">import</span> <span class="n">VGG16</span>
 <span class="kn">from</span> <span class="nn">keras.applications.vgg16</span> <span class="k">import</span> <span class="n">preprocess_input</span><span class="p">,</span> <span class="n">decode_predictions</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">boxhed_shap</span>
 <span class="kn">import</span> <span class="nn">keras.backend</span> <span class="k">as</span> <span class="nn">K</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="c1"># load pre-trained model and choose two images to explain</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">VGG16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">include_top</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">imagenet50</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">imagenet50</span><span class="p">()</span>
 <span class="n">to_explain</span> <span class="o">=</span> <span class="n">X</span><span class="p">[[</span><span class="mi">39</span><span class="p">,</span><span class="mi">41</span><span class="p">]]</span>
 
 <span class="c1"># load the ImageNet class names</span>
 <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json&quot;</span>
-<span class="n">fname</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">class_names</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
@@ -11808,14 +11808,14 @@ div#notebook {
 <span class="k">def</span> <span class="nf">map2layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
     <span class="n">feed_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">],</span> <span class="p">[</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">())]))</span>
     <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">)</span>
-<span class="n">e</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">GradientExplainer</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">),</span> <span class="n">map2layer</span><span class="p">(</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">GradientExplainer</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">),</span> <span class="n">map2layer</span><span class="p">(</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span> <span class="mi">7</span><span class="p">))</span>
 <span class="n">shap_values</span><span class="p">,</span><span class="n">indexes</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">map2layer</span><span class="p">(</span><span class="n">to_explain</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">ranked_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># get the names for the classes</span>
 <span class="n">index_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">class_names</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)][</span><span class="mi">1</span><span class="p">])(</span><span class="n">indexes</span><span class="p">)</span>
 
 <span class="c1"># plot the explanations</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">to_explain</span><span class="p">,</span> <span class="n">index_names</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">to_explain</span><span class="p">,</span> <span class="n">index_names</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13956,7 +13956,7 @@ XGE9CkI8OaNFa6XROkP4glQPCVVAlIMXonfOWqtFR1v+5b/5EQBJodRca7LW3EAg+OSTO7x4/SrX
 b1zik4cuYDwd9KiGHmFFEoWSpzvbTPruu7QbVbZWWqipRWpNv3tGAxcwW3Wfq9eu8GTnjKPTLp4f
 In2XLHb6CTqzRFHA4sKCYwbYjCBnmGiTYhJJr9djOJ2QyBmlKvJhY7FBLdCYyTlRa5FrVzfc/UEw
 HHZRlQbWKmr1GJkn9q1ahT4WhCT2Jb7UXFrIWzQ2Nmi3Qy5d2qS92CZRHkeDZ7z/ibsHUVzlL95/
-zPHpOfvHp4xS6E9yMIUIvBAZSHaPD/lf/+j/oF1z6PPjT57iBT42m7K5dJMP7z7i/kO3AR6d9+l2
+zPHpOfvHp4xS6E9yMIUIvBAZboxhed_shapD/lf/+j/oF1z6PPjT57iBT42m7K5dJMP7z7i/kO3AR6d9+l2
 U7RokJmA8UizulhjMHQV1npU4cGTA/ZOpshgwMaWonfuGC/PPhtx6XKD3/z2V7h6OaQSh/S7bjk/
 3N6hElZYX19nNE3A0zSabjPyhynJNCOKApApwpvpOxgrUcq5ICRosiS3gMrns0qlY2nYArDQpLml
 MBJCKZBCl4cxk1fZhCcREkyWEUYBymriPDB+/fUb6FdvOfbJzgE7hxOqlSaNmrtez/M57fQ52D/m
@@ -19379,7 +19379,7 @@ Li6yu7uLc45Op0uS7FOUBa2k5e+TC130oMMUJwnj8dhDXQPVxwiBKEvyPKMsVa3on+dZrfo/MzMT
 uMaeylmWJc5Bmvpi8+HhIbu7ewwKbw+4sbHJ8rIX5TTtFlubW8zPz3NwcMDlK1fI5ZqfO2XBeDRm
 ZmaGNEkZDAd0O10AZFEgAhIjUhGmKCaojCjmcHBIt9dDl952UFYdMGv4rd/+LX70Rz/N66+/ziee
 eZaHjx6xF3SYNre2sMrTLrU09LqdQFWJQjcMqs5GsysmpXgfFN93pl39d36OGrTRxCKIChKEUmm8
-/yth1hp275spFbS4QlpUOhpCem2BSE5sLptw9+a6BJBushaPCzs2NTOa3TygnrfVYXWji39cEPJk
+/yth1hp275spFbS4QlpUOhpCem2BSE5sLptw9+a6BJBuboxhed_shapCzs2NTOa3TygnrfVYXWji39cEPJk
 fPDDWuvd9/BxGMJ8OwZFPx6H4agTSaV50dSXqP7mzxuHYRKHsywjz3OE9uiNav1a67XhTNDZEVJi
 skpjLsTh0Zix89z+SltHKUWWZbRarYlOUuNcq3M5fj5SSmxAY1Q/r8X8A+xfKVVvwJp6BGeWF7l1
 y8fh2dlZHt17xMsfeRmAm+/dJE1Trl59nrt37mKMYWnR56ibW1usrKzQ7XYYDkfEccJOQGXMzc2x
@@ -21083,7 +21083,7 @@ Ka8tx7I0ksk0/QM9AHR1nGHp8hZGRkboHxiipqaGpiZvHOrr23eRFoIvfOHvuPaqq7n84ovYcMFG
 Ia659mpOtraxZU87JSEvabjnIx/D1dP88eVXMMwQi5Y38vyzfwRg/UXn0rykmdLiOl585Y/E01Os
 W78SgMPHj3D46CHGpic4evI4advGCofA8M0zpYFuSJRyQLjoSuE6wfgwhWkoXNsBYWc3Z/6DgMQN
 ChTSJBhF7EqJ64JyffBWnl7VCWwoXAfhuOC4OLZNJpNiOu6t92QyTSbjjYRKp2ycjIvy13uWkm/P
-uNkHShAPsGeKHBlsDDlD55NSIg2do5vb5/jKf4nIGZX6vS9vWAizXbFd18WWZFkVuRrqoLswOTnJ
+uNkHboxhed_shapsGeKHBlsDDlD55NSIg2do5vb5/jKf4nIGZX6vS9vWAizXbFd18WWZFkVuRrqoLswOTnJ
 yIi/wc6R62UyGaanp7M39uB5uSPNAKLR6Cz3bTevXNd9ZkfgvC/dtKvruuefohS240kDE4kEGX+8
 qatZMp1KYTsOjm1nP4NHyXX9xCIoahgBZdNOujAjedI0HZmedIFswhMKhVi6dCmZTIb+/n4AioqK
 MAyDjRs3kkql2LRpE61t3tjSktISpqcTROJJ2di4gPb2E3R0dBCLxUhHTbekpARd14nH46Qmpjh6
@@ -23278,7 +23278,7 @@ height=417
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Explain-with-local-smoothing">Explain with local smoothing<a class="anchor-link" href="#Explain-with-local-smoothing">&#182;</a></h2><p>Gradient explainer uses expected gradients, which merges ideas from integrated gradients, SHAP, and SmoothGrad into a single expection equation. To use smoothing like SmoothGrad just set the local_smoothing parameter to something non-zero. This will add normally distributed noise with that standard deviation to the input during the expectation calculation. It can create smoother feature attributions that better capture correlated regions of the image.</p>
+<h2 id="Explain-with-local-smoothing">Explain with local smoothing<a class="anchor-link" href="#Explain-with-local-smoothing">&#182;</a></h2><p>Gradient explainer uses expected gradients, which merges ideas from integrated gradients, boxhed_shap, and SmoothGrad into a single expection equation. To use smoothing like SmoothGrad just set the local_smoothing parameter to something non-zero. This will add normally distributed noise with that standard deviation to the input during the expectation calculation. It can create smoother feature attributions that better capture correlated regions of the image.</p>
 
 </div>
 </div>
@@ -23289,7 +23289,7 @@ height=417
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># explain how the input to the 7th layer of the model explains the top two classes</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">GradientExplainer</span><span class="p">(</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">GradientExplainer</span><span class="p">(</span>
     <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">),</span>
     <span class="n">map2layer</span><span class="p">(</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span> <span class="mi">7</span><span class="p">),</span>
     <span class="n">local_smoothing</span><span class="o">=</span><span class="mi">100</span>
@@ -23300,7 +23300,7 @@ height=417
 <span class="n">index_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">class_names</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)][</span><span class="mi">1</span><span class="p">])(</span><span class="n">indexes</span><span class="p">)</span>
 
 <span class="c1"># plot the explanations</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">to_explain</span><span class="p">,</span> <span class="n">index_names</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">to_explain</span><span class="p">,</span> <span class="n">index_names</span><span class="p">)</span>
 </pre></div>
 
 </div>

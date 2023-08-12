@@ -1,20 +1,20 @@
-.. currentmodule:: shap
+.. currentmodule:: boxhed_shap
 
 .. _api_examples:
 
 API Examples
 ----------------
 
-These examples parallel the namespace structure of SHAP. Each object or function in SHAP has a 
+These examples parallel the namespace structure of boxhed_shap. Each object or function in boxhed_shap has a 
 corresponding example notebook here that demonstrates its API usage. The source notebooks
-are `available on GitHub <https://github.com/slundberg/shap/tree/master/notebooks/api_examples>`_.
+are `available on GitHub <https://github.com/slundberg/boxhed_shap/tree/master/notebooks/api_examples>`_.
 
 
 .. _explainers_examples:
 
 explainers
 ==========
-.. Examples for members of :ref:`shap.explainers <explainers_api>`.
+.. Examples for members of :ref:`boxhed_shap.explainers <explainers_api>`.
 
 .. toctree::
     :glob:
@@ -27,7 +27,7 @@ explainers
 
 maskers
 =======
-.. Examples for members of :ref:`shap.maskers <maskers_api>`.
+.. Examples for members of :ref:`boxhed_shap.maskers <maskers_api>`.
 
 .. toctree::
     :glob:
@@ -40,7 +40,7 @@ maskers
 
 models
 ======
-.. Examples for members of :ref:`shap.models <models_api>`.
+.. Examples for members of :ref:`boxhed_shap.models <models_api>`.
 
 .. toctree::
     :glob:
@@ -53,7 +53,7 @@ models
 
 plots
 =====
-.. Examples for members of :ref:`shap.plots <plots_api>`.
+.. Examples for members of :ref:`boxhed_shap.plots <plots_api>`.
 
 .. toctree::
     :glob:

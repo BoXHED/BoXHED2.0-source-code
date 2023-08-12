@@ -1,19 +1,19 @@
 import matplotlib
 import numpy as np
 matplotlib.use('Agg')
-import shap # pylint: disable=wrong-import-position
+import boxhed_shap # pylint: disable=wrong-import-position
 
 def test_random_single_image():
     """ Just make sure the image_plot function doesn't crash.
     """
 
-    shap.image_plot(np.random.randn(3, 20, 20), np.random.randn(3, 20, 20), show=False)
+    boxhed_shap.image_plot(np.random.randn(3, 20, 20), np.random.randn(3, 20, 20), show=False)
 
 def test_random_multi_image():
     """ Just make sure the image_plot function doesn't crash.
     """
 
-    shap.image_plot([np.random.randn(3, 20, 20) for i in range(3)], np.random.randn(3, 20, 20), show=False)
+    boxhed_shap.image_plot([np.random.randn(3, 20, 20) for i in range(3)], np.random.randn(3, 20, 20), show=False)
 
 def test_image_to_text_single():
     """ Just make sure the image_to_text function doesn't crash.
@@ -36,4 +36,4 @@ def test_image_to_text_single():
     test_output_names = np.array([str(i) for i in range(test_word_length)])
 
     shap_values_test = MockImageExplanation(test_data, test_values, test_output_names)
-    shap.plots.image_to_text(shap_values_test)
+    boxhed_shap.plots.image_to_text(shap_values_test)

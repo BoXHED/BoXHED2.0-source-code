@@ -12,7 +12,7 @@ npm run build
 
 ## Publishing the package to npm 
 
-A new shapjs version can be published to [npm](https://www.npmjs.com/package/shapjs):
+A new boxhed_shapjs version can be published to [npm](https://www.npmjs.com/package/boxhed_shapjs):
 
 <pre>
 npm run pub

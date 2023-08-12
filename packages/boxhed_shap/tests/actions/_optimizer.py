@@ -5,13 +5,13 @@
 import numpy as np
 import pandas as pd
 import pytest
-import shap
-from shap.utils._exceptions import ConvergenceError, InvalidAction
+import boxhed_shap
+from boxhed_shap.utils._exceptions import ConvergenceError, InvalidAction
 
 def create_basic_scenario():
     X = pd.DataFrame({"feature1": np.ones(5), "feature2": np.ones(5), "feature3": np.ones(5)})
 
-    class IncreaseFeature1(shap.actions.Action):
+    class IncreaseFeature1(boxhed_shap.actions.Action):
         """ Sample action.
         """
 
@@ -25,7 +25,7 @@ def create_basic_scenario():
         def __str__(self):
             return f"Improve feature1 by {self.amount}."
 
-    class IncreaseFeature2(shap.actions.Action):
+    class IncreaseFeature2(boxhed_shap.actions.Action):
         """ Sample action.
         """
 
@@ -39,7 +39,7 @@ def create_basic_scenario():
         def __str__(self):
             return f"Improve feature2 by {self.amount}."
 
-    class IncreaseFeature3(shap.actions.Action):
+    class IncreaseFeature3(boxhed_shap.actions.Action):
         """ Sample action.
         """
 
@@ -66,7 +66,7 @@ def test_basic_run():
         IncreaseFeature2(5),
         [IncreaseFeature3(i) for i in range(1,20)]
     ]
-    optimizer = shap.ActionOptimizer(passed, possible_actions)
+    optimizer = boxhed_shap.ActionOptimizer(passed, possible_actions)
     actions = optimizer(X.iloc[0])
     assert len(actions) == 2
     assert sum(a.cost for a in actions) == 27 # ensure we got the optimal answer
@@ -79,7 +79,7 @@ def test_too_few_evals():
         IncreaseFeature2(5),
         [IncreaseFeature3(i) for i in range(1,20)]
     ]
-    optimizer = shap.ActionOptimizer(passed, possible_actions)
+    optimizer = boxhed_shap.ActionOptimizer(passed, possible_actions)
     with pytest.raises(ConvergenceError):
         optimizer(X.iloc[0], max_evals=3)
 
@@ -91,7 +91,7 @@ def test_run_out_of_group():
         IncreaseFeature2(5),
         [IncreaseFeature3(1)]
     ]
-    optimizer = shap.ActionOptimizer(passed, possible_actions)
+    optimizer = boxhed_shap.ActionOptimizer(passed, possible_actions)
     actions = optimizer(X.iloc[0])
     print(actions)
     assert len(actions) == 3
@@ -99,4 +99,4 @@ def test_run_out_of_group():
 
 def test_bad_action():
     with pytest.raises(InvalidAction):
-        shap.ActionOptimizer(None, [None])
+        boxhed_shap.ActionOptimizer(None, [None])

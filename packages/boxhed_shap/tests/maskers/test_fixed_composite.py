@@ -4,7 +4,7 @@
 import tempfile
 import pytest
 import numpy as np
-import shap
+import boxhed_shap
 
 @pytest.mark.skip(reason="fails on travis and I don't know why yet...Ryan might need to take a look since this API will change soon anyway")
 def test_fixed_composite_masker_call():
@@ -16,10 +16,10 @@ def test_fixed_composite_masker_call():
     args = ("This is a test statement for fixed composite masker",)
 
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    masker = shap.maskers.Text(tokenizer)
+    masker = boxhed_shap.maskers.Text(tokenizer)
     mask = np.zeros(masker.shape(*args)[1], dtype=bool)
 
-    fixed_composite_masker = shap.maskers.FixedComposite(masker)
+    fixed_composite_masker = boxhed_shap.maskers.FixedComposite(masker)
 
     expected_fixed_composite_masked_output = (np.array(['']), np.array(["This is a test statement for fixed composite masker"]))
     fixed_composite_masked_output = fixed_composite_masker(mask, *args)
@@ -33,8 +33,8 @@ def test_serialization_fixedcomposite_masker():
     AutoTokenizer = pytest.importorskip("transformers").AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained("distilbert-base-cased", use_fast=False)
-    underlying_masker = shap.maskers.Text(tokenizer)
-    original_masker = shap.maskers.FixedComposite(underlying_masker)
+    underlying_masker = boxhed_shap.maskers.Text(tokenizer)
+    original_masker = boxhed_shap.maskers.FixedComposite(underlying_masker)
 
     with tempfile.TemporaryFile() as temp_serialization_file:
 
@@ -43,7 +43,7 @@ def test_serialization_fixedcomposite_masker():
         temp_serialization_file.seek(0)
 
         # deserialize masker
-        new_masker = shap.maskers.FixedComposite.load(temp_serialization_file)
+        new_masker = boxhed_shap.maskers.FixedComposite.load(temp_serialization_file)
 
     test_text = "I ate a Cannoli"
     test_input_mask = np.array([True, False, True, True, False, True, True, True])

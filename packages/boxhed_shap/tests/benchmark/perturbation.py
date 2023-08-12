@@ -1,8 +1,8 @@
 import numpy as np
-import shap 
-import shap.benchmark as benchmark 
+import boxhed_shap 
+import boxhed_shap.benchmark as benchmark 
 from transformers import AutoTokenizer
-from shap.maskers import Independent, Partition, Impute, Text, Image, FixedComposite
+from boxhed_shap.maskers import Independent, Partition, Impute, Text, Image, FixedComposite
 
 model = lambda x, y: x 
 sort_order = 'positive'

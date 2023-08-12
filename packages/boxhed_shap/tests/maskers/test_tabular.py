@@ -3,17 +3,17 @@
 
 import tempfile
 import numpy as np
-import shap
+import boxhed_shap
 
 
 def test_serialization_independent_masker_dataframe():
     """ Test the serialization of an Independent masker based on a data frame.
     """
 
-    X, _ = shap.datasets.boston()
+    X, _ = boxhed_shap.datasets.boston()
 
     # initialize independent masker
-    original_independent_masker = shap.maskers.Independent(X)
+    original_independent_masker = boxhed_shap.maskers.Independent(X)
 
     with tempfile.TemporaryFile() as temp_serialization_file:
 
@@ -23,7 +23,7 @@ def test_serialization_independent_masker_dataframe():
         temp_serialization_file.seek(0)
 
         # deserialize masker
-        new_independent_masker = shap.maskers.Independent.load(temp_serialization_file)
+        new_independent_masker = boxhed_shap.maskers.Independent.load(temp_serialization_file)
 
     mask = np.ones(X.shape[1]).astype(int)
     mask[0] = 0
@@ -37,11 +37,11 @@ def test_serialization_independent_masker_numpy():
     """
 
 
-    X, _ = shap.datasets.boston()
+    X, _ = boxhed_shap.datasets.boston()
     X = X.values
 
     # initialize independent masker
-    original_independent_masker = shap.maskers.Independent(X)
+    original_independent_masker = boxhed_shap.maskers.Independent(X)
 
     with tempfile.TemporaryFile() as temp_serialization_file:
 
@@ -52,7 +52,7 @@ def test_serialization_independent_masker_numpy():
         temp_serialization_file.seek(0)
 
         # deserialize masker
-        new_independent_masker = shap.maskers.Masker.load(temp_serialization_file)
+        new_independent_masker = boxhed_shap.maskers.Masker.load(temp_serialization_file)
 
     mask = np.ones(X.shape[1]).astype(int)
     mask[0] = 0
@@ -65,10 +65,10 @@ def test_serialization_partion_masker_dataframe():
     """ Test the serialization of a Partition masker based on a DataFrame.
     """
 
-    X, _ = shap.datasets.boston()
+    X, _ = boxhed_shap.datasets.boston()
 
     # initialize partition masker
-    original_partition_masker = shap.maskers.Partition(X)
+    original_partition_masker = boxhed_shap.maskers.Partition(X)
 
     with tempfile.TemporaryFile() as temp_serialization_file:
 
@@ -78,7 +78,7 @@ def test_serialization_partion_masker_dataframe():
         temp_serialization_file.seek(0)
 
         # deserialize masker
-        new_partition_masker = shap.maskers.Partition.load(temp_serialization_file)
+        new_partition_masker = boxhed_shap.maskers.Partition.load(temp_serialization_file)
 
     mask = np.ones(X.shape[1]).astype(int)
     mask[0] = 0
@@ -91,11 +91,11 @@ def test_serialization_partion_masker_numpy():
     """ Test the serialization of a Partition masker based on a numpy array.
     """
 
-    X, _ = shap.datasets.boston()
+    X, _ = boxhed_shap.datasets.boston()
     X = X.values
 
     # initialize partition masker
-    original_partition_masker = shap.maskers.Partition(X)
+    original_partition_masker = boxhed_shap.maskers.Partition(X)
 
     with tempfile.TemporaryFile() as temp_serialization_file:
 
@@ -105,7 +105,7 @@ def test_serialization_partion_masker_numpy():
         temp_serialization_file.seek(0)
 
         # deserialize masker
-        new_partition_masker = shap.maskers.Masker.load(temp_serialization_file)
+        new_partition_masker = boxhed_shap.maskers.Masker.load(temp_serialization_file)
 
     mask = np.ones(X.shape[1]).astype(int)
     mask[0] = 0

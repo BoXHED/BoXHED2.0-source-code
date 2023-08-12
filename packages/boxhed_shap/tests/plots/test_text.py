@@ -1,5 +1,5 @@
 import numpy as np
-import shap
+import boxhed_shap
 
 def test_single_text_to_text():
     """ Just make sure the test_plot function doesn't crash.
@@ -31,7 +31,7 @@ def test_single_text_to_text():
     ])
 
 
-    shap_values_test = shap.Explanation(
+    shap_values_test = boxhed_shap.Explanation(
         values=[test_values],
         base_values=[test_base_values],
         data=[test_data],
@@ -40,4 +40,4 @@ def test_single_text_to_text():
         clustering=[test_clustering],
         hierarchical_values=[test_hierarchical_values]
     )
-    shap.plots.text(shap_values_test)
+    boxhed_shap.plots.text(shap_values_test)

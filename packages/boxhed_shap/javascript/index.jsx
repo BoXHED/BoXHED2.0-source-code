@@ -12,7 +12,7 @@ import {
 injectTapEventPlugin();
 
 // Save some globals for the inline scripts to access
-window.SHAP = {
+window.boxhed_shap = {
   SimpleListVisualizer,
   AdditiveForceVisualizer,
   AdditiveForceArrayVisualizer,

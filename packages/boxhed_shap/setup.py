@@ -114,7 +114,7 @@ def compile_cuda_module(host_args):
                  "-gencode=arch=compute_70,code=sm_70 " + \
                  "-gencode=arch=compute_75,code=sm_75 " + \
                  "-gencode=arch=compute_75,code=compute_75"
-    nvcc_command = "shap/cext/_cext_gpu.cu -lib -o {} -Xcompiler {} -I{} " \
+    nvcc_command = "boxhed_shap/cext/_cext_gpu.cu -lib -o {} -Xcompiler {} -I{} " \
                    "--std c++14 " \
                    "--expt-extended-lambda " \
                    "--expt-relaxed-constexpr {}".format(
@@ -138,7 +138,7 @@ def run_setup(with_binary, test_xgboost, test_lightgbm, test_catboost, test_spar
             compile_args.append('/MD')
 
         ext_modules.append(
-            Extension('shap._cext', sources=['shap/cext/_cext.cc'],
+            Extension('boxhed_shap._cext', sources=['boxhed_shap/cext/_cext.cc'],
                       extra_compile_args=compile_args))
     if with_cuda:
         try:
@@ -152,11 +152,11 @@ def run_setup(with_binary, test_xgboost, test_lightgbm, test_catboost, test_spar
             lib_dir, lib = compile_cuda_module(compile_args)
 
             ext_modules.append(
-                Extension('shap._cext_gpu', sources=['shap/cext/_cext_gpu.cc'],
+                Extension('boxhed_shap._cext_gpu', sources=['boxhed_shap/cext/_cext_gpu.cc'],
                           extra_compile_args=compile_args,
                           library_dirs=[lib_dir, cudart_path],
                           libraries=[lib, 'cudart'],
-                          depends=['shap/cext/_cext_gpu.cu', 'shap/cext/gpu_treeshap.h','setup.py'])
+                          depends=['boxhed_shap/cext/_cext_gpu.cu', 'boxhed_shap/cext/gpu_treeboxhed_shap.h','setup.py'])
             )
         except Exception as e:
             raise Exception("Error building cuda module: " + repr(e))
@@ -203,29 +203,22 @@ def run_setup(with_binary, test_xgboost, test_lightgbm, test_catboost, test_spar
 
     setup(
         name='boxhed_shap',
-        version="1.0", #find_version("shap", "__init__.py"),
+        version="1.0", #find_version("boxhed_shap", "__init__.py"),
         description='A unified approach to explain the output of any machine learning model.',
-        long_description="SHAP (SHapley Additive exPlanations) is a unified approach to explain "
-                         "the output of " + \
-                         "any machine learning model. SHAP connects game theory with local "
-                         "explanations, uniting " + \
-                         "several previous methods and representing the only possible consistent "
-                         "and locally accurate " + \
-                         "additive feature attribution method based on expectations. "
-                         "This is a redistribution of the Python package shap with small changes "
+        long_description="This is a redistribution of the Python package boxhed_shap with small changes "
                          "to work with the package BoXHED."
                          ,
         long_description_content_type="text/markdown",
-        #url='http://github.com/slundberg/shap',
+        #url='http://github.com/slundberg/boxhed_shap',
         author='Arash Pakbin',
         author_email='a.pakbin@tamu.edu',
         license='MIT',
         packages=[
-            'shap', 'shap.explainers', 'shap.explainers.other', 'shap.explainers._deep',
-            'shap.plots', 'shap.plots.colors', 'shap.benchmark', 'shap.maskers', 'shap.utils',
-            'shap.actions', 'shap.models'
+            'boxhed_shap', 'boxhed_shap.explainers', 'boxhed_shap.explainers.other', 'boxhed_shap.explainers._deep',
+            'boxhed_shap.plots', 'boxhed_shap.plots.colors', 'boxhed_shap.benchmark', 'boxhed_shap.maskers', 'boxhed_shap.utils',
+            'boxhed_shap.actions', 'boxhed_shap.models'
         ],
-        package_data={'shap': ['plots/resources/*', 'cext/tree_shap.h']},
+        package_data={'boxhed_shap': ['plots/resources/*', 'cext/tree_boxhed_shap.h']},
         cmdclass={'build_ext': build_ext},
         setup_requires=['numpy'],
         install_requires=['numpy', 'scipy', 'scikit-learn', 'pandas', 'tqdm>4.25.0',
