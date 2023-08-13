@@ -101,7 +101,7 @@ def _run_batch_process(param_dict_, rslts):
         rslts [batch_size*test_block_size*batch_idx:batch_size*test_block_size*(batch_idx+1)] = scores
         #rslts [batch_block_size*batch_idx: batch_block_size*(batch_idx+1)] = scores
 
-    trained_models = Parallel(n_jobs=-1, prefer="threads")(delayed(_fit_single_model)(param_dict) 
+    trained_models = Parallel(n_jobs=batch_size, prefer="threads")(delayed(_fit_single_model)(param_dict) 
             for param_dict in param_dicts_train[batch_idx*batch_size:
                 (batch_idx+1)*batch_size])
 
@@ -319,7 +319,7 @@ def group_k_fold(ID, num_folds, seed=None):
     return gkf
 
 
-def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1, seed=None, ID=None):
+def cv(param_grid, X_post, num_folds, gpu_list, nthread=1, models_per_gpu=1, seed=None, ID=None):
     """cross validate different hyperpatameter combinations based on likelihood risk.
 
     :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
