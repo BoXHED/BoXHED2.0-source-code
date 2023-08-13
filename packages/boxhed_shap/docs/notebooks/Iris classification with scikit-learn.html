@@ -11775,7 +11775,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Iris-classification-with-scikit-learn">Iris classification with scikit-learn<a class="anchor-link" href="#Iris-classification-with-scikit-learn">&#182;</a></h1><p>Here we use the well-known Iris species dataset to illustrate how SHAP can explain the output of many different model types, from k-nearest neighbors, to neural networks. This dataset is very small, with only a 150 samples. We use a random set of 130 for training and 20 for testing the models. Because this is a small dataset with only a few features we use the entire training dataset for the background. In problems with more features we would want to pass only the median of the training dataset, or weighted k-medians. While we only have a few samples, the prediction problem is fairly easy and all methods acheive perfect accuracy. What's interesting is how different methods sometimes rely on different sets of features for their predictions.</p>
+<h1 id="Iris-classification-with-scikit-learn">Iris classification with scikit-learn<a class="anchor-link" href="#Iris-classification-with-scikit-learn">&#182;</a></h1><p>Here we use the well-known Iris species dataset to illustrate how boxhed_shap can explain the output of many different model types, from k-nearest neighbors, to neural networks. This dataset is very small, with only a 150 samples. We use a random set of 130 for training and 20 for testing the models. Because this is a small dataset with only a few features we use the entire training dataset for the background. In problems with more features we would want to pass only the median of the training dataset, or weighted k-medians. While we only have a few samples, the prediction problem is fairly easy and all methods acheive perfect accuracy. What's interesting is how different methods sometimes rely on different sets of features for their predictions.</p>
 
 </div>
 </div>
@@ -11796,21 +11796,21 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">boxhed_shap</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="n">X_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">Y_train</span><span class="p">,</span><span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="o">*</span><span class="n">shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">iris</span><span class="p">(),</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span><span class="n">X_test</span><span class="p">,</span><span class="n">Y_train</span><span class="p">,</span><span class="n">Y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="o">*</span><span class="n">boxhed_shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">iris</span><span class="p">(),</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># rather than use the whole training set to estimate expected values, we could summarize with</span>
 <span class="c1"># a set of weighted kmeans, each weighted by the number of points they represent. But this dataset</span>
 <span class="c1"># is so small we don&#39;t worry about it</span>
-<span class="c1">#X_train_summary = shap.kmeans(X_train, 50)</span>
+<span class="c1">#X_train_summary = boxhed_shap.kmeans(X_train, 50)</span>
 
 <span class="k">def</span> <span class="nf">print_accuracy</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy = </span><span class="si">{0}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="o">==</span> <span class="n">Y_test</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">Y_test</span><span class="p">)))</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># to let the print get out before any progress bars</span>
 
-<span class="n">shap</span><span class="o">.</span><span class="n">initjs</span><span class="p">()</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">initjs</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11922,9 +11922,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">knn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">knn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
 </pre></div>
 
 </div>
@@ -11941,7 +11941,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 </pre>
 </div>
 </div>
@@ -11989,7 +11989,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12058,9 +12058,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12088,7 +12088,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:00&lt;00:00, 38.97it/s]
 </pre>
 </div>
@@ -12141,9 +12141,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">svc_linear</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12171,7 +12171,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:00&lt;00:00, 41.21it/s]
 </pre>
 </div>
@@ -12224,9 +12224,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">linear_lr</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">linear_lr</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">linear_lr</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12254,7 +12254,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:00&lt;00:00, 34.30it/s]
 </pre>
 </div>
@@ -12308,9 +12308,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">dtree</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">dtree</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">dtree</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12338,7 +12338,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:00&lt;00:00, 40.56it/s]
 </pre>
 </div>
@@ -12392,9 +12392,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">rforest</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">rforest</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">rforest</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12422,7 +12422,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:01&lt;00:00, 21.58it/s]
 </pre>
 </div>
@@ -12476,9 +12476,9 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <span class="n">print_accuracy</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 
 <span class="c1"># explain all the predictions in the test set</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">X_train</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12506,7 +12506,7 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>Using 120 background data samples could cause slower run times. Consider using shap.kmeans(data, K) to summarize the background as K weighted samples.
+<pre>Using 120 background data samples could cause slower run times. Consider using boxhed_shap.kmeans(data, K) to summarize the background as K weighted samples.
 100%|██████████| 30/30 [00:00&lt;00:00, 46.62it/s]
 </pre>
 </div>

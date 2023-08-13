@@ -2,7 +2,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 matplotlib.use('Agg')
-import shap # pylint: disable=wrong-import-position
+import boxhed_shap # pylint: disable=wrong-import-position
 
 
 def test_dependence_one_string_feature():
@@ -10,7 +10,7 @@ def test_dependence_one_string_feature():
     """
     X = _create_sample_dataset(string_features={"Sex"})
 
-    shap.dependence_plot(
+    boxhed_shap.dependence_plot(
         "Sex",
         np.random.randn(*X.values.shape),
         X,
@@ -24,7 +24,7 @@ def test_dependence_two_string_features():
     """
     X = _create_sample_dataset(string_features={"Sex", "Blood group"})
 
-    shap.dependence_plot(
+    boxhed_shap.dependence_plot(
         "Sex",
         np.random.randn(*X.values.shape),
         X,
@@ -38,7 +38,7 @@ def test_dependence_one_string_feature_no_interaction():
     """
     X = _create_sample_dataset(string_features={"Sex"})
 
-    shap.dependence_plot(
+    boxhed_shap.dependence_plot(
         "Sex",
         np.random.randn(*X.values.shape),
         X,
@@ -52,7 +52,7 @@ def test_dependence_one_string_feature_auto_interaction():
     """
     X = _create_sample_dataset(string_features={"Sex"})
 
-    shap.dependence_plot(
+    boxhed_shap.dependence_plot(
         "Sex",
         np.random.randn(*X.values.shape),
         X,
@@ -70,9 +70,9 @@ def test_approximate_interactions():
 
     shap_values = np.random.randn(*X_one_string_feature.values.shape)
 
-    interactions_no_features = shap.approximate_interactions(0, shap_values, X_no_string_features)
-    interactions_one_string_feature = shap.approximate_interactions(0, shap_values, X_one_string_feature)
-    interactions_two_string_feature = shap.approximate_interactions(0, shap_values, X_two_string_features)
+    interactions_no_features = boxhed_shap.approximate_interactions(0, shap_values, X_no_string_features)
+    interactions_one_string_feature = boxhed_shap.approximate_interactions(0, shap_values, X_one_string_feature)
+    interactions_two_string_feature = boxhed_shap.approximate_interactions(0, shap_values, X_two_string_features)
 
     assert (interactions_no_features == interactions_one_string_feature).all()
     assert (interactions_no_features == interactions_two_string_feature).all()

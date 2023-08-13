@@ -2,12 +2,12 @@ Image examples
 ----------------
 
 These examples explain machine learning models applied to image data. They are all generated from Jupyter
-notebooks `available on GitHub <https://github.com/slundberg/shap/tree/master/notebooks/image_examples>`_.
+notebooks `available on GitHub <https://github.com/slundberg/boxhed_shap/tree/master/notebooks/image_examples>`_.
 
 
 Image classification
 ====================
-Examples using :class:`shap.explainers.Partition` to explain image classifiers.
+Examples using :class:`boxhed_shap.explainers.Partition` to explain image classifiers.
 
 .. toctree::
     :glob:
@@ -18,7 +18,7 @@ Examples using :class:`shap.explainers.Partition` to explain image classifiers.
 
 Image captioning
 ================
-Examples using :class:`shap.explainers.Permutation` to produce explanations in a model agnostic manner.
+Examples using :class:`boxhed_shap.explainers.Permutation` to produce explanations in a model agnostic manner.
 
 .. toctree::
     :glob:

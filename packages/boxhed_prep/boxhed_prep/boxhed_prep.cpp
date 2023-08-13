@@ -12,7 +12,9 @@
 #include <cstdlib>
 #include <cmath> 
 
-#include <omp.h>
+#ifdef _OPENMP
+    #include <omp.h>
+#endif
 #include <string>
 #include <exception>
 #include <sstream>

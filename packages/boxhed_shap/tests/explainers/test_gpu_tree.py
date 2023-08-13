@@ -4,8 +4,8 @@
 import sklearn
 import pytest
 import numpy as np
-import shap
-from shap.utils import assert_import
+import boxhed_shap
+from boxhed_shap.utils import assert_import
 
 try:
     assert_import("cext_gpu")
@@ -17,28 +17,28 @@ def test_front_page_xgboost():
     xgboost = pytest.importorskip("xgboost")
 
     # load JS visualization code to notebook
-    shap.initjs()
+    boxhed_shap.initjs()
 
     # train XGBoost model
-    X, y = shap.datasets.california(n_points=500)
+    X, y = boxhed_shap.datasets.california(n_points=500)
     model = xgboost.train({"learning_rate": 0.01}, xgboost.DMatrix(X, label=y), 100)
 
-    # explain the model's predictions using SHAP values
-    explainer = shap.GPUTreeExplainer(model)
+    # explain the model's predictions using boxhed_shap values
+    explainer = boxhed_shap.GPUTreeExplainer(model)
     shap_values = explainer.shap_values(X)
 
     # visualize the first prediction's explaination
-    shap.force_plot(explainer.expected_value, shap_values[0, :], X.iloc[0, :])
+    boxhed_shap.force_plot(explainer.expected_value, shap_values[0, :], X.iloc[0, :])
 
     # visualize the training set predictions
-    shap.force_plot(explainer.expected_value, shap_values, X)
+    boxhed_shap.force_plot(explainer.expected_value, shap_values, X)
 
-    # create a SHAP dependence plot to show the effect of a single feature across the whole dataset
-    shap.dependence_plot(5, shap_values, X, show=False)
-    shap.dependence_plot("Longitude", shap_values, X, show=False)
+    # create a boxhed_shap dependence plot to show the effect of a single feature across the whole dataset
+    boxhed_shap.dependence_plot(5, shap_values, X, show=False)
+    boxhed_shap.dependence_plot("Longitude", shap_values, X, show=False)
 
     # summarize the effects of all the features
-    shap.summary_plot(shap_values, X, show=False)
+    boxhed_shap.summary_plot(shap_values, X, show=False)
 
 
 rs = np.random.RandomState(15921)  # pylint: disable=no-member
@@ -200,25 +200,25 @@ def idfn(task):
 
 @pytest.mark.parametrize("task", tasks, ids=idfn)
 @pytest.mark.parametrize("feature_perturbation", ["interventional", "tree_path_dependent"])
-def test_gpu_tree_explainer_shap(task, feature_perturbation):
+def test_gpu_tree_explainer_boxhed_shap(task, feature_perturbation):
     model, X, _ = task
-    gpu_ex = shap.GPUTreeExplainer(model, X, feature_perturbation=feature_perturbation)
-    ex = shap.TreeExplainer(model, X, feature_perturbation=feature_perturbation)
-    host_shap = ex.shap_values(X, check_additivity=True)
-    gpu_shap = gpu_ex.shap_values(X, check_additivity=True)
+    gpu_ex = boxhed_shap.GPUTreeExplainer(model, X, feature_perturbation=feature_perturbation)
+    ex = boxhed_shap.TreeExplainer(model, X, feature_perturbation=feature_perturbation)
+    host_boxhed_shap = ex.shap_values(X, check_additivity=True)
+    gpu_boxhed_shap = gpu_ex.shap_values(X, check_additivity=True)
 
     # Check outputs roughly the same as CPU algorithm
     assert np.allclose(ex.expected_value, gpu_ex.expected_value, 1e-3, 1e-3)
-    assert np.allclose(host_shap, gpu_shap, 1e-3, 1e-3)
+    assert np.allclose(host_boxhed_shap, gpu_boxhed_shap, 1e-3, 1e-3)
 
 
 @pytest.mark.parametrize("task", tasks, ids=idfn)
 @pytest.mark.parametrize("feature_perturbation", ["tree_path_dependent"])
-def test_gpu_tree_explainer_shap_interactions(task, feature_perturbation):
+def test_gpu_tree_explainer_boxhed_shap_interactions(task, feature_perturbation):
     model, X, margin = task
-    ex = shap.GPUTreeExplainer(model, X, feature_perturbation=feature_perturbation)
-    shap_values = np.array(ex.shap_interaction_values(X), copy=False)
+    ex = boxhed_shap.GPUTreeExplainer(model, X, feature_perturbation=feature_perturbation)
+    shap_values = np.array(ex.boxhed_shap_interaction_values(X), copy=False)
 
     assert np.abs(np.sum(shap_values, axis=(len(shap_values.shape) - 1, len(
         shap_values.shape) - 2)).T + ex.expected_value - margin).max() < 1e-4, \
-        "SHAP values don't sum to model output!"
+        "boxhed_shap values don't sum to model output!"

@@ -4,7 +4,7 @@
 # pylint: disable=missing-function-docstring
 import pickle
 import numpy as np
-import shap
+import boxhed_shap
 from . import common
 
 def test_exact_second_order():
@@ -22,45 +22,45 @@ def test_exact_second_order():
     right_answer[:, 2] += data[:, 2]
     right_answer[:, 2] += (data[:, 2] * data[:, 3]) / 2
     right_answer[:, 3] += (data[:, 2] * data[:, 3]) / 2
-    shap_values = shap.explainers.Permutation(model, np.zeros((1,5)))(data)
+    shap_values = boxhed_shap.explainers.Permutation(model, np.zeros((1,5)))(data)
 
     assert np.allclose(right_answer, shap_values.values)
 
 def test_tabular_single_output_auto_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict, data, data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict, data, data)
 
 def test_tabular_multi_output_auto_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict_proba, data, data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict_proba, data, data)
 
 def test_tabular_single_output_partition_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict, shap.maskers.Partition(data), data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict, boxhed_shap.maskers.Partition(data), data)
 
 def test_tabular_multi_output_partition_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict_proba, shap.maskers.Partition(data), data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict_proba, boxhed_shap.maskers.Partition(data), data)
 
 def test_tabular_single_output_independent_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict, shap.maskers.Independent(data), data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict, boxhed_shap.maskers.Independent(data), data)
 
 def test_tabular_multi_output_independent_masker():
     model, data = common.basic_xgboost_scenario(100)
-    common.test_additivity(shap.explainers.Permutation, model.predict_proba, shap.maskers.Independent(data), data)
+    common.test_additivity(boxhed_shap.explainers.Permutation, model.predict_proba, boxhed_shap.maskers.Independent(data), data)
 
 def test_serialization():
     model, data = common.basic_xgboost_scenario()
     common.test_serialization(
-        shap.explainers.Permutation, model.predict, data, data,
+        boxhed_shap.explainers.Permutation, model.predict, data, data,
         rtol=0.1, atol=0.05, max_evals=100000
     )
 
 def test_serialization_no_model_or_masker():
     model, data = common.basic_xgboost_scenario()
     common.test_serialization(
-        shap.explainers.Permutation, model.predict, data, data,
+        boxhed_shap.explainers.Permutation, model.predict, data, data,
         model_saver=False, masker_saver=False,
         model_loader=lambda _: model.predict, masker_loader=lambda _: data,
         rtol=0.1, atol=0.05, max_evals=100000
@@ -69,6 +69,6 @@ def test_serialization_no_model_or_masker():
 def test_serialization_custom_model_save():
     model, data = common.basic_xgboost_scenario()
     common.test_serialization(
-        shap.explainers.Permutation, model.predict, data, data,
+        boxhed_shap.explainers.Permutation, model.predict, data, data,
         model_saver=pickle.dump, model_loader=pickle.load, rtol=0.1, atol=0.05, max_evals=100000
     )

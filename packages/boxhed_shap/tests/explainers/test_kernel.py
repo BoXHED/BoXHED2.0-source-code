@@ -2,19 +2,19 @@ import numpy as np
 import scipy as sp
 import pandas as pd
 import sklearn
-import shap
+import boxhed_shap
 
 def test_null_model_small():
     """ Test a small null model.
     """
-    explainer = shap.KernelExplainer(lambda x: np.zeros(x.shape[0]), np.ones((2, 4)), nsamples=100)
+    explainer = boxhed_shap.KernelExplainer(lambda x: np.zeros(x.shape[0]), np.ones((2, 4)), nsamples=100)
     e = explainer.explain(np.ones((1, 4)))
     assert np.sum(np.abs(e)) < 1e-8
 
 def test_null_model():
     """ Test a larger null model.
     """
-    explainer = shap.KernelExplainer(lambda x: np.zeros(x.shape[0]), np.ones((2, 10)), nsamples=100)
+    explainer = boxhed_shap.KernelExplainer(lambda x: np.zeros(x.shape[0]), np.ones((2, 10)), nsamples=100)
     e = explainer.explain(np.ones((1, 10)))
     assert np.sum(np.abs(e)) < 1e-8
 
@@ -23,40 +23,40 @@ def test_front_page_model_agnostic():
     """
 
     # print the JS visualization code to the notebook
-    shap.initjs()
+    boxhed_shap.initjs()
 
     # train a SVM classifier
-    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*shap.datasets.iris(), test_size=0.1, random_state=0)
+    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*boxhed_shap.datasets.iris(), test_size=0.1, random_state=0)
     svm = sklearn.svm.SVC(kernel='rbf', probability=True)
     svm.fit(X_train, Y_train)
 
-    # use Kernel SHAP to explain test set predictions
-    explainer = shap.KernelExplainer(svm.predict_proba, X_train, nsamples=100, link="logit")
+    # use Kernel boxhed_shap to explain test set predictions
+    explainer = boxhed_shap.KernelExplainer(svm.predict_proba, X_train, nsamples=100, link="logit")
     shap_values = explainer.shap_values(X_test)
 
-    # plot the SHAP values for the Setosa output of the first instance
-    shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], X_test.iloc[0, :], link="logit")
+    # plot the boxhed_shap values for the Setosa output of the first instance
+    boxhed_shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], X_test.iloc[0, :], link="logit")
 
 def test_front_page_model_agnostic_rank():
     """ Test the rank regularized explanation of the ReadMe example.
     """
 
     # print the JS visualization code to the notebook
-    shap.initjs()
+    boxhed_shap.initjs()
 
     # train a SVM classifier
-    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*shap.datasets.iris(), test_size=0.1, random_state=0)
+    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*boxhed_shap.datasets.iris(), test_size=0.1, random_state=0)
     svm = sklearn.svm.SVC(kernel='rbf', probability=True)
     svm.fit(X_train, Y_train)
 
-    # use Kernel SHAP to explain test set predictions
-    explainer = shap.KernelExplainer(svm.predict_proba, X_train, nsamples=100, link="logit", l1_reg="rank(3)")
+    # use Kernel boxhed_shap to explain test set predictions
+    explainer = boxhed_shap.KernelExplainer(svm.predict_proba, X_train, nsamples=100, link="logit", l1_reg="rank(3)")
     shap_values = explainer.shap_values(X_test)
 
-    # plot the SHAP values for the Setosa output of the first instance
-    shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], X_test.iloc[0, :], link="logit")
+    # plot the boxhed_shap values for the Setosa output of the first instance
+    boxhed_shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], X_test.iloc[0, :], link="logit")
 
-def test_kernel_shap_with_dataframe():
+def test_kernel_boxhed_shap_with_dataframe():
     """ Test with a Pandas DataFrame.
     """
     np.random.seed(3)
@@ -70,14 +70,14 @@ def test_kernel_shap_with_dataframe():
     linear_model = sklearn.linear_model.LinearRegression()
     linear_model.fit(df_X, df_y)
 
-    explainer = shap.KernelExplainer(linear_model.predict, df_X, keep_index=True)
+    explainer = boxhed_shap.KernelExplainer(linear_model.predict, df_X, keep_index=True)
     _ = explainer.shap_values(df_X)
 
-def test_kernel_shap_with_a1a_sparse_zero_background():
+def test_kernel_boxhed_shap_with_a1a_sparse_zero_background():
     """ Test with a sparse matrix for the background.
     """
 
-    X, y = shap.datasets.a1a() # pylint: disable=unbalanced-tuple-unpacking
+    X, y = boxhed_shap.datasets.a1a() # pylint: disable=unbalanced-tuple-unpacking
     x_train, x_test, y_train, _ = sklearn.model_selection.train_test_split(X, y, test_size=0.01, random_state=0)
     linear_model = sklearn.linear_model.LinearRegression()
     linear_model.fit(x_train, y_train)
@@ -85,36 +85,36 @@ def test_kernel_shap_with_a1a_sparse_zero_background():
     _, cols = x_train.shape
     shape = 1, cols
     background = sp.sparse.csr_matrix(shape, dtype=x_train.dtype)
-    explainer = shap.KernelExplainer(linear_model.predict, background)
+    explainer = boxhed_shap.KernelExplainer(linear_model.predict, background)
     explainer.shap_values(x_test)
 
-def test_kernel_shap_with_a1a_sparse_nonzero_background():
+def test_kernel_boxhed_shap_with_a1a_sparse_nonzero_background():
     """ Check with a sparse non zero background matrix.
     """
     np.set_printoptions(threshold=100000)
     np.random.seed(0)
 
-    X, y = shap.datasets.a1a() # pylint: disable=unbalanced-tuple-unpacking
+    X, y = boxhed_shap.datasets.a1a() # pylint: disable=unbalanced-tuple-unpacking
     x_train, x_test, y_train, _ = sklearn.model_selection.train_test_split(X, y, test_size=0.01, random_state=0)
     linear_model = sklearn.linear_model.LinearRegression()
     linear_model.fit(x_train, y_train)
     # Calculate median of background data
     median_dense = sklearn.utils.sparsefuncs.csc_median_axis_0(x_train.tocsc())
     median = sp.sparse.csr_matrix(median_dense)
-    explainer = shap.KernelExplainer(linear_model.predict, median)
+    explainer = boxhed_shap.KernelExplainer(linear_model.predict, median)
     shap_values = explainer.shap_values(x_test)
 
     def dense_to_sparse_predict(data):
         sparse_data = sp.sparse.csr_matrix(data)
         return linear_model.predict(sparse_data)
 
-    explainer_dense = shap.KernelExplainer(dense_to_sparse_predict, median_dense.reshape((1, len(median_dense))))
+    explainer_dense = boxhed_shap.KernelExplainer(dense_to_sparse_predict, median_dense.reshape((1, len(median_dense))))
     x_test_dense = x_test.toarray()
     shap_values_dense = explainer_dense.shap_values(x_test_dense)
     # Validate sparse and dense result is the same
     assert np.allclose(shap_values, shap_values_dense, rtol=1e-02, atol=1e-01)
 
-def test_kernel_shap_with_high_dim_sparse():
+def test_kernel_boxhed_shap_with_high_dim_sparse():
     """ Verifies we can run on very sparse data produced from feature hashing.
     """
 
@@ -136,7 +136,7 @@ def test_kernel_shap_with_high_dim_sparse():
     _, cols = x_train.shape
     shape = 1, cols
     background = sp.sparse.csr_matrix(shape, dtype=x_train.dtype)
-    explainer = shap.KernelExplainer(linear_model.predict, background)
+    explainer = boxhed_shap.KernelExplainer(linear_model.predict, background)
     _ = explainer.shap_values(x_test)
 
 def test_kernel_sparse_vs_dense_multirow_background():
@@ -144,12 +144,12 @@ def test_kernel_sparse_vs_dense_multirow_background():
     """
 
     # train a logistic regression classifier
-    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*shap.datasets.iris(), test_size=0.1, random_state=0)
+    X_train, X_test, Y_train, _ = sklearn.model_selection.train_test_split(*boxhed_shap.datasets.iris(), test_size=0.1, random_state=0)
     lr = sklearn.linear_model.LogisticRegression(solver='lbfgs')
     lr.fit(X_train, Y_train)
 
-    # use Kernel SHAP to explain test set predictions with dense data
-    explainer = shap.KernelExplainer(lr.predict_proba, X_train, nsamples=100, link="logit", l1_reg="rank(3)")
+    # use Kernel boxhed_shap to explain test set predictions with dense data
+    explainer = boxhed_shap.KernelExplainer(lr.predict_proba, X_train, nsamples=100, link="logit", l1_reg="rank(3)")
     shap_values = explainer.shap_values(X_test)
 
     X_sparse_train = sp.sparse.csr_matrix(X_train)
@@ -158,8 +158,8 @@ def test_kernel_sparse_vs_dense_multirow_background():
     lr_sparse = sklearn.linear_model.LogisticRegression(solver='lbfgs')
     lr_sparse.fit(X_sparse_train, Y_train)
 
-    # use Kernel SHAP again but with sparse data
-    sparse_explainer = shap.KernelExplainer(lr.predict_proba, X_sparse_train, nsamples=100, link="logit", l1_reg="rank(3)")
+    # use Kernel boxhed_shap again but with sparse data
+    sparse_explainer = boxhed_shap.KernelExplainer(lr.predict_proba, X_sparse_train, nsamples=100, link="logit", l1_reg="rank(3)")
     sparse_shap_values = sparse_explainer.shap_values(X_sparse_test)
 
     assert np.allclose(shap_values, sparse_shap_values, rtol=1e-05, atol=1e-05)
@@ -182,7 +182,7 @@ def test_linear():
     def f(x):
         return x[:, 0] + 2.0*x[:, 1]
 
-    phi = shap.KernelExplainer(f, x).shap_values(x, l1_reg="num_features(2)", silent=True)
+    phi = boxhed_shap.KernelExplainer(f, x).shap_values(x, l1_reg="num_features(2)", silent=True)
     assert phi.shape == x.shape
 
     # corollary 1
@@ -207,23 +207,23 @@ def test_non_numeric():
     pipeline.fit(X, y)
 
     # use KernelExplainer
-    explainer = shap.KernelExplainer(pipeline.predict, X, nsamples=100)
+    explainer = boxhed_shap.KernelExplainer(pipeline.predict, X, nsamples=100)
     shap_values = explainer.explain(X[0, :].reshape(1, -1))
 
     assert np.abs(explainer.expected_value + shap_values.sum(0) - pipeline.predict(X[0, :].reshape(1, -1))[0]) < 1e-4
     assert shap_values[2] == 0
 
-    # tests for shap.KernelExplainer.not_equal
-    assert shap.KernelExplainer.not_equal(0, 0) == shap.KernelExplainer.not_equal('0', '0')
-    assert shap.KernelExplainer.not_equal(0, 1) == shap.KernelExplainer.not_equal('0', '1')
-    assert shap.KernelExplainer.not_equal(0, np.nan) == shap.KernelExplainer.not_equal('0', np.nan)
-    assert shap.KernelExplainer.not_equal(0, np.nan) == shap.KernelExplainer.not_equal('0', None)
-    assert shap.KernelExplainer.not_equal(np.nan, 0) == shap.KernelExplainer.not_equal(np.nan, '0')
-    assert shap.KernelExplainer.not_equal(np.nan, 0) == shap.KernelExplainer.not_equal(None, '0')
-    assert shap.KernelExplainer.not_equal("ab", "bc")
-    assert not shap.KernelExplainer.not_equal("ab", "ab")
-    assert shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T13'))
-    assert not shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T12'))
-    assert shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T13'))
-    assert shap.KernelExplainer.not_equal(pd.Period('4Q2005'), pd.Period('3Q2005'))
-    assert not shap.KernelExplainer.not_equal(pd.Period('4Q2005'), pd.Period('4Q2005'))
+    # tests for boxhed_shap.KernelExplainer.not_equal
+    assert boxhed_shap.KernelExplainer.not_equal(0, 0) == boxhed_shap.KernelExplainer.not_equal('0', '0')
+    assert boxhed_shap.KernelExplainer.not_equal(0, 1) == boxhed_shap.KernelExplainer.not_equal('0', '1')
+    assert boxhed_shap.KernelExplainer.not_equal(0, np.nan) == boxhed_shap.KernelExplainer.not_equal('0', np.nan)
+    assert boxhed_shap.KernelExplainer.not_equal(0, np.nan) == boxhed_shap.KernelExplainer.not_equal('0', None)
+    assert boxhed_shap.KernelExplainer.not_equal(np.nan, 0) == boxhed_shap.KernelExplainer.not_equal(np.nan, '0')
+    assert boxhed_shap.KernelExplainer.not_equal(np.nan, 0) == boxhed_shap.KernelExplainer.not_equal(None, '0')
+    assert boxhed_shap.KernelExplainer.not_equal("ab", "bc")
+    assert not boxhed_shap.KernelExplainer.not_equal("ab", "ab")
+    assert boxhed_shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T13'))
+    assert not boxhed_shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T12'))
+    assert boxhed_shap.KernelExplainer.not_equal(pd.Timestamp('2017-01-01T12'), pd.Timestamp('2017-01-01T13'))
+    assert boxhed_shap.KernelExplainer.not_equal(pd.Period('4Q2005'), pd.Period('3Q2005'))
+    assert not boxhed_shap.KernelExplainer.not_equal(pd.Period('4Q2005'), pd.Period('4Q2005'))

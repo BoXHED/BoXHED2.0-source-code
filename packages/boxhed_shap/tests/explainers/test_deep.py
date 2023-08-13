@@ -6,8 +6,8 @@ from packaging import version
 import numpy as np
 import pandas as pd
 import pytest
-import shap
-from shap import DeepExplainer
+import boxhed_shap
+from boxhed_shap import DeepExplainer
 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
@@ -114,7 +114,7 @@ def test_tf_keras_mnist_cnn(): # pylint: disable=too-many-locals
     # explain by passing the tensorflow inputs and outputs
     np.random.seed(0)
     inds = np.random.choice(x_train.shape[0], 3, replace=False)
-    e = shap.DeepExplainer((model.layers[0].input, model.layers[-1].input), x_train[inds, :, :])
+    e = boxhed_shap.DeepExplainer((model.layers[0].input, model.layers[-1].input), x_train[inds, :, :])
     shap_values = e.shap_values(x_test[:1])
 
     sess = tf.compat.v1.keras.backend.get_session()
@@ -123,7 +123,7 @@ def test_tf_keras_mnist_cnn(): # pylint: disable=too-many-locals
 
     sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
     d = np.abs(sums - diff).sum()
-    assert d / np.abs(diff).sum() < 0.001, "Sum of SHAP values does not match difference! %f" % d
+    assert d / np.abs(diff).sum() < 0.001, "Sum of boxhed_shap values does not match difference! %f" % d
 
 
 def test_tf_keras_linear():
@@ -157,7 +157,7 @@ def test_tf_keras_linear():
     fit_coef = model.layers[1].get_weights()[0].T[0]
 
     # explain
-    e = shap.DeepExplainer((model.layers[0].input, model.layers[-1].output), x)
+    e = boxhed_shap.DeepExplainer((model.layers[0].input, model.layers[-1].output), x)
     shap_values = e.shap_values(x)
 
     # verify that the explanation follows the equation in LinearExplainer
@@ -217,12 +217,12 @@ def test_tf_keras_imdb_lstm():
     # For debugging, can view graph:
     # writer = tf.compat.v1.summary.FileWriter("c:\\tmp", sess.graph)
     # writer.close()
-    e = shap.DeepExplainer((mod.layers[0].input, mod.layers[-1].output), background)
+    e = boxhed_shap.DeepExplainer((mod.layers[0].input, mod.layers[-1].output), background)
     shap_values = e.shap_values(testx)
     sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
     diff = sess.run(mod.layers[-1].output, feed_dict={mod.layers[0].input: testx})[0, :] - \
         sess.run(mod.layers[-1].output, feed_dict={mod.layers[0].input: background}).mean(0)
-    assert np.allclose(sums, diff, atol=1e-02), "Sum of SHAP values does not match difference!"
+    assert np.allclose(sums, diff, atol=1e-02), "Sum of boxhed_shap values does not match difference!"
 
 
 def test_pytorch_mnist_cnn():
@@ -313,9 +313,9 @@ def test_pytorch_mnist_cnn():
         np.random.seed(0)
         inds = np.random.choice(next_x.shape[0], 3, replace=False)
         if interim:
-            e = shap.DeepExplainer((model, model.conv_layers[0]), next_x[inds, :, :, :])
+            e = boxhed_shap.DeepExplainer((model, model.conv_layers[0]), next_x[inds, :, :, :])
         else:
-            e = shap.DeepExplainer(model, next_x[inds, :, :, :])
+            e = boxhed_shap.DeepExplainer(model, next_x[inds, :, :, :])
         test_x, _ = next(iter(test_loader))
         input_tensor = test_x[:1]
         input_tensor.requires_grad = True
@@ -327,7 +327,7 @@ def test_pytorch_mnist_cnn():
             diff = (model(test_x[:1]) - model(next_x[inds, :, :, :])).detach().numpy().mean(0)
         sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
         d = np.abs(sums - diff).sum()
-        assert d / np.abs(diff).sum() < 0.001, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+        assert d / np.abs(diff).sum() < 0.001, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())
 
     batch_size = 32
 
@@ -433,7 +433,7 @@ def test_pytorch_custom_nested_models():
     next_x, _ = next(iter(loader))
     np.random.seed(0)
     inds = np.random.choice(next_x.shape[0], 20, replace=False)
-    e = shap.DeepExplainer(model, next_x[inds, :])
+    e = boxhed_shap.DeepExplainer(model, next_x[inds, :])
     test_x, _ = next(iter(loader))
     shap_values = e.shap_values(test_x[:1])
 
@@ -443,7 +443,7 @@ def test_pytorch_custom_nested_models():
         diff = (model(test_x[:1]) - model(next_x[inds, :])).detach().numpy().mean(0)
     sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
     d = np.abs(sums - diff).sum()
-    assert d / np.abs(diff).sum() < 0.001, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+    assert d / np.abs(diff).sum() < 0.001, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())
 
 
 def test_pytorch_single_output():
@@ -504,7 +504,7 @@ def test_pytorch_single_output():
     next_x, _ = next(iter(loader))
     np.random.seed(0)
     inds = np.random.choice(next_x.shape[0], 20, replace=False)
-    e = shap.DeepExplainer(model, next_x[inds, :])
+    e = boxhed_shap.DeepExplainer(model, next_x[inds, :])
     test_x, _ = next(iter(loader))
     shap_values = e.shap_values(test_x[:1])
 
@@ -514,7 +514,7 @@ def test_pytorch_single_output():
         diff = (model(test_x[:1]) - model(next_x[inds, :])).detach().numpy().mean(0)
     sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
     d = np.abs(sums - diff).sum()
-    assert d / np.abs(diff).sum() < 0.001, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+    assert d / np.abs(diff).sum() < 0.001, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())
 
 
 def test_pytorch_multiple_inputs():
@@ -588,17 +588,17 @@ def test_pytorch_multiple_inputs():
         np.random.seed(0)
         inds = np.random.choice(next_x1.shape[0], 20, replace=False)
         background = [next_x1[inds, :], next_x2[inds, :]]
-        e = shap.DeepExplainer(model, background)
+        e = boxhed_shap.DeepExplainer(model, background)
         test_x1, test_x2, _ = next(iter(loader))
-        shap_x1, shap_x2 = e.shap_values([test_x1[:1], test_x2[:1]])
+        boxhed_shap_x1, boxhed_shap_x2 = e.shap_values([test_x1[:1], test_x2[:1]])
 
         model.eval()
         model.zero_grad()
         with torch.no_grad():
             diff = (model(test_x1[:1], test_x2[:1]) - model(*background)).detach().numpy().mean(0)
-        sums = np.array([shap_x1[i].sum() + shap_x2[i].sum() for i in range(len(shap_x1))])
+        sums = np.array([boxhed_shap_x1[i].sum() + boxhed_shap_x2[i].sum() for i in range(len(boxhed_shap_x1))])
         d = np.abs(sums - diff).sum()
-        assert d / np.abs(diff).sum() < 0.001, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+        assert d / np.abs(diff).sum() < 0.001, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())
 
     _run_pytorch_multiple_inputs_test(disconnected=True)
     _run_pytorch_multiple_inputs_test(disconnected=False)

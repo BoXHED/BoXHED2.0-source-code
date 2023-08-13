@@ -1,7 +1,7 @@
 from urllib.error import HTTPError
 import numpy as np
 import pytest
-import shap
+import boxhed_shap
 
 
 # pylint: disable=import-error, import-outside-toplevel, no-name-in-module, import-error
@@ -84,7 +84,7 @@ def test_tf_keras_mnist_cnn():
     # explain by passing the tensorflow inputs and outputs
     np.random.seed(0)
     inds = np.random.choice(x_train.shape[0], 20, replace=False)
-    e = shap.GradientExplainer((model.layers[0].input, model.layers[-1].input), x_train[inds, :, :])
+    e = boxhed_shap.GradientExplainer((model.layers[0].input, model.layers[-1].input), x_train[inds, :, :])
     shap_values = e.shap_values(x_test[:1], nsamples=2000)
 
     sess = tf.compat.v1.keras.backend.get_session()
@@ -93,7 +93,7 @@ def test_tf_keras_mnist_cnn():
 
     sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
     d = np.abs(sums - diff).sum()
-    assert d / (np.abs(diff).sum() + 0.01) < 0.1, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+    assert d / (np.abs(diff).sum() + 0.01) < 0.1, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())
 
 
 def test_pytorch_mnist_cnn():
@@ -196,9 +196,9 @@ def test_pytorch_mnist_cnn():
         np.random.seed(0)
         inds = np.random.choice(next_x.shape[0], 3, replace=False)
         if interim:
-            e = shap.GradientExplainer((model, model.conv1), next_x[inds, :, :, :])
+            e = boxhed_shap.GradientExplainer((model, model.conv1), next_x[inds, :, :, :])
         else:
-            e = shap.GradientExplainer(model, next_x[inds, :, :, :])
+            e = boxhed_shap.GradientExplainer(model, next_x[inds, :, :, :])
         test_x, _ = next(iter(test_loader))
         shap_values = e.shap_values(test_x[:1], nsamples=5000)
 
@@ -210,7 +210,7 @@ def test_pytorch_mnist_cnn():
                 diff = (model(test_x[:1]) - model(next_x[inds, :, :, :])).detach().numpy().mean(0)
             sums = np.array([shap_values[i].sum() for i in range(len(shap_values))])
             d = np.abs(sums - diff).sum()
-            assert d / (np.abs(diff).sum() + 0.01) < 0.1, "Sum of SHAP values " \
+            assert d / (np.abs(diff).sum() + 0.01) < 0.1, "Sum of boxhed_shap values " \
                                                  "does not match difference! %f" % (d / np.abs(diff).sum())
 
     print('Running test from interim layer')
@@ -246,14 +246,14 @@ def test_pytorch_multiple_inputs():
 
     model = Net()
 
-    e = shap.GradientExplainer(model, background)
-    shap_x1, shap_x2 = e.shap_values([x1, x2])
+    e = boxhed_shap.GradientExplainer(model, background)
+    boxhed_shap_x1, boxhed_shap_x2 = e.shap_values([x1, x2])
 
     model.eval()
     model.zero_grad()
     with torch.no_grad():
         diff = (model(x1, x2) - model(*background)).detach().numpy().mean(0)
 
-    sums = np.array([shap_x1[i].sum() + shap_x2[i].sum() for i in range(len(shap_x1))])
+    sums = np.array([boxhed_shap_x1[i].sum() + boxhed_shap_x2[i].sum() for i in range(len(boxhed_shap_x1))])
     d = np.abs(sums - diff).sum()
-    assert d / (np.abs(diff).sum()+0.01) < 0.1, "Sum of SHAP values does not match difference! %f" % (d / np.abs(diff).sum())
+    assert d / (np.abs(diff).sum()+0.01) < 0.1, "Sum of boxhed_shap values does not match difference! %f" % (d / np.abs(diff).sum())

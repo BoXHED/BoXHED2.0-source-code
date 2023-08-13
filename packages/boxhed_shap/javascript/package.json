@@ -1,7 +1,7 @@
 {
-  "name": "shapjs",
+  "name": "boxhed_shapjs",
   "version": "0.35.0",
-  "description": "Web based visualizations of SHAP explanations.",
+  "description": "Web based visualizations of boxhed_shap explanations.",
   "main": "build/index.js",
   "files": [
     "build/index.js",
@@ -14,7 +14,7 @@
     "pub": "npm run build && npm publish"
   },
   "author": "Scott Lundberg",
-  "repository": "https://github.com/slundberg/shap",
+  "repository": "https://github.com/slundberg/boxhed_shap",
   "license": "MIT",
   "dependencies": {
     "d3": "^4",

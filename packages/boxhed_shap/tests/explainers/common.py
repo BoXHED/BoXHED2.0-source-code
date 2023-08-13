@@ -1,10 +1,10 @@
 import tempfile
 import numpy as np
 import pytest
-import shap
+import boxhed_shap
 
 
-def basic_xgboost_scenario(max_samples=None, dataset=shap.datasets.adult):
+def basic_xgboost_scenario(max_samples=None, dataset=boxhed_shap.datasets.adult):
     """ Create a basic XGBoost model on a data set.
     """
     xgboost = pytest.importorskip('xgboost')

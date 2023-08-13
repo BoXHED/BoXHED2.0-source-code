@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pytest
-import shap
+import boxhed_shap
 from .utils import explainer # (pytest fixture do not remove) pylint: disable=unused-import
 
 
@@ -10,6 +10,6 @@ def test_violin(explainer): # pylint: disable=redefined-outer-name
     """
     fig = plt.figure()
     shap_values = explainer.shap_values(explainer.data)
-    shap.plots.violin(shap_values)
+    boxhed_shap.plots.violin(shap_values)
     plt.tight_layout()
     return fig

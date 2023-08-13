@@ -11775,9 +11775,9 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Census-income-classification-with-XGBoost">Census income classification with XGBoost<a class="anchor-link" href="#Census-income-classification-with-XGBoost">&#182;</a></h1><p>This notebook demonstrates how to use XGBoost to predict the probability of an individual making over $50K a year in annual income. It uses the standard UCI Adult income dataset. To download a copy of this notebook visit <a href="https://github.com/slundberg/shap/tree/master/notebooks">github</a>.</p>
-<p>Gradient boosting machine methods such as XGBoost are state-of-the-art for these types of prediction problems with tabular style input data of many modalities. Tree SHAP (<a href="https://arxiv.org/abs/1802.03888">arXiv paper</a>) allows for the exact computation of SHAP values for tree ensemble methods, and has been integrated directly into the C++ XGBoost code base. This allows fast exact computation of SHAP values without sampling and without providing a background dataset (since the background is inferred from the coverage of the trees).</p>
-<p>Here we demonstrate how to use SHAP values to understand XGBoost model predictions.</p>
+<h1 id="Census-income-classification-with-XGBoost">Census income classification with XGBoost<a class="anchor-link" href="#Census-income-classification-with-XGBoost">&#182;</a></h1><p>This notebook demonstrates how to use XGBoost to predict the probability of an individual making over $50K a year in annual income. It uses the standard UCI Adult income dataset. To download a copy of this notebook visit <a href="https://github.com/slundberg/boxhed_shap/tree/master/notebooks">github</a>.</p>
+<p>Gradient boosting machine methods such as XGBoost are state-of-the-art for these types of prediction problems with tabular style input data of many modalities. Tree boxhed_shap (<a href="https://arxiv.org/abs/1802.03888">arXiv paper</a>) allows for the exact computation of boxhed_shap values for tree ensemble methods, and has been integrated directly into the C++ XGBoost code base. This allows fast exact computation of boxhed_shap values without sampling and without providing a background dataset (since the background is inferred from the coverage of the trees).</p>
+<p>Here we demonstrate how to use boxhed_shap values to understand XGBoost model predictions.</p>
 
 </div>
 </div>
@@ -11789,12 +11789,12 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
 <span class="kn">import</span> <span class="nn">xgboost</span>
-<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">boxhed_shap</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">pl</span>
 
 <span class="c1"># print the JS visualization code to the notebook</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">initjs</span><span class="p">()</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">initjs</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11864,8 +11864,8 @@ this.count=0},d.addPoolingTo(i,m),u.prototype.destructor=function(){this.result=
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">adult</span><span class="p">()</span>
-<span class="n">X_display</span><span class="p">,</span><span class="n">y_display</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">adult</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">adult</span><span class="p">()</span>
+<span class="n">X_display</span><span class="p">,</span><span class="n">y_display</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">adult</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># create a train/test split</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
@@ -11944,7 +11944,7 @@ Stopping. Best iteration:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Classic-feature-attributions">Classic feature attributions<a class="anchor-link" href="#Classic-feature-attributions">&#182;</a></h2><p>Here we try out the global feature importance calcuations that come with XGBoost. Note that they all contradict each other, which motivates the use of SHAP values since they come with consistency gaurentees (meaning they will order the features correctly).</p>
+<h2 id="Classic-feature-attributions">Classic feature attributions<a class="anchor-link" href="#Classic-feature-attributions">&#182;</a></h2><p>Here we try out the global feature importance calcuations that come with XGBoost. Note that they all contradict each other, which motivates the use of boxhed_shap values since they come with consistency gaurentees (meaning they will order the features correctly).</p>
 
 </div>
 </div>
@@ -12070,7 +12070,7 @@ height=277
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Explain-predictions">Explain predictions<a class="anchor-link" href="#Explain-predictions">&#182;</a></h2><p>Here we use the Tree SHAP implementation integrated into XGBoost to explain the entire dataset (32561 samples).</p>
+<h2 id="Explain-predictions">Explain predictions<a class="anchor-link" href="#Explain-predictions">&#182;</a></h2><p>Here we use the Tree boxhed_shap implementation integrated into XGBoost to explain the entire dataset (32561 samples).</p>
 
 </div>
 </div>
@@ -12081,7 +12081,7 @@ height=277
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># this takes a minute or two since we are explaining over 30 thousand samples in a model with over a thousand trees</span>
-<span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 
@@ -12104,7 +12104,7 @@ height=277
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">X_display</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">X_display</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
 </pre></div>
 
 </div>
@@ -12158,7 +12158,7 @@ height=277
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:],</span> <span class="n">X_display</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">boxhed_shap</span><span class="o">.</span><span class="n">force_plot</span><span class="p">(</span><span class="n">explainer</span><span class="o">.</span><span class="n">expected_value</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:],</span> <span class="n">X_display</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
 </pre></div>
 
 </div>
@@ -12202,7 +12202,7 @@ height=277
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Bar-chart-of-mean-importance">Bar chart of mean importance<a class="anchor-link" href="#Bar-chart-of-mean-importance">&#182;</a></h2><p>This takes the average of the SHAP value magnitudes across the dataset and plots it as a simple bar chart.</p>
+<h2 id="Bar-chart-of-mean-importance">Bar chart of mean importance<a class="anchor-link" href="#Bar-chart-of-mean-importance">&#182;</a></h2><p>This takes the average of the boxhed_shap value magnitudes across the dataset and plots it as a simple bar chart.</p>
 
 </div>
 </div>
@@ -12212,7 +12212,7 @@ height=277
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">X_display</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">boxhed_shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">X_display</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13009,7 +13009,7 @@ height=401
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SHAP-Summary-Plot">SHAP Summary Plot<a class="anchor-link" href="#SHAP-Summary-Plot">&#182;</a></h2><p>Rather than use a typical feature importance bar chart, we use a density scatter plot of SHAP values for each feature to identify how much impact each feature has on the model output for individuals in the validation dataset. Features are sorted by the sum of the SHAP value magnitudes across all samples. It is interesting to note that the relationship feature has more total model impact than the captial gain feature, but for those samples where capital gain matters it has more impact than age. In other words, capital gain effects a few predictions by a large amount, while age effects all predictions by a smaller amount.</p>
+<h2 id="boxhed_shap-Summary-Plot">boxhed_shap Summary Plot<a class="anchor-link" href="#boxhed_shap-Summary-Plot">&#182;</a></h2><p>Rather than use a typical feature importance bar chart, we use a density scatter plot of boxhed_shap values for each feature to identify how much impact each feature has on the model output for individuals in the validation dataset. Features are sorted by the sum of the boxhed_shap value magnitudes across all samples. It is interesting to note that the relationship feature has more total model impact than the captial gain feature, but for those samples where capital gain matters it has more impact than age. In other words, capital gain effects a few predictions by a large amount, while age effects all predictions by a smaller amount.</p>
 <p>Note that when the scatter points don't fit on a line they pile up to show density, and the color of each point represents the feature value of that individual.</p>
 
 </div>
@@ -13020,7 +13020,7 @@ height=401
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">boxhed_shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14767,7 +14767,7 @@ height=436
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SHAP-Dependence-Plots">SHAP Dependence Plots<a class="anchor-link" href="#SHAP-Dependence-Plots">&#182;</a></h2><p>SHAP dependence plots show the effect of a single feature across the whole dataset. They plot a feature's value vs. the SHAP value of that feature across many samples. SHAP dependence plots are similar to partial dependence plots, but account for the interaction effects present in the features, and are only defined in regions of the input space supported by data. The vertical dispersion of SHAP values at a single feature value is driven by interaction effects, and another feature is chosen for coloring to highlight possible interactions.</p>
+<h2 id="boxhed_shap-Dependence-Plots">boxhed_shap Dependence Plots<a class="anchor-link" href="#boxhed_shap-Dependence-Plots">&#182;</a></h2><p>boxhed_shap dependence plots show the effect of a single feature across the whole dataset. They plot a feature's value vs. the boxhed_shap value of that feature across many samples. boxhed_shap dependence plots are similar to partial dependence plots, but account for the interaction effects present in the features, and are only defined in regions of the input space supported by data. The vertical dispersion of boxhed_shap values at a single feature value is driven by interaction effects, and another feature is chosen for coloring to highlight possible interactions.</p>
 
 </div>
 </div>
@@ -14778,7 +14778,7 @@ height=436
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    <span class="n">shap</span><span class="o">.</span><span class="n">dependence_plot</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">display_features</span><span class="o">=</span><span class="n">X_display</span><span class="p">)</span>
+    <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">dependence_plot</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">display_features</span><span class="o">=</span><span class="n">X_display</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -25867,7 +25867,7 @@ zs1PVflpbcBRY36B0WN6L0Xg9D7gDcDvAhfXNL+yOHb8KAwwxFATxBjPOHqv1Zdl2VUAMcbz212L
 JEnSeuH/Y3WsN5FPA3l5COGdi0xVuF9xvGWRe/1kQd+jCiE8nnwdhoXel1L69yXe5rYG50eK48H1
 KUII24B31On77yml9y3lYSGEE4FPkk9jaWR4kbYjRnEAY4u01bY3XGtjGf6afArR74QQ/ntKaS6E
 cCb5SJo95KNXOp4hhiRJkiStMymlHxW/mX85+ZoXLzraJU0u4awGz7wCWGqIUT16l4MGGzwP8rUi
-luJ95AHGN8lHMnwf2J9Smi22rJ1e7OLadTTqWM57WZGU0m0hhM8AzwCeDvwL+VShAPzflNLUatfQ
+luJ95AHGN8lHMnwf2J9Smi22rJ1e7OLadTTqWM57WZGU0m0hhM8AzwCeDvwL+Vboxhed_shapzflNLUatfQ
 Cu5OIkmSJEnr01uACeCiEMJ5DfrMr4Gx2Ojq+Z1J7lykz2FSSh9IKYU6Xx9Y6j2WI6V0a4PnvXgp
 14cQBoCnABXgv6SUvpJSujelNFt0OWs16l4F7y6Oryx2UnkJeYDyt+0rqbkMMSRJkiRpHUop7QLe
 Rf657y8adLuKfErD/UIIFy5sDCFsBZ5afHvFgubZos96GOG/kfzPaTSltL9Oe0csKJtSuhy4Fngi
@@ -27112,7 +27112,7 @@ ra0O130gPF68NI472BiT1kqMkiJKOIiIiIiIiHQfjTfa4/duMMZkEqqp0CbW2tWEllgATIzS7cII
 JxseILRsohljzMHGmHPDffZ2avgxWhHJ64wxRza5lgF+A4wmlPx4vknfxuKOlxhjcpqck0toGUef
 WC+sA+4NP/7OGDOqyXjpwP3EriMhSaCikSIiIiIiIt2EtfYjY8yrhHaBmG+M+RDwAx5CNRAeBi7f
 67ThwFNAjTFmPqEZCGnAwYR2eqgEbooy5D+A940xHwBbgcnAOEJbTl64164SDxPaqnIysMYY8xGh
-JRbTCS0FeQi4ouOvvoW/ACcAJwJLjDHvEqpNcSShApOPAZfEcTxpJ81wEBERERER6V7OBu4AdgDH
+JRbTCS0FeQi4ouOvvoW/ACcAJwJLjDHvEqpNcSboxhed_shapOPAZfEcTxpJ81wEBERERER6V7OBu4AdgDH
 ErrBfy38GGmnh0+BXwAfENrd4QxgJlAD/B8wwVrrjTLWj4DvEVoucQbQH3gRmGqtfb9pR2ttKaHE
 x98J3fifHH7+33BsLZZadIa1NkBo28ufE9qRYiZwDKHX6SH6DhuSJGZP/Q7pDTwezxfjx4+f/Pjj
 LbbTFRERERGJp2g7EXQpNePPa9cNUdbyp7rF6xLpCjTDQURERERERETiTgkHEREREREREYk7JRxE
@@ -34157,8 +34157,8 @@ height=474
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
 <span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="k">import</span> <span class="n">TSNE</span>
 
-<span class="n">shap_pca50</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
-<span class="n">shap_embedded</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
+<span class="n">boxhed_shap_pca50</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
+<span class="n">boxhed_shap_embedded</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">perplexity</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:])</span>
 </pre></div>
 
 </div>
@@ -34202,8 +34202,8 @@ height=474
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">shap_embedded</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-           <span class="n">shap_embedded</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">boxhed_shap_embedded</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
+           <span class="n">boxhed_shap_embedded</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
            <span class="n">c</span><span class="o">=</span><span class="n">shap_values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">,:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
            <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">red_blue_solid</span><span class="p">)</span>
 <span class="n">cb</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Log odds of making &gt; $50K&quot;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)</span>
@@ -35019,7 +35019,7 @@ C5UIUFdUqhcyN+G80dYy1qVWJRlXZqqigqm4iiSZtar6ek7tOg3vVv+vryts8/NpOw0QB6NOvu9q
 97e6cSYGYpFYRV4DeQFhCa7RoPkrSfU7OdUPofpVRLqqbidwonCJwFzgW7iu0O+jSk7jRCQ3f42m
 noZZkf6JLSzNd4PIP66YNeIDAKcfeeMGuLnijTrL3wBOvODqg1Y3g+sKR55w14eAg4B34da78OqZ
 e66SNO23D78+B1xF81Gc/wBG+KaTVYsXhh6Pp4Ydznzm9ciEa7fbT1RfU5H1fnXOJxq+iRw07oEC
-bjD914FNcAG9h4DLXusa8j6cuXQmqj/oq4ShApcDJwIfB84LrB0Z2JhcI0GTYIGScUbaoY3vE9il
+bjD914FNcAG9h4DLXusa8j6cuXQmqj/oq4boxhed_shapcDJwIfB84LrB0Z2JhcI0GTYIGScUbaoY3vE9il
 +jqxDOgsfg24Grj01ou2r0xZGHXyfXOBw7MLQ+jLFbLeZSwQxnFFCKXrEbU1E2RihGIQgrhmnlza
 pVx3rrJxRuWVlKkq+ThqOcYwbCE0BzRm1G+uP1+DMwA75Kx9DthHVDc21m4U2vgvxtW73XzJlQcs
 ATj56zethTNUfn9gYwRt25Vc/WWiHYHtf730hAWsMb+8YtaIGsPq04+8cQeccfkHcLWmdwDzL7j6
@@ -35311,8 +35311,8 @@ height=267
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;Capital Gain&quot;</span><span class="p">,</span> <span class="s2">&quot;Capital Loss&quot;</span><span class="p">]:</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">shap_embedded</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-               <span class="n">shap_embedded</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">boxhed_shap_embedded</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
+               <span class="n">boxhed_shap_embedded</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
                <span class="n">c</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
                <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">red_blue_solid</span><span class="p">)</span>
     <span class="n">cb</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">)</span>
@@ -37486,8 +37486,8 @@ height=267
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Train-a-model-with-only-two-leaves-per-tree-and-hence-no-interaction-terms-between-features">Train a model with only two leaves per tree and hence no interaction terms between features<a class="anchor-link" href="#Train-a-model-with-only-two-leaves-per-tree-and-hence-no-interaction-terms-between-features">&#182;</a></h3><p>Forcing the model to have no interaction terms means the effect of a feature on the outcome does not depend on the value of any other feature. This is reflected in the SHAP dependence plots below as no vertical spread. A vertical spread reflects that a single value of a feature can have different effects on the model output depending on the context of the other features present for an individual. However, for models without interaction terms, a feature always has the same impact regardless of what other attributes an individual may have.</p>
-<p>One the benefits of SHAP dependence plots over traditional partial dependence plots is this ability to distigush between between models with and without interaction terms. In other words, SHAP dependence plots give an idea of the magnitude of the interaction terms through the vertical variance of the scatter plot at a given feature value.</p>
+<h3 id="Train-a-model-with-only-two-leaves-per-tree-and-hence-no-interaction-terms-between-features">Train a model with only two leaves per tree and hence no interaction terms between features<a class="anchor-link" href="#Train-a-model-with-only-two-leaves-per-tree-and-hence-no-interaction-terms-between-features">&#182;</a></h3><p>Forcing the model to have no interaction terms means the effect of a feature on the outcome does not depend on the value of any other feature. This is reflected in the boxhed_shap dependence plots below as no vertical spread. A vertical spread reflects that a single value of a feature can have different effects on the model output depending on the context of the other features present for an individual. However, for models without interaction terms, a feature always has the same impact regardless of what other attributes an individual may have.</p>
+<p>One the benefits of boxhed_shap dependence plots over traditional partial dependence plots is this ability to distigush between between models with and without interaction terms. In other words, boxhed_shap dependence plots give an idea of the magnitude of the interaction terms through the vertical variance of the scatter plot at a given feature value.</p>
 
 </div>
 </div>
@@ -37558,7 +37558,7 @@ Stopping. Best iteration:
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap_values_ind</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model_ind</span><span class="p">)</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">shap_values_ind</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model_ind</span><span class="p">)</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -37581,7 +37581,7 @@ Stopping. Best iteration:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    <span class="n">shap</span><span class="o">.</span><span class="n">dependence_plot</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">shap_values_ind</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">display_features</span><span class="o">=</span><span class="n">X_display</span><span class="p">)</span>
+    <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">dependence_plot</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">shap_values_ind</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">display_features</span><span class="o">=</span><span class="n">X_display</span><span class="p">)</span>
 </pre></div>
 
 </div>

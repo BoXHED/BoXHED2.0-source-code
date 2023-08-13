@@ -2,7 +2,7 @@
 '''
 import matplotlib.pyplot as plt
 import pytest
-import shap
+import boxhed_shap
 
 from .utils import explainer # (pytest fixture do not remove) pylint: disable=unused-import
 
@@ -13,6 +13,6 @@ def test_simple_bar(explainer): # pylint: disable=redefined-outer-name
     """
     shap_values = explainer(explainer.data)
     fig = plt.figure()
-    shap.plots.bar(shap_values, show=False)
+    boxhed_shap.plots.bar(shap_values, show=False)
     plt.tight_layout()
     return fig

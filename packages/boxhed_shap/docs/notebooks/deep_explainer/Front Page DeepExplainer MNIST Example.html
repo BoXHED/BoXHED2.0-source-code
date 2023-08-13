@@ -11901,16 +11901,16 @@ Test accuracy: 0.9858
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># ...include code from https://github.com/keras-team/keras/blob/master/examples/mnist_cnn.py</span>
 
-<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">boxhed_shap</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># select a set of background examples to take an expectation over</span>
 <span class="n">background</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
 
 <span class="c1"># explain predictions of the model on three images</span>
-<span class="n">e</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">DeepExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">boxhed_shap</span><span class="o">.</span><span class="n">DeepExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">background</span><span class="p">)</span>
 <span class="c1"># ...or pass tensors directly</span>
-<span class="c1"># e = shap.DeepExplainer((model.layers[0].input, model.layers[-1].output), background)</span>
+<span class="c1"># e = boxhed_shap.DeepExplainer((model.layers[0].input, model.layers[-1].output), background)</span>
 <span class="n">shap_values</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
@@ -11925,7 +11925,7 @@ Test accuracy: 0.9858
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># plot the feature attributions</span>
-<span class="n">shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="o">-</span><span class="n">x_test</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">boxhed_shap</span><span class="o">.</span><span class="n">image_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="o">-</span><span class="n">x_test</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
 </div>
