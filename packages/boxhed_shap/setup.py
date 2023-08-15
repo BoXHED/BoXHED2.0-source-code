@@ -203,7 +203,7 @@ def run_setup(with_binary, test_xgboost, test_lightgbm, test_catboost, test_spar
 
     setup(
         name='boxhed_shap',
-        version="1.0", #find_version("boxhed_shap", "__init__.py"),
+        version="1.0.1", #find_version("boxhed_shap", "__init__.py"),
         description='A unified approach to explain the output of any machine learning model.',
         long_description="This is a redistribution of the Python package boxhed_shap with small changes "
                          "to work with the package BoXHED."
