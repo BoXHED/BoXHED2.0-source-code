@@ -5,17 +5,15 @@ from tqdm import tqdm
 import multiprocessing as mp
 from itertools import product
 from boxhed.boxhed import boxhed
-from boxhed.utils import temp_seed
 from multiprocessing import Manager
 from sklearn.utils import indexable
-from joblib import Parallel, delayed
 from multiprocessing.shared_memory import SharedMemory
 from multiprocessing.managers import SharedMemoryManager
+from boxhed.utils import Process, run_as_threads
 #'''
 #TODO: CAN I DO ANYTHING ABOUT OMP_NUM_THREADS
 os.environ['OMP_NUM_THREADS'] = "1"
 #'''
-#from sklearn.model_selection import GroupKFold
 
 def _to_shared_mem(smm, arr_np):
     shared_mem       = smm.SharedMemory(size=arr_np.nbytes)
@@ -53,20 +51,19 @@ def _run_batch_process(param_dict_, rslts):
     delta = np.ndarray(shape = delta_shape, dtype = delta_dtype, buffer = smem_delta.buf)
 
 
-
     def _fit_single_model(param_dict):
         estimator = boxhed()
         estimator.set_params(**param_dict)
 
         fold = param_dict["fold"]
         estimator.fit(X    [data_idx[fold]['train'], :], 
-                      delta[data_idx[fold]['train']],
-                      w    [data_idx[fold]['train']])
+                    delta[data_idx[fold]['train']],
+                    w    [data_idx[fold]['train']])
 
         return estimator
 
 
-    def _get_score_batch_est_test(idx_dict):
+    def _get_score_batch_est_test(est, idx_dict):
         est_idx   = idx_dict['est_idx']
         test_idx  = idx_dict['test_idx']
         abs_idx   = batch_idx*batch_size+est_idx
@@ -74,8 +71,6 @@ def _run_batch_process(param_dict_, rslts):
 
         n_trees = test_dict['n_estimators']
         fold    = test_dict['fold']
-
-        est       = trained_models[est_idx]
         #return f"{est.max_depth}, {n_trees}, {fold}"
         return est.score(
             X    [data_idx[fold]['test'], :], 
@@ -84,9 +79,12 @@ def _run_batch_process(param_dict_, rslts):
             ntree_limit = n_trees)
 
     def _get_score_batch_est(idx_dicts):
+        assert len(set([id['est_idx'] for id in idx_dicts]))==1
+        est = trained_models[idx_dicts[0]['est_idx']].copy()
+
         scores = [None] * len(idx_dicts)
         for i, idx_dict in enumerate(idx_dicts):
-            scores[i] = _get_score_batch_est_test(idx_dict)
+            scores[i] = _get_score_batch_est_test(est, idx_dict)
         return scores
 
 
@@ -95,15 +93,14 @@ def _run_batch_process(param_dict_, rslts):
         idx_dicts = [{"est_idx": rslt_idx // test_block_size, "test_idx":rslt_idx % test_block_size} 
             for rslt_idx in range(batch_block_size)]
         idx_dicts = [idx_dicts[i : i + test_block_size] for i in range(0, len(idx_dicts), test_block_size)]
-        scores = Parallel(n_jobs = batch_size, prefer = "threads")(delayed (_get_score_batch_est)(idx_dicts_) 
-            for idx_dicts_ in idx_dicts)
+
+        scores = run_as_threads(_get_score_batch_est, [{'idx_dicts': id} for id in idx_dicts])
+
         scores = [item for sublist in scores for item in sublist]
         rslts [batch_size*test_block_size*batch_idx:batch_size*test_block_size*(batch_idx+1)] = scores
         #rslts [batch_block_size*batch_idx: batch_block_size*(batch_idx+1)] = scores
 
-    trained_models = Parallel(n_jobs=batch_size, prefer="threads")(delayed(_fit_single_model)(param_dict) 
-            for param_dict in param_dicts_train[batch_idx*batch_size:
-                (batch_idx+1)*batch_size])
+    trained_models = run_as_threads (_fit_single_model, [{'param_dict' : pd} for pd in param_dicts_train[batch_idx*batch_size: (batch_idx+1)*batch_size]])
 
     _fill_rslt()
 
@@ -222,14 +219,17 @@ class collapsed_gs_:
                 print (rslt_mngd)
                 raise
                 '''
-
-                p = mp.Process(target = _run_batch_process, args = (param_dict_mngd, rslt_mngd))
+                #https://stackoverflow.com/questions/63758186/how-to-catch-exceptions-thrown-by-functions-executed-using-multiprocessing-proce
+                p = Process(target = _run_batch_process, args = (param_dict_mngd, rslt_mngd))
 
                 p.start() 
                 p.join()
+
+                if p.exception:
+                    raise Exception(p.exception[1])
                 
                 p.terminate()
-            
+
             smm.shutdown()
             
             self.rslts = list(rslt_mngd)
@@ -319,7 +319,7 @@ def group_k_fold(ID, num_folds, seed=None):
     return gkf
 
 
-def cv(param_grid, X_post, num_folds, gpu_list, nthread=1, models_per_gpu=1, seed=None, ID=None):
+def cv(param_grid, X_post, num_folds, gpu_list, nthread=-1, models_per_gpu=1, seed=None, ID=None):
     """cross validate different hyperpatameter combinations based on likelihood risk.
 
     :param param_grid: a dictionary containing candidate values for the hyperparameters to cross-validate on. An example would be:
@@ -362,17 +362,10 @@ def cv(param_grid, X_post, num_folds, gpu_list, nthread=1, models_per_gpu=1, see
 
     collapsed_ntree_gs_  = collapsed_gs_(param_grid, gkf, gpu_list, batch_size)
  
-    try:
-        results     = collapsed_ntree_gs_.fit(X,w,delta)
-        means       = results['mean_test_score']
-        stds        = results['std_test_score']
-        params      = results['params']
-
-    except MemoryError as me:
-        print (me)
-        means       = np.array([])
-        stds        = np.array([])
-        params      = np.array([])
+    results     = collapsed_ntree_gs_.fit(X,w,delta)
+    means       = results['mean_test_score']
+    stds        = results['std_test_score']
+    params      = results['params']
 
 
     return {"params":params , "score_mean":means, "score_ste":stds/np.sqrt(num_folds)}
