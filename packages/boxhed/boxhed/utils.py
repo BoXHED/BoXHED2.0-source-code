@@ -12,7 +12,14 @@ import pickle
 from scipy.stats import beta # beta distribution.
 import math
 
-
+import functools
+#import multiprocessing
+#from sys import platform
+#if platform == "linux" or platform == "linux2":
+#    multiprocessing.set_start_method('fork', force=True)
+#from multiprocessing import Process
+import multiprocessing as mp
+import traceback
 import warnings
 warnings.simplefilter(action='ignore', category=Warning)
 
@@ -117,12 +124,29 @@ def create_dir_if_not_exist(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-import functools
-#import multiprocessing
-#from sys import platform
-#if platform == "linux" or platform == "linux2":
-#    multiprocessing.set_start_method('fork', force=True)
-from multiprocessing import Process, Queue
+
+#https://stackoverflow.com/questions/63758186/how-to-catch-exceptions-thrown-by-functions-executed-using-multiprocessing-proce
+class Process(mp.Process):
+
+    def __init__(self, *args, **kwargs):
+        mp.Process.__init__(self, *args, **kwargs)
+        self._pconn, self._cconn = mp.Pipe()
+        self._exception = None
+
+    def run(self):
+        try:
+            mp.Process.run(self)
+            self._cconn.send(None)
+        except Exception as e:
+            tb = traceback.format_exc()
+            self._cconn.send((e, tb))
+            #raise e  # You can still rise this exception if you need to
+
+    @property
+    def exception(self):
+        if self._pconn.poll():
+            self._exception = self._pconn.recv()
+        return self._exception
 
 
 def run_as_process(func):
@@ -132,10 +156,14 @@ def run_as_process(func):
         def _func(queue, func, *args, **kwargs):
             queue.put(func(*args, **kwargs))
 
-        queue = Queue()
+        queue = mp.Queue()
         p = Process(target=_func, args=(queue, func, *args), kwargs=kwargs)
         p.start()
         p.join()
+        ## https://stackoverflow.com/questions/63758186/how-to-catch-exceptions-thrown-by-functions-executed-using-multiprocessing-proce
+        if p.exception:
+            raise p.exception
+        ##
         p.terminate()
         return queue.get()
     return run_as_process
@@ -168,17 +196,22 @@ def load_pickle(addr):
 
 
 from threading import Thread
-def run_as_threads(f, args_dict_list):
+def run_as_threads(f, kwargs):
 
-    T = []
-    for args_dict in args_dict_list:
-        t=Thread(target = f, kwargs = args_dict)
+    def f_(rslts, idx, **kwargs):
+        rslts [idx] = f(**kwargs)
+
+    rslts = [None]*len(kwargs)
+    T     = []
+    for idx, kwargs_ in enumerate(kwargs):
+        t=Thread(target = f_, args = [rslts, idx], kwargs = kwargs_)
         t.start()
         T.append(t)
 
     for t in T:
         t.join()
 
+    return rslts
 
 #https://stackoverflow.com/questions/49555991/can-i-create-a-local-numpy-random-seed
 @contextlib.contextmanager
