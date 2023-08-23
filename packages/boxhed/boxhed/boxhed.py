@@ -1,4 +1,5 @@
 import sys
+import pickle
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin, TransformerMixin 
@@ -188,7 +189,8 @@ class boxhed(BaseEstimator, RegressorMixin):
 
                                 'base_score':       f0_,
                                 'gpu_id':           self.gpu_id,
-                                'nthread':          self.nthread
+                                'nthread':          self.nthread,
+                                'predictor':'cpu_predictor'
                                 }
     
         self.boxhed_ = xgb.train( self.params_, 
@@ -350,9 +352,29 @@ class boxhed(BaseEstimator, RegressorMixin):
         fname : str
             The address to the file to be saved.
         """
-        self.prep.prep_lib = None
+        if hasattr(self, 'prep'):
+            self.prep.prep_lib = None
         utils.dump_pickle(self, fname)
-        self.prep.__init__()
+        if hasattr(self, 'prep'):
+            self.prep.__init__()
+            
+
+    def copy(self):
+        """Copy a BoXHED instance.
+
+        Returns
+        -------
+        BoXHED instance
+            Returns a BoXHED instance.
+        """
+        if hasattr(self, 'prep'):
+            self.prep.prep_lib = None
+        boxhed_ = pickle.loads(pickle.dumps(self, -1))
+        if hasattr(self, 'prep'):
+            self.prep.__init__()
+            boxhed_.prep.__init__()
+        return boxhed_
+
 
     def load_model(self, fname):
         """Retrieve the fitted BoXHED instance from disk.
@@ -367,7 +389,8 @@ class boxhed(BaseEstimator, RegressorMixin):
             if attr.startswith('__') or attr.startswith('_'):
                 continue
             setattr(self, attr, getattr(boxhed_, attr))
-        self.prep.__init__()
+        if hasattr(self, 'prep'):
+            self.prep.__init__()
 
     def _time_splits(self):
         trees_df = self.boxhed_.trees_to_dataframe()
