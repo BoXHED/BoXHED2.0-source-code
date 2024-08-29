@@ -2,7 +2,7 @@
 
 **B**oosted e**X**act **H**azard **E**stimator with **D**ynamic covariates v2.0 (BoXHED2.0, pronounced 'box-head') is a software package designed for nonparametric estimation of hazard functions using gradient-boosted trees. BoXHED2.0 supports both time-static and time-dependent covariates. 
 
-This document provides instructions for manually installing the [BoXHED2.0](https://github.com/BoXHED/BoXHED2.0) package. For additional information, including tutorials and related publications, please visit the package's GitHub page.
+This document provides instructions for manually installing the [BoXHED2.0](https://github.com/BoXHED/BoXHED2.0) package. For additional information, including precompiled packages, tutorials, and related publications, please visit the package's GitHub page.
 
 ## Prerequisites
 BoXHED2.0 has been developed and tested on Linux and macOS. The following are required:
