@@ -41,10 +41,3 @@ Install BoXHED2.0 from pip:
 ```
 pip install boxhed
 ```
-
-Run *BoXHED2_tutorial.ipynb* for a demonstration of how to fit a BoXHED hazard estimator.
-```
-jupyter notebook BoXHED2_tutorial.ipynb
-``` 
-
-BoXHED2.0 also supports the use of SHAP values. Please see the installation instructions for the [BoXHED SHAP](https://github.com/BoXHED/BoXHED2.0/blob/master/README_SHAP.md) package.
