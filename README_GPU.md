@@ -41,10 +41,3 @@ BoXHED2.0 can then be installed by running:
 The installer logs its activity in the terminal. If the installation is unsuccessful, check *setup_log.txt* created within the current directory for a description of the problem(s).  
 
 In our experience, one of the most prevalent problems is that CMake cannot find the CUDA compiler, or needs some arguments set depending on your machine. If this is the case, please see the instructions at line 65 of *setup.sh* to properly set the missing arguments.
-
-Run *BoXHED2_tutorial.ipynb* for a demonstration of how to fit a BoXHED hazard estimator.
-```
-jupyter notebook BoXHED2_tutorial.ipynb
-```
-
-BoXHED2.0 also supports the use of SHAP values. Please see the installation instructions for the [BoXHED SHAP](https://github.com/BoXHED/BoXHED2.0/blob/master/README_SHAP.md) package.
