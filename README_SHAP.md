@@ -12,10 +12,3 @@ Install the `shap` package using `pip`:
 ```
 pip install ./packages/boxhed_shap
 ```
-
-The tutorial *BoXHED2_tutorial.ipynb* provides example code on how to use `shap`:
-```
-jupyter notebook BoXHED2_tutorial.ipynb
-```
-
-To save disk space, you may delete the directory `./packages/boxhed_shap` and its contents (~400Mb) after installation. 
